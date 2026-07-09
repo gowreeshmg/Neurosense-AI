@@ -1,0 +1,29 @@
+{
+  "name": "NeuroSense AI — Dual-Modality Mental Health Check-in",
+  "short_name": "NeuroSense AI",
+  "description": "State-of-the-art Multimodal Clinical Decision Support & Explainable AI (LIME + SHAP) for student mental health screening.",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#182C41",
+  "theme_color": "#182C41",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/img/neurosense-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/img/neurosense-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/img/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
