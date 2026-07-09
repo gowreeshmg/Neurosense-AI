@@ -20,6 +20,46 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/static/css/styles.css?v=20260709_glass130">
     <style id="ios-dashboard-glass">
+        @font-face {
+            font-family: 'Helvetica Now Text';
+            src: url('https://db.onlinewebfonts.com/c/08e020de1811ec4489f82d1247a42c09?family=Helvetica+Now+Text');
+            font-weight: normal;
+            font-style: normal;
+        }
+        * {
+            font-family: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.01);
+            background-blend-mode: luminosity;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: none;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.4px;
+            background: linear-gradient(180deg,
+              rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+              rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+              rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        @keyframes dropdown-in {
+            from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-dropdown { animation: dropdown-in 0.2s ease-out; }
+        .duration-400 { transition-duration: 400ms; }
         /* EXACT iPHONE iOS GLASSMORPHISM & TRANSPARENT BODY OVERRIDE FOR DASHBOARD */
         #lumoraHomeScreen.hidden-screen,
         #lumoraHomeScreen[style*="display: none"],
@@ -601,87 +641,137 @@
         <div class="glow-orb orb-3"></div>
     </div>
 
-    <!-- ==================== SCREEN 1: RIVR-STYLE HOME SCREEN ==================== -->
-    <section id="lumoraHomeScreen" class="view-screen active w-full h-screen flex items-center justify-center p-3 md:p-5 bg-[#f0f0f0] rivr-hero-wrapper" style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 12px; background-color: #f0f0f0; z-index: 2; font-family: var(--font-helvetica);">
-        <div class="relative w-full max-w-[1536px] h-full rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-none flex flex-col items-center bg-white/10 group rivr-section" style="position: relative; width: 100%; max-width: 1536px; height: 100%; border-radius: clamp(1.5rem, 3vw, 3rem); overflow: hidden; display: flex; flex-direction: column; align-items: center; background: rgba(255, 255, 255, 0.1);">
-            <!-- The Video Background -->
-            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover object-[65%] lg:object-center z-0" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260428_193507_4286c423-2fd9-4efd-92bd-91a939453fc1.mp4"></video>
+    <!-- ==================== SCREEN 1: FLOWPATH / NEUROSENSE AI FULLSCREEN HERO SCREEN ==================== -->
+    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2; font-family: 'Helvetica Now Text', -apple-system, sans-serif;">
+        <!-- Looping video background with object-cover -->
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4"></video>
+        <!-- Subtle dark overlay on top of video -->
+        <div class="absolute inset-0 bg-black/10 z-0 pointer-events-none"></div>
 
-            <!-- The Content Layer -->
-            <div class="relative z-10 w-full h-full flex flex-col items-center justify-between" style="position: relative; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-                <!-- Navbar Component (Cleaned: NO duplicate center buttons/links) -->
-                <nav class="w-full flex justify-between items-center px-6 md:px-12 pt-6 md:pt-8 relative z-10" style="padding: clamp(16px, 3vw, 32px) clamp(24px, 5vw, 48px); display: flex; justify-content: flex-start; align-items: center; width: 100%;">
-                    <!-- Left Brand Logo (True iPhone iOS Glass Pill) -->
-                    <div class="flex items-center gap-2 bg-white/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-sm rivr-brand-pill" style="display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); padding: 10px 22px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.45); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);">
-                        <span class="text-lg md:text-xl font-normal tracking-tight text-[rgba(30,50,90,0.95)]" style="font-size: 1.35rem; font-weight: 700; color: #182C41;">🧠 NeuroSense AI</span>
-                    </div>
-                </nav>
+        <!-- Top Navigation (not fixed/sticky) -->
+        <header class="w-full relative z-20 px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5 flex items-center justify-between">
+            <!-- Logo: Inline SVG diamond shape (28x28) with two overlapping diamond paths at 0.9 and 0.5 opacity, plus text -->
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchScreen('home')">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0">
+                    <path d="M14 2L26 14L14 26L2 14L14 2Z" fill="white" fill-opacity="0.9"/>
+                    <path d="M14 6L22 14L14 22L6 14L14 6Z" fill="white" fill-opacity="0.5"/>
+                </svg>
+                <span class="text-white text-lg sm:text-xl font-medium tracking-tight">NeuroSense AI</span>
+            </div>
 
-                <!-- Text & Center Action Container (Moved upwards into clean sky area with darker, ultra-visible typography) -->
-                <div class="w-full flex flex-col items-center pt-8 px-6 text-center max-w-4xl" style="width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 920px; margin: clamp(30px, 6vh, 85px) auto auto auto; padding: clamp(20px, 4vw, 40px) 24px; background: transparent; border: none; box-shadow: none;">
-                    <!-- HeroBadge Component (True iPhone iOS Glass Pill) -->
-                    <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/20 mx-auto mb-3 w-fit rivr-badge" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); border: 1px solid rgba(255, 255, 255, 0.45); margin-bottom: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);">
-                        <span style="font-size: 1rem;">✨</span>
-                        <span class="text-[14px] font-normal text-[rgba(30,50,90,0.9)]" style="font-size: 14px; font-weight: 700; color: #182C41;">Dual-Modality Mental Health Triage</span>
-                    </div>
-
-                    <!-- h1 Title (Darker #2c3440 Charcoal Slate for crisp contrast over silver clouds) -->
-                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-[80px] font-normal text-[#5E6470] mb-2 tracking-tight leading-[1.05] rivr-h1" style="font-size: clamp(2.4rem, 6vw, 4.6rem); font-weight: 700; color: #2c3440; margin-bottom: 16px; letter-spacing: -1.5px; line-height: 1.08; font-family: var(--font-heading); text-shadow: 0 1px 3px rgba(255,255,255,0.85);">
-                        Multimodal Mental Clarity
-                    </h1>
-
-                    <!-- p Subtitle (Darker #2c3440 Charcoal Slate for crisp contrast over silver clouds) -->
-                    <p class="text-sm sm:text-base md:text-lg text-[#5E6470] opacity-80 leading-relaxed max-w-xl font-normal rivr-p" style="font-size: clamp(0.98rem, 1.6vw, 1.2rem); color: #2c3440; opacity: 1; line-height: 1.6; max-width: 660px; font-weight: 600; margin: 0 auto; text-shadow: 0 1px 3px rgba(255,255,255,0.85);">
-                        Synthesize voice acoustic tension (195 librosa biomarkers) and written reflections into real-time explainable AI triage and Socratic CBT.
-                    </p>
-
-                    <!-- CENTER SCREEN DASHBOARD BUTTON (True iPhone iOS Glassmorphism Island) -->
-                    <button onclick="switchScreen('dashboard')" class="center-dashboard-btn" style="margin-top: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); color: #182C41; font-family: var(--font-heading); font-size: clamp(1.05rem, 2vw, 1.22rem); font-weight: 700; padding: 16px 40px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14), inset 0 1px 1.5px rgba(255, 255, 255, 0.85); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); letter-spacing: -0.3px;" onmouseover="this.style.background='rgba(255, 255, 255, 0.32)'; this.style.transform='scale(1.05) translateY(-2px)'; this.style.boxShadow='0 20px 48px rgba(0, 0, 0, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.95)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.16)'; this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 14px 36px rgba(0, 0, 0, 0.14), inset 0 1px 1.5px rgba(255, 255, 255, 0.85)';">
-                        <span style="font-size: 1.35rem;">🚀</span>
-                        <span>Explore AI Workspace</span>
-                        <span style="background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.65); width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; margin-left: 6px; color: #182C41; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">➔</span>
+            <!-- Desktop Nav (Hidden on Mobile) -->
+            <nav class="hidden md:flex items-center gap-6 lg:gap-8">
+                <!-- Dropdown 1: Product -->
+                <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
+                    <button class="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2 focus:outline-none">
+                        <span>Product</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
+                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[180px] shadow-xl animate-dropdown z-50">
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Dual-Modality Screening</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">LIME Text Explainability</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">SHAP Audio Attribution</a>
+                    </div>
                 </div>
 
-                <!-- Bottom See-Through iOS Glass & Cutout Islands -->
-                <div style="width: 100%; position: relative; height: 160px; pointer-events: none;">
-                    <!-- BottomLeftCard Component (True iPhone iOS Glass Island) -->
-                    <div class="absolute bottom-28 right-4 left-auto md:left-6 md:right-auto md:bottom-6 lg:bottom-10 lg:left-10 p-3 md:p-4 lg:p-5 rounded-[1.2rem] md:rounded-[1.5rem] lg:rounded-[2.2rem] bg-white/30 backdrop-blur-xl flex flex-col gap-2 lg:gap-3 min-w-[140px] md:min-w-[150px] lg:min-w-[180px] w-fit rivr-bottom-left" style="position: absolute; bottom: clamp(16px, 4vw, 40px); left: clamp(16px, 4vw, 40px); padding: 18px 26px; border-radius: clamp(1.2rem, 2vw, 2.2rem); background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); border: 1px solid rgba(255, 255, 255, 0.45); display: flex; flex-direction: column; gap: 6px; min-width: 170px; box-shadow: 0 10px 30px rgba(0,0,0,0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.85); pointer-events: auto;">
-                        <span class="text-2xl md:text-3xl font-normal text-[rgba(30,50,90,0.9)] tracking-tight" style="font-size: clamp(1.8rem, 3.2vw, 2.2rem); font-weight: 700; color: #182C41; line-height: 1;">100%</span>
-                        <span class="text-[10px] md:text-[12px] font-normal text-[rgba(30,50,90,0.6)] uppercase tracking-wider" style="font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.6px;">Ensemble Accuracy</span>
+                <!-- Dropdown 2: Solutions -->
+                <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
+                    <button class="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2 focus:outline-none">
+                        <span>Solutions</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[180px] shadow-xl animate-dropdown z-50">
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Student Check-in Portal</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Clinical CBT Assistant</a>
+                        <a href="/docs" target="_blank" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">API Reference</a>
                     </div>
+                </div>
 
-                    <!-- BottomRightCorner Component (Restored EXACTLY as it was before with border curve & corner masks) -->
-                    <div class="absolute bottom-0 right-0 p-3 pt-5 pl-8 sm:p-4 sm:pt-6 sm:pl-10 md:p-6 md:pt-8 md:pl-14 bg-[#f0f0f0] rounded-tl-[1.5rem] sm:rounded-tl-[2rem] md:rounded-tl-[3.5rem] flex items-center gap-3 sm:gap-4 md:gap-6 rivr-bottom-right" style="position: absolute; bottom: 0; right: 0; padding: clamp(14px, 3vw, 24px) clamp(16px, 4vw, 36px) clamp(14px, 3vw, 24px) clamp(24px, 5vw, 48px); background-color: #f0f0f0; border-top-left-radius: clamp(1.5rem, 4vw, 3.5rem); display: flex; align-items: center; gap: clamp(12px, 3vw, 20px); pointer-events: auto; z-index: 20;">
-                        <!-- Top intersection mask -->
-                        <div class="absolute -top-[1.5rem] sm:-top-[2rem] md:-top-[3.5rem] right-0 w-[1.5rem] sm:w-[2rem] md:w-[3.5rem] h-[1.5rem] sm:h-[2rem] md:h-[3.5rem] pointer-events-none rivr-mask-top" style="position: absolute; top: calc(clamp(1.5rem, 4vw, 3.5rem) * -1); right: 0; width: clamp(1.5rem, 4vw, 3.5rem); height: clamp(1.5rem, 4vw, 3.5rem); pointer-events: none;">
-                            <svg width="100%" height="100%" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M56 56V0C56 30.9279 30.9279 56 0 56H56Z" fill="#f0f0f0"/></svg>
-                        </div>
-                        <!-- Left intersection mask -->
-                        <div class="absolute bottom-0 -left-[1.5rem] sm:-left-[2rem] md:-left-[3.5rem] w-[1.5rem] sm:w-[2rem] md:w-[3.5rem] h-[1.5rem] sm:h-[2rem] md:h-[3.5rem] pointer-events-none rivr-mask-left" style="position: absolute; bottom: 0; left: calc(clamp(1.5rem, 4vw, 3.5rem) * -1); width: clamp(1.5rem, 4vw, 3.5rem); height: clamp(1.5rem, 4vw, 3.5rem); pointer-events: none;">
-                            <svg width="100%" height="100%" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M56 56H0C30.9279 56 56 30.9279 56 0V56Z" fill="#f0f0f0"/></svg>
-                        </div>
-
-                        <!-- Circle Icon -->
-                        <div class="bg-[rgba(30,50,90,0.05)] w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-[rgba(30,50,90,0.1)] text-[rgba(30,50,90,0.8)]" style="background: rgba(30,50,90,0.08); width: clamp(38px, 6vw, 52px); height: clamp(38px, 6vw, 52px); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(30,50,90,0.15); font-size: clamp(1rem, 2vw, 1.4rem); color: rgba(30,50,90,0.8);">
-                            🧠
-                        </div>
-
-                        <!-- Info column -->
-                        <div style="display: flex; flex-direction: column;">
-                            <span class="text-[16px] md:text-[20px] font-normal text-[rgba(30,50,90,0.95)]" style="font-size: clamp(15px, 2.5vw, 19px); font-weight: 700; color: rgba(30,50,90,0.95);">Explainable XAI</span>
-                            <span class="text-[12px] md:text-[15px] font-normal" style="font-size: clamp(12px, 1.8vw, 14px); font-weight: 600; color: rgba(30,50,90,0.7); margin-top: 2px;">Real-time LIME & SHAP Attribution</span>
-                        </div>
+                <!-- Dropdown 3: About -->
+                <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
+                    <button class="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2 focus:outline-none">
+                        <span>About</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[180px] shadow-xl animate-dropdown z-50">
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Our Research & Mission</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Clinical Validation</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Reach Us</a>
                     </div>
+                </div>
+
+                <!-- No Dropdown: Check-In / Dashboard -->
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium py-2 cursor-pointer">Check-in</a>
+            </nav>
+
+            <!-- Desktop CTA -->
+            <div class="hidden md:flex items-center gap-4">
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium cursor-pointer">Log in</a>
+                <button onclick="switchScreen('dashboard')" class="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium hover:bg-white/15 transition-all cursor-pointer border border-white/20 shadow-sm">
+                    Try it free
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button onclick="toggleMobileHeroMenu()" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 focus:outline-none transition-all duration-300 relative z-30" aria-label="Toggle Menu">
+                <svg id="heroMenuIconOpen" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg id="heroMenuIconClose" class="w-6 h-6 hidden transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </header>
+
+        <!-- Mobile Menu (Sliding dropdown panel) -->
+        <div id="heroMobileMenu" class="hidden md:hidden absolute top-16 left-4 right-4 bg-[#2C221C]/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/15 z-50 transition-all duration-400" style="transition-timing-function: cubic-bezier(0.16,1,0.3,1);">
+            <div class="flex flex-col gap-4 text-left">
+                <div>
+                    <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">Product</span>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">Dual-Modality Screening</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">LIME Text Explainability</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">SHAP Audio Attribution</a>
+                </div>
+                <div class="border-t border-white/10 pt-3">
+                    <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">Solutions</span>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">Student Check-in Portal</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">Clinical CBT Assistant</a>
+                </div>
+                <div class="border-t border-white/10 pt-3 flex flex-col gap-2">
+                    <a onclick="switchScreen('dashboard')" class="w-full text-center py-2 text-white/90 hover:text-white text-sm font-medium">Log in</a>
+                    <button onclick="switchScreen('dashboard')" class="w-full liquid-glass rounded-full py-2.5 text-white text-sm font-medium border border-white/20">
+                        Try it free
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Content (top-aligned below nav, not vertically centered) -->
+        <div class="flex-1 flex items-start justify-center relative z-10 pt-16 sm:pt-20 md:pt-24 px-4 w-full">
+            <div class="text-center max-w-3xl mx-auto flex flex-col items-center">
+                <!-- Heading h1 exact to prompt with custom span styling -->
+                <h1 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-[-0.02em] font-normal">
+                    Bridge the<br class="hidden sm:inline">
+                    gaps. <span class="text-white/60">Ditch the</span><br class="hidden sm:inline">
+                    <span class="text-white/60">guesswork.</span>
+                </h1>
+
+                <!-- Subheading p exact to prompt -->
+                <p class="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mt-6 sm:mt-8 font-normal">
+                    NeuroSense AI unifies speech acoustics and linguistic analysis, so student counselors spend less energy plugging gaps and more on real clinical progress.
+                </p>
+
+                <!-- Single CTA Button exact to user request: "and a single button to dashboard just like before" -->
+                <div class="flex items-center justify-center mt-8 sm:mt-10">
+                    <button onclick="switchScreen('dashboard')" class="px-8 py-3.5 sm:py-4 liquid-glass rounded-full text-white text-base sm:text-lg font-semibold hover:bg-white/15 shadow-2xl transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-3 border border-white/30 cursor-pointer group">
+                        <span>Launch Check-in Dashboard</span>
+                        <svg class="w-5 h-5 text-white/80 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ==================== SCREEN 2: MAIN PROJECT DASHBOARD ==================== -->
-    <!-- Fullscreen Unblurred Background Video for Main Dashboard (Exact Home Screen Background, 100% unblurred) -->
+    <!-- Fullscreen Unblurred Background Video for Main Dashboard (Exact prompt video URL, 100% unblurred) -->
     <div id="dashboardBgVideoContainer" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none;">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: none !important; opacity: 1 !important;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260428_193507_4286c423-2fd9-4efd-92bd-91a939453fc1.mp4"></video>
+        <video autoplay muted loop playsinline class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: none !important; opacity: 1 !important;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4"></video>
         <div class="dashboard-video-tint" style="display: none !important; background: transparent !important;"></div>
     </div>
 
@@ -962,5 +1052,22 @@
     <script src="/static/js/charts.js?v=20260709_glass130"></script>
     <script src="/static/js/audio_recorder.js?v=20260709_glass130"></script>
     <script src="/static/js/main.js?v=20260709_glass130"></script>
+    <script>
+        function toggleMobileHeroMenu() {
+            const menu = document.getElementById('heroMobileMenu');
+            const iconOpen = document.getElementById('heroMenuIconOpen');
+            const iconClose = document.getElementById('heroMenuIconClose');
+            if (!menu) return;
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                if (iconOpen) iconOpen.classList.add('hidden');
+                if (iconClose) iconClose.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+                if (iconOpen) iconOpen.classList.remove('hidden');
+                if (iconClose) iconClose.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
