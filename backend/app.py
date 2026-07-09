@@ -21,14 +21,6 @@ from backend.schemas import (
     CBTChatRequest, CBTChatResponse, MetricsResponse,
     TextXAIOutput, AudioXAIOutput, CBTInterventionOutput
 )
-from src.models.text_classifier import LinguisticStressClassifier
-from src.models.audio_classifier import AudioEnsemblePipeline
-from src.models.fusion_engine import LateDecisionFusion
-from src.xai.text_explainer import TextExplainerLIME
-from src.xai.audio_explainer import AudioExplainerSHAP
-from src.speech.transcriber import SpeechTranscriber
-from src.data_prep.audio_processor import extract_195_features_from_audio
-from src.assistant.cbt_chatbot import CBTEmpathyAssistant
 
 app = FastAPI(
     title="NeuroSense AI — Dual-Modality Mental Health System API",
@@ -58,8 +50,16 @@ def ensure_pipelines_loaded():
     global text_clf, audio_clf, fusion_engine, text_explainer, audio_explainer, transcriber, cbt_assistant
     if text_clf is not None and audio_clf is not None:
         return
-    print("[API Startup] Initializing NeuroSense AI Dual-Modality pipelines...")
+    print("[API Startup] Lazily importing and initializing NeuroSense AI Dual-Modality pipelines...")
     try:
+        from src.models.text_classifier import LinguisticStressClassifier
+        from src.models.audio_classifier import AudioEnsemblePipeline
+        from src.models.fusion_engine import LateDecisionFusion
+        from src.xai.text_explainer import TextExplainerLIME
+        from src.xai.audio_explainer import AudioExplainerSHAP
+        from src.speech.transcriber import SpeechTranscriber
+        from src.assistant.cbt_chatbot import CBTEmpathyAssistant
+
         if text_clf is None:
             text_clf = LinguisticStressClassifier()
             text_clf.load_model()
@@ -91,18 +91,30 @@ def load_pipelines():
 
 # Serve static frontend files
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+if not os.path.exists(FRONTEND_DIR):
+    for alt in [Path("/var/task/frontend"), Path("frontend"), Path(__file__).resolve().parent / "frontend"]:
+        if alt.exists():
+            FRONTEND_DIR = alt
+            break
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
 @app.get("/")
 def read_root():
     index_file = FRONTEND_DIR / "index.html"
+    if not index_file.exists():
+        for alt in [Path("/var/task/frontend/index.html"), Path("frontend/index.html"), Path(__file__).resolve().parent.parent / "frontend" / "index.html"]:
+            if alt.exists():
+                index_file = alt
+                break
     if index_file.exists():
         return FileResponse(index_file)
     return {"status": "NeuroSense AI API running smoothly. Visit /docs for OpenAPI specifications."}
 
 @app.post("/api/analyze/text", response_model=TextAnalyzeResponse)
 def analyze_text(req: TextAnalyzeRequest):
+    if not text_clf or not text_clf.is_fitted:
+        ensure_pipelines_loaded()
     if not text_clf or not text_clf.is_fitted:
         raise HTTPException(status_code=500, detail="Text classifier model not loaded.")
         
@@ -139,6 +151,8 @@ def analyze_text(req: TextAnalyzeRequest):
 
 @app.post("/api/analyze/multimodal", response_model=MultimodalAnalyzeResponse)
 def analyze_multimodal(req: MultimodalAnalyzeRequest):
+    if not fusion_engine:
+        ensure_pipelines_loaded()
     if not fusion_engine:
         raise HTTPException(status_code=500, detail="Multimodal fusion engine not initialized.")
         
@@ -196,6 +210,7 @@ async def analyze_audio_file(
     transcribes via OpenAI Whisper, extracts 195 acoustic features via librosa,
     and returns full dual-modality fusion and XAI evaluation!
     """
+    ensure_pipelines_loaded()
     temp_dir = tempfile.gettempdir()
     temp_path = os.path.join(temp_dir, f"neurosense_{time.time()}_{file.filename}")
     
@@ -282,6 +297,8 @@ async def analyze_audio_file(
 
 @app.post("/api/chat/cbt", response_model=CBTChatResponse)
 def chat_cbt(req: CBTChatRequest):
+    if not cbt_assistant:
+        ensure_pipelines_loaded()
     if not cbt_assistant:
         raise HTTPException(status_code=500, detail="CBT assistant not initialized.")
     reply = cbt_assistant.chat_reply(req.message, current_stress_category=req.current_stress_category)

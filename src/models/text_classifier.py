@@ -144,6 +144,11 @@ class LinguisticStressClassifier:
 
     def load_model(self, path=TEXT_MODEL_PATH):
         if not os.path.exists(path):
+            for alt in [Path("/var/task/models_bin/text_classifier_pipeline.pkl"), Path("models_bin/text_classifier_pipeline.pkl"), Path(__file__).resolve().parent.parent.parent / "models_bin" / "text_classifier_pipeline.pkl"]:
+                if alt.exists():
+                    path = alt
+                    break
+        if not os.path.exists(path):
             raise FileNotFoundError(f"Trained text model not found at {path}. Run train_and_evaluate first.")
         with open(path, "rb") as f:
             checkpoint = pickle.load(f)
