@@ -3,10 +3,17 @@
   "builds": [
     {
       "src": "backend/app.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": "models_bin/**,frontend/**,data/**,src/**"
+      }
     }
   ],
   "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "backend/app.py"
+    },
     {
       "src": "/(.*)",
       "dest": "backend/app.py"

@@ -4,9 +4,11 @@ from pathlib import Path
 # Base Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
-MODELS_DIR = BASE_DIR / "models_bin"
-os.makedirs(DATA_DIR, exist_ok=True)
-os.makedirs(MODELS_DIR, exist_ok=True)
+try:
+    os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(MODELS_DIR, exist_ok=True)
+except (OSError, PermissionError):
+    pass  # Serverless read-only filesystem safe fallback (Vercel / AWS Lambda)
 
 # Dataset Paths
 TEXT_DATASET_PATH = DATA_DIR / "student_stress_dataset.csv"

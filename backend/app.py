@@ -54,28 +54,40 @@ audio_explainer = None
 transcriber = None
 cbt_assistant = None
 
-@app.on_event("startup")
-def load_pipelines():
+def ensure_pipelines_loaded():
     global text_clf, audio_clf, fusion_engine, text_explainer, audio_explainer, transcriber, cbt_assistant
+    if text_clf is not None and audio_clf is not None:
+        return
     print("[API Startup] Initializing NeuroSense AI Dual-Modality pipelines...")
     try:
-        text_clf = LinguisticStressClassifier()
-        text_clf.load_model()
+        if text_clf is None:
+            text_clf = LinguisticStressClassifier()
+            text_clf.load_model()
     except Exception as e:
         print(f"[API Startup] Could not load text classifier: {e}")
         
     try:
-        audio_clf = AudioEnsemblePipeline()
-        audio_clf.load_model()
+        if audio_clf is None:
+            audio_clf = AudioEnsemblePipeline()
+            audio_clf.load_model()
     except Exception as e:
         print(f"[API Startup] Could not load audio classifier: {e}")
         
-    fusion_engine = LateDecisionFusion(text_pipeline=text_clf, audio_pipeline=audio_clf)
-    text_explainer = TextExplainerLIME(text_classifier=text_clf)
-    audio_explainer = AudioExplainerSHAP(audio_classifier=audio_clf)
-    transcriber = SpeechTranscriber()
-    cbt_assistant = CBTEmpathyAssistant()
+    if fusion_engine is None:
+        fusion_engine = LateDecisionFusion(text_pipeline=text_clf, audio_pipeline=audio_clf)
+    if text_explainer is None:
+        text_explainer = TextExplainerLIME(text_classifier=text_clf)
+    if audio_explainer is None:
+        audio_explainer = AudioExplainerSHAP(audio_classifier=audio_clf)
+    if transcriber is None:
+        transcriber = SpeechTranscriber()
+    if cbt_assistant is None:
+        cbt_assistant = CBTEmpathyAssistant()
     print("[API Startup] All pipelines initialized successfully!")
+
+@app.on_event("startup")
+def load_pipelines():
+    ensure_pipelines_loaded()
 
 # Serve static frontend files
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
