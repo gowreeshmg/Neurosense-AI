@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroSense AI — Dual-Modality Mental Health Detection & Explainable CBT System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/styles.css?v=20260709_glass130">
+    <style id="ios-dashboard-glass">
+        /* EXACT iPHONE iOS GLASSMORPHISM & TRANSPARENT BODY OVERRIDE FOR DASHBOARD */
+        #lumoraHomeScreen.hidden-screen,
+        #lumoraHomeScreen[style*="display: none"],
+        #lumoraHomeScreen[style*="display:none"] {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        body.on-dashboard {
+            background-color: transparent !important;
+            background: transparent !important;
+        }
+        #dashboardBgVideoContainer {
+            z-index: 0 !important;
+            opacity: 1 !important;
+            pointer-events: none !important;
+        }
+        #appDashboardScreen {
+            position: relative !important;
+            z-index: 2 !important;
+            background: transparent !important;
+        }
+        /* =========================================================================
+           1. UNIVERSAL iPHONE iOS LIQUID GLASS ISLAND HIERARCHY (OUTER vs INNER)
+           ========================================================================= */
+        /* Make Dashboard Video Background 100% Unblurred Exact Like Home Screen */
+        #dashboardBgVideoContainer video {
+            filter: none !important;
+            opacity: 1 !important;
+            object-fit: cover !important;
+            object-position: center !important;
+        }
+        #dashboardBgVideoContainer .dashboard-video-tint {
+            background: transparent !important;
+            display: none !important;
+        }
+
+        /* Fix Brain Emoji Visibility on Windows/Edge/Chrome */
+        body.on-dashboard .brand-icon,
+        .brand-icon {
+            background: none !important;
+            -webkit-background-clip: border-box !important;
+            -webkit-text-fill-color: initial !important;
+            color: initial !important;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)) !important;
+            font-size: 2.2rem !important;
+            display: inline-block !important;
+            opacity: 1 !important;
+        }
+
+        /* Round Top Right Theme Toggle Glassmorphism Island */
+        #btnThemeToggle.round-glass-btn {
+            position: fixed !important;
+            top: 22px !important;
+            right: 26px !important;
+            z-index: 1000 !important;
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(28px) saturate(210%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.55) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.45rem !important;
+            cursor: pointer !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            padding: 0 !important;
+        }
+        #btnThemeToggle.round-glass-btn:hover {
+            transform: scale(1.1) rotate(15deg) !important;
+            background: rgba(255, 255, 255, 0.28) !important;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
+        }
+
+        /* =========================================================================
+           2. DARK MODE SLEEK GLASS ISLANDS & ELEGANT HIGH-CONTRAST TYPOGRAPHY
+           ========================================================================= */
+        /* Outer Islands: Sleek translucent dark slate/obsidian glass so background is visible with rich contrast */
+        body.on-dashboard:not([data-theme="light"]) .glass-card,
+        body.on-dashboard:not([data-theme="light"]) .glass-card-accent,
+        body.on-dashboard:not([data-theme="light"]) .hero-banner,
+        body.on-dashboard:not([data-theme="light"]) .counselor-banner,
+        body.on-dashboard:not([data-theme="light"]) .counselor-card,
+        body.on-dashboard:not([data-theme="light"]) .footer,
+        body.on-dashboard:not([data-theme="light"]) .navbar-top-controls .glass-pill {
+            background: rgba(15, 23, 42, 0.48) !important;
+            backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.22) !important;
+        }
+
+        /* Inner Islands ("islands inside other islands should be darker so that its easily visible and would also looks good") */
+        body.on-dashboard:not([data-theme="light"]) .audio-visualizer-container,
+        body.on-dashboard:not([data-theme="light"]) textarea,
+        body.on-dashboard:not([data-theme="light"]) .lime-token-box,
+        body.on-dashboard:not([data-theme="light"]) .result-box,
+        body.on-dashboard:not([data-theme="light"]) .xai-text-box,
+        body.on-dashboard:not([data-theme="light"]) .xai-audio-box,
+        body.on-dashboard:not([data-theme="light"]) .gauge-box,
+        body.on-dashboard:not([data-theme="light"]) .role-selector,
+        body.on-dashboard:not([data-theme="light"]) .toggle-group,
+        body.on-dashboard:not([data-theme="light"]) .prompt-chip,
+        body.on-dashboard:not([data-theme="light"]) .btn-secondary,
+        body.on-dashboard:not([data-theme="light"]) .role-btn:not(.active),
+        body.on-dashboard:not([data-theme="light"]) .cbt-exercise-box,
+        body.on-dashboard:not([data-theme="light"]) .cbt-coping-box,
+        body.on-dashboard:not([data-theme="light"]) .cbt-chat-container,
+        body.on-dashboard:not([data-theme="light"]) .bot-msg,
+        body.on-dashboard:not([data-theme="light"]) .chat-input-bar input,
+        body.on-dashboard:not([data-theme="light"]) .stat-pill,
+        body.on-dashboard:not([data-theme="light"]) .progress-bar {
+            background: rgba(6, 11, 22, 0.68) !important;
+            backdrop-filter: blur(16px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+        }
+
+        /* Top Center Title in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) .top-center-title {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+        }
+
+        /* Crisp, elegant Headings in Dark Mode (pure white with clean drop shadow, no blurry neon) */
+        body.on-dashboard:not([data-theme="light"]) h2,
+        body.on-dashboard:not([data-theme="light"]) h3,
+        body.on-dashboard:not([data-theme="light"]) .cbt-exercise-box h4,
+        body.on-dashboard:not([data-theme="light"]) .cbt-coping-box h4,
+        body.on-dashboard:not([data-theme="light"]) .cbt-chat-container h4 {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85) !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        /* Refined, readable Body Text & Labels in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen h1:not(.top-center-title),
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen p,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen span:not(.badge):not(.status-indicator):not(.cbt-tag),
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen label,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen div,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen table,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen th,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen td,
+        body.on-dashboard:not([data-theme="light"]) .cbt-steps,
+        body.on-dashboard:not([data-theme="light"]) .chat-msg {
+            color: #E2E8F0 !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) .card-desc,
+        body.on-dashboard:not([data-theme="light"]) .hero-content p,
+        body.on-dashboard:not([data-theme="light"]) .toggle-label {
+            color: #CBD5E1 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) textarea#journalTextarea::placeholder {
+            color: rgba(203, 213, 225, 0.65) !important;
+            text-shadow: none !important;
+        }
+
+        /* Sleek Sapphire / Azure Ocean Gradient Buttons in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) .role-btn.active,
+        body.on-dashboard:not([data-theme="light"]) .btn-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+            font-weight: 700 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.on-dashboard:not([data-theme="light"]) #btnRoleCounselor.active {
+            background: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%) !important;
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4) !important;
+        }
+
+        /* Sleek Glass Badges & Status Indicators in Dark Mode (no jarring neon) */
+        body.on-dashboard:not([data-theme="light"]) .badge,
+        body.on-dashboard:not([data-theme="light"]) .status-indicator,
+        body.on-dashboard:not([data-theme="light"]) .cbt-tag {
+            background: rgba(56, 189, 248, 0.18) !important;
+            border: 1px solid rgba(56, 189, 248, 0.45) !important;
+            color: #38BDF8 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+            text-shadow: none !important;
+            font-weight: 700 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) .status-indicator.ready {
+            background: rgba(52, 211, 153, 0.18) !important;
+            border: 1px solid rgba(52, 211, 153, 0.45) !important;
+            color: #34D399 !important;
+        }
+
+        /* Progress Bar Fills */
+        body.on-dashboard:not([data-theme="light"]) .fill-text {
+            background: linear-gradient(90deg, #9333EA 0%, #EC4899 100%) !important;
+            box-shadow: 0 0 12px rgba(236, 72, 153, 0.5) !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+        body.on-dashboard:not([data-theme="light"]) .fill-audio {
+            background: linear-gradient(90deg, #0284C7 0%, #38BDF8 100%) !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5) !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        /* =========================================================================
+           3. LIGHT MODE REFINED GLASS ISLANDS & CRISP TYPOGRAPHY
+           ========================================================================= */
+        /* Outer Islands: Sleek translucent white glass */
+        body.on-dashboard[data-theme="light"] .glass-card,
+        body.on-dashboard[data-theme="light"] .glass-card-accent,
+        body.on-dashboard[data-theme="light"] .hero-banner,
+        body.on-dashboard[data-theme="light"] .counselor-banner,
+        body.on-dashboard[data-theme="light"] .counselor-card,
+        body.on-dashboard[data-theme="light"] .footer,
+        body.on-dashboard[data-theme="light"] .navbar-top-controls .glass-pill {
+            background: rgba(255, 255, 255, 0.62) !important;
+            backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Inner Islands: Clean recessed inner frosted glass */
+        body.on-dashboard[data-theme="light"] .audio-visualizer-container,
+        body.on-dashboard[data-theme="light"] textarea,
+        body.on-dashboard[data-theme="light"] .lime-token-box,
+        body.on-dashboard[data-theme="light"] .result-box,
+        body.on-dashboard[data-theme="light"] .xai-text-box,
+        body.on-dashboard[data-theme="light"] .xai-audio-box,
+        body.on-dashboard[data-theme="light"] .gauge-box,
+        body.on-dashboard[data-theme="light"] .role-selector,
+        body.on-dashboard[data-theme="light"] .toggle-group,
+        body.on-dashboard[data-theme="light"] .prompt-chip,
+        body.on-dashboard[data-theme="light"] .btn-secondary,
+        body.on-dashboard[data-theme="light"] .role-btn:not(.active),
+        body.on-dashboard[data-theme="light"] .cbt-exercise-box,
+        body.on-dashboard[data-theme="light"] .cbt-coping-box,
+        body.on-dashboard[data-theme="light"] .cbt-chat-container,
+        body.on-dashboard[data-theme="light"] .bot-msg,
+        body.on-dashboard[data-theme="light"] .chat-input-bar input,
+        body.on-dashboard[data-theme="light"] .stat-pill,
+        body.on-dashboard[data-theme="light"] .progress-bar {
+            background: rgba(241, 245, 249, 0.78) !important;
+            backdrop-filter: blur(16px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Top Center Title in Light Mode */
+        body.on-dashboard[data-theme="light"] .top-center-title {
+            color: #0F172A !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Premium Charcoal Slate Headings in Light Mode */
+        body.on-dashboard[data-theme="light"] h2,
+        body.on-dashboard[data-theme="light"] h3,
+        body.on-dashboard[data-theme="light"] .cbt-exercise-box h4,
+        body.on-dashboard[data-theme="light"] .cbt-coping-box h4,
+        body.on-dashboard[data-theme="light"] .cbt-chat-container h4 {
+            color: #0F172A !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        body.on-dashboard[data-theme="light"] #appDashboardScreen h1:not(.top-center-title),
+        body.on-dashboard[data-theme="light"] #appDashboardScreen p,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen span:not(.badge):not(.status-indicator):not(.cbt-tag),
+        body.on-dashboard[data-theme="light"] #appDashboardScreen label,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen div,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen table,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen th,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen td,
+        body.on-dashboard[data-theme="light"] .cbt-steps,
+        body.on-dashboard[data-theme="light"] .chat-msg {
+            color: #334155 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .card-desc,
+        body.on-dashboard[data-theme="light"] .hero-content p,
+        body.on-dashboard[data-theme="light"] .toggle-label {
+            color: #475569 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] textarea#journalTextarea::placeholder {
+            color: rgba(71, 85, 105, 0.65) !important;
+            text-shadow: none !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .role-btn.active,
+        body.on-dashboard[data-theme="light"] .btn-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+            font-weight: 700 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.on-dashboard[data-theme="light"] #btnRoleCounselor.active {
+            background: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%) !important;
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.35) !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .badge,
+        body.on-dashboard[data-theme="light"] .status-indicator,
+        body.on-dashboard[data-theme="light"] .cbt-tag {
+            background: rgba(2, 132, 199, 0.12) !important;
+            border: 1px solid rgba(2, 132, 199, 0.35) !important;
+            color: #0284C7 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+            text-shadow: none !important;
+            font-weight: 700 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .status-indicator.ready {
+            background: rgba(5, 150, 105, 0.12) !important;
+            border: 1px solid rgba(5, 150, 105, 0.35) !important;
+            color: #059669 !important;
+        }
+
+        /* Small Theme Toggle Button & Responsive Layout Overrides */
+        #btnThemeToggle.round-glass-btn {
+            position: fixed !important;
+            top: 16px !important;
+            right: 20px !important;
+            z-index: 1000 !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.14) !important;
+            backdrop-filter: blur(28px) saturate(210%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.55) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.15rem !important;
+            cursor: pointer !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            padding: 0 !important;
+        }
+
+        #btnThemeToggle.round-glass-btn:hover {
+            transform: scale(1.08) !important;
+            background: rgba(255, 255, 255, 0.22) !important;
+        }
+
+        @media (max-width: 900px) {
+            /* 1. Theme Toggle on Top Right Corner */
+            #btnThemeToggle.round-glass-btn {
+                position: fixed !important;
+                top: 10px !important;
+                right: 12px !important;
+                width: 34px !important;
+                height: 34px !important;
+                font-size: 1.05rem !important;
+                z-index: 1000 !important;
+            }
+
+            /* 2. Return to Home on Top Left Corner */
+            header.navbar-top-controls > div:first-child {
+                position: fixed !important;
+                top: 10px !important;
+                left: 12px !important;
+                width: auto !important;
+                min-width: 0 !important;
+                flex: none !important;
+                z-index: 1000 !important;
+                display: block !important;
+            }
+
+            header.navbar-top-controls > div:first-child button.glass-pill {
+                padding: 6px 14px !important;
+                font-size: 0.82rem !important;
+                height: 34px !important;
+                border-radius: 999px !important;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.28) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 6px !important;
+                margin: 0 !important;
+            }
+
+            /* 3. Top Center Header: Big NeuroSense AI Text & Title */
+            header.navbar-top-controls {
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                margin: 0 auto 18px auto !important;
+                padding: 46px 0 0 0 !important; /* Space so it sits centered right below top corner buttons */
+                width: 100% !important;
+            }
+
+            header.navbar-top-controls > div:nth-child(2) {
+                width: 100% !important;
+                min-width: 100% !important;
+                flex: none !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            header.navbar-top-controls .nav-brand.top-center-brand {
+                width: 100% !important;
+                padding: 0 !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 4px !important;
+                text-align: center !important;
+            }
+
+            header.navbar-top-controls .nav-brand .brand-icon {
+                font-size: 2.6rem !important;
+                display: inline-block !important;
+            }
+
+            header.navbar-top-controls .nav-brand .brand-text h1,
+            header.navbar-top-controls .nav-brand .brand-text h1.top-center-title {
+                font-size: 2.2rem !important;
+                font-weight: 800 !important;
+                letter-spacing: -0.6px !important;
+                line-height: 1.1 !important;
+                margin: 0 !important;
+                display: block !important;
+                text-align: center !important;
+                color: #182C41 !important;
+                text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;
+            }
+
+            body.on-dashboard:not([data-theme="light"]) header.navbar-top-controls .nav-brand .brand-text h1,
+            body.on-dashboard:not([data-theme="light"]) header.navbar-top-controls .nav-brand .brand-text h1.top-center-title {
+                color: #FFFFFF !important;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+            }
+
+            header.navbar-top-controls .nav-brand .badge-ai {
+                margin: 6px auto 0 auto !important;
+                font-size: 0.72rem !important;
+                padding: 4px 12px !important;
+                display: inline-block !important;
+            }
+
+            /* 4. Role selector on mobile right underneath center title */
+            header.navbar-top-controls > div:nth-child(3) {
+                width: 100% !important;
+                min-width: 100% !important;
+                flex: none !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            header.navbar-top-controls .role-selector {
+                width: 90% !important;
+                max-width: 360px !important;
+                display: flex !important;
+                justify-content: space-between !important;
+            }
+
+            header.navbar-top-controls .role-selector .role-btn {
+                flex: 1 !important;
+                padding: 8px 10px !important;
+                font-size: 0.85rem !important;
+                justify-content: center !important;
+            }
+
+            /* 5. Voice and Narrative cards NEXT TO EACH OTHER on phone screens (2 columns) */
+            .input-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 10px !important;
+            }
+
+            .input-grid .glass-card {
+                padding: 12px 10px !important;
+                border-radius: 18px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+
+            .input-grid .card-header h3 {
+                font-size: 0.92rem !important;
+                line-height: 1.25 !important;
+            }
+
+            .input-grid .card-desc {
+                font-size: 0.74rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 8px !important;
+            }
+
+            .audio-actions .btn,
+            .quick-access .prompt-chip,
+            .journal-footer .btn {
+                font-size: 0.74rem !important;
+                padding: 6px 4px !important;
+                min-height: 38px !important;
+                line-height: 1.2 !important;
+                white-space: normal !important;
+                text-align: center !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin-bottom: 6px !important;
+                border-radius: 10px !important;
+            }
+
+            .audio-visualizer-container {
+                min-height: 80px !important;
+                padding: 6px !important;
+                margin-bottom: 8px !important;
+            }
+
+            textarea#journalTextarea {
+                height: 115px !important;
+                font-size: 0.8rem !important;
+                padding: 8px !important;
+                margin-bottom: 8px !important;
+            }
+
+            #appDashboardScreen {
+                padding: 10px 12px !important;
+            }
+        }
+
+        /* Remove island / glass box around center NeuroSense AI brand on dashboard */
+        header.navbar-top-controls .nav-brand.top-center-brand {
+            background: transparent !important;
+            border: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+
+        header.navbar-top-controls .nav-brand.top-center-brand .top-center-title {
+            color: #182C41 !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;
+            font-weight: 800 !important;
+        }
+
+        /* Enforce complete invisibility of result island until a test completes */
+        #analysisResultsSection.hidden,
+        .results-section.hidden,
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Ambient Background Orbs (ONLY for Dashboard Screen) -->
+    <div class="app-background" style="display: none;">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <!-- ==================== SCREEN 1: RIVR-STYLE HOME SCREEN ==================== -->
+    <section id="lumoraHomeScreen" class="view-screen active w-full h-screen flex items-center justify-center p-3 md:p-5 bg-[#f0f0f0] rivr-hero-wrapper" style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 12px; background-color: #f0f0f0; z-index: 2; font-family: var(--font-helvetica);">
+        <div class="relative w-full max-w-[1536px] h-full rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-none flex flex-col items-center bg-white/10 group rivr-section" style="position: relative; width: 100%; max-width: 1536px; height: 100%; border-radius: clamp(1.5rem, 3vw, 3rem); overflow: hidden; display: flex; flex-direction: column; align-items: center; background: rgba(255, 255, 255, 0.1);">
+            <!-- The Video Background -->
+            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover object-[65%] lg:object-center z-0" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260428_193507_4286c423-2fd9-4efd-92bd-91a939453fc1.mp4"></video>
+
+            <!-- The Content Layer -->
+            <div class="relative z-10 w-full h-full flex flex-col items-center justify-between" style="position: relative; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <!-- Navbar Component (Cleaned: NO duplicate center buttons/links) -->
+                <nav class="w-full flex justify-between items-center px-6 md:px-12 pt-6 md:pt-8 relative z-10" style="padding: clamp(16px, 3vw, 32px) clamp(24px, 5vw, 48px); display: flex; justify-content: flex-start; align-items: center; width: 100%;">
+                    <!-- Left Brand Logo (True iPhone iOS Glass Pill) -->
+                    <div class="flex items-center gap-2 bg-white/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-sm rivr-brand-pill" style="display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); padding: 10px 22px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.45); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);">
+                        <span class="text-lg md:text-xl font-normal tracking-tight text-[rgba(30,50,90,0.95)]" style="font-size: 1.35rem; font-weight: 700; color: #182C41;">🧠 NeuroSense AI</span>
+                    </div>
+                </nav>
+
+                <!-- Text & Center Action Container (Moved upwards into clean sky area with darker, ultra-visible typography) -->
+                <div class="w-full flex flex-col items-center pt-8 px-6 text-center max-w-4xl" style="width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 920px; margin: clamp(30px, 6vh, 85px) auto auto auto; padding: clamp(20px, 4vw, 40px) 24px; background: transparent; border: none; box-shadow: none;">
+                    <!-- HeroBadge Component (True iPhone iOS Glass Pill) -->
+                    <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/20 mx-auto mb-3 w-fit rivr-badge" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); border: 1px solid rgba(255, 255, 255, 0.45); margin-bottom: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);">
+                        <span style="font-size: 1rem;">✨</span>
+                        <span class="text-[14px] font-normal text-[rgba(30,50,90,0.9)]" style="font-size: 14px; font-weight: 700; color: #182C41;">Dual-Modality Mental Health Triage</span>
+                    </div>
+
+                    <!-- h1 Title (Darker #2c3440 Charcoal Slate for crisp contrast over silver clouds) -->
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-[80px] font-normal text-[#5E6470] mb-2 tracking-tight leading-[1.05] rivr-h1" style="font-size: clamp(2.4rem, 6vw, 4.6rem); font-weight: 700; color: #2c3440; margin-bottom: 16px; letter-spacing: -1.5px; line-height: 1.08; font-family: var(--font-heading); text-shadow: 0 1px 3px rgba(255,255,255,0.85);">
+                        Multimodal Mental Clarity
+                    </h1>
+
+                    <!-- p Subtitle (Darker #2c3440 Charcoal Slate for crisp contrast over silver clouds) -->
+                    <p class="text-sm sm:text-base md:text-lg text-[#5E6470] opacity-80 leading-relaxed max-w-xl font-normal rivr-p" style="font-size: clamp(0.98rem, 1.6vw, 1.2rem); color: #2c3440; opacity: 1; line-height: 1.6; max-width: 660px; font-weight: 600; margin: 0 auto; text-shadow: 0 1px 3px rgba(255,255,255,0.85);">
+                        Synthesize voice acoustic tension (195 librosa biomarkers) and written reflections into real-time explainable AI triage and Socratic CBT.
+                    </p>
+
+                    <!-- CENTER SCREEN DASHBOARD BUTTON (True iPhone iOS Glassmorphism Island) -->
+                    <button onclick="switchScreen('dashboard')" class="center-dashboard-btn" style="margin-top: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); color: #182C41; font-family: var(--font-heading); font-size: clamp(1.05rem, 2vw, 1.22rem); font-weight: 700; padding: 16px 40px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14), inset 0 1px 1.5px rgba(255, 255, 255, 0.85); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); letter-spacing: -0.3px;" onmouseover="this.style.background='rgba(255, 255, 255, 0.32)'; this.style.transform='scale(1.05) translateY(-2px)'; this.style.boxShadow='0 20px 48px rgba(0, 0, 0, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.95)';" onmouseout="this.style.background='rgba(255, 255, 255, 0.16)'; this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 14px 36px rgba(0, 0, 0, 0.14), inset 0 1px 1.5px rgba(255, 255, 255, 0.85)';">
+                        <span style="font-size: 1.35rem;">🚀</span>
+                        <span>Explore AI Workspace</span>
+                        <span style="background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.65); width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; margin-left: 6px; color: #182C41; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">➔</span>
+                    </button>
+                </div>
+
+                <!-- Bottom See-Through iOS Glass & Cutout Islands -->
+                <div style="width: 100%; position: relative; height: 160px; pointer-events: none;">
+                    <!-- BottomLeftCard Component (True iPhone iOS Glass Island) -->
+                    <div class="absolute bottom-28 right-4 left-auto md:left-6 md:right-auto md:bottom-6 lg:bottom-10 lg:left-10 p-3 md:p-4 lg:p-5 rounded-[1.2rem] md:rounded-[1.5rem] lg:rounded-[2.2rem] bg-white/30 backdrop-blur-xl flex flex-col gap-2 lg:gap-3 min-w-[140px] md:min-w-[150px] lg:min-w-[180px] w-fit rivr-bottom-left" style="position: absolute; bottom: clamp(16px, 4vw, 40px); left: clamp(16px, 4vw, 40px); padding: 18px 26px; border-radius: clamp(1.2rem, 2vw, 2.2rem); background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(32px) saturate(210%) contrast(105%); -webkit-backdrop-filter: blur(32px) saturate(210%) contrast(105%); border: 1px solid rgba(255, 255, 255, 0.45); display: flex; flex-direction: column; gap: 6px; min-width: 170px; box-shadow: 0 10px 30px rgba(0,0,0,0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.85); pointer-events: auto;">
+                        <span class="text-2xl md:text-3xl font-normal text-[rgba(30,50,90,0.9)] tracking-tight" style="font-size: clamp(1.8rem, 3.2vw, 2.2rem); font-weight: 700; color: #182C41; line-height: 1;">100%</span>
+                        <span class="text-[10px] md:text-[12px] font-normal text-[rgba(30,50,90,0.6)] uppercase tracking-wider" style="font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.6px;">Ensemble Accuracy</span>
+                    </div>
+
+                    <!-- BottomRightCorner Component (Restored EXACTLY as it was before with border curve & corner masks) -->
+                    <div class="absolute bottom-0 right-0 p-3 pt-5 pl-8 sm:p-4 sm:pt-6 sm:pl-10 md:p-6 md:pt-8 md:pl-14 bg-[#f0f0f0] rounded-tl-[1.5rem] sm:rounded-tl-[2rem] md:rounded-tl-[3.5rem] flex items-center gap-3 sm:gap-4 md:gap-6 rivr-bottom-right" style="position: absolute; bottom: 0; right: 0; padding: clamp(14px, 3vw, 24px) clamp(16px, 4vw, 36px) clamp(14px, 3vw, 24px) clamp(24px, 5vw, 48px); background-color: #f0f0f0; border-top-left-radius: clamp(1.5rem, 4vw, 3.5rem); display: flex; align-items: center; gap: clamp(12px, 3vw, 20px); pointer-events: auto; z-index: 20;">
+                        <!-- Top intersection mask -->
+                        <div class="absolute -top-[1.5rem] sm:-top-[2rem] md:-top-[3.5rem] right-0 w-[1.5rem] sm:w-[2rem] md:w-[3.5rem] h-[1.5rem] sm:h-[2rem] md:h-[3.5rem] pointer-events-none rivr-mask-top" style="position: absolute; top: calc(clamp(1.5rem, 4vw, 3.5rem) * -1); right: 0; width: clamp(1.5rem, 4vw, 3.5rem); height: clamp(1.5rem, 4vw, 3.5rem); pointer-events: none;">
+                            <svg width="100%" height="100%" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M56 56V0C56 30.9279 30.9279 56 0 56H56Z" fill="#f0f0f0"/></svg>
+                        </div>
+                        <!-- Left intersection mask -->
+                        <div class="absolute bottom-0 -left-[1.5rem] sm:-left-[2rem] md:-left-[3.5rem] w-[1.5rem] sm:w-[2rem] md:w-[3.5rem] h-[1.5rem] sm:h-[2rem] md:h-[3.5rem] pointer-events-none rivr-mask-left" style="position: absolute; bottom: 0; left: calc(clamp(1.5rem, 4vw, 3.5rem) * -1); width: clamp(1.5rem, 4vw, 3.5rem); height: clamp(1.5rem, 4vw, 3.5rem); pointer-events: none;">
+                            <svg width="100%" height="100%" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M56 56H0C30.9279 56 56 30.9279 56 0V56Z" fill="#f0f0f0"/></svg>
+                        </div>
+
+                        <!-- Circle Icon -->
+                        <div class="bg-[rgba(30,50,90,0.05)] w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-[rgba(30,50,90,0.1)] text-[rgba(30,50,90,0.8)]" style="background: rgba(30,50,90,0.08); width: clamp(38px, 6vw, 52px); height: clamp(38px, 6vw, 52px); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(30,50,90,0.15); font-size: clamp(1rem, 2vw, 1.4rem); color: rgba(30,50,90,0.8);">
+                            🧠
+                        </div>
+
+                        <!-- Info column -->
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="text-[16px] md:text-[20px] font-normal text-[rgba(30,50,90,0.95)]" style="font-size: clamp(15px, 2.5vw, 19px); font-weight: 700; color: rgba(30,50,90,0.95);">Explainable XAI</span>
+                            <span class="text-[12px] md:text-[15px] font-normal" style="font-size: clamp(12px, 1.8vw, 14px); font-weight: 600; color: rgba(30,50,90,0.7); margin-top: 2px;">Real-time LIME & SHAP Attribution</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SCREEN 2: MAIN PROJECT DASHBOARD ==================== -->
+    <!-- Fullscreen Unblurred Background Video for Main Dashboard (Exact Home Screen Background, 100% unblurred) -->
+    <div id="dashboardBgVideoContainer" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none;">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: none !important; opacity: 1 !important;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260428_193507_4286c423-2fd9-4efd-92bd-91a939453fc1.mp4"></video>
+        <div class="dashboard-video-tint" style="display: none !important; background: transparent !important;"></div>
+    </div>
+
+    <!-- Top Right Round Glassmorphism Theme Toggle Island Button -->
+    <button id="btnThemeToggle" class="round-glass-btn" onclick="toggleTheme()" title="Switch Light/Dark Mode" style="position: fixed; top: 16px; right: 20px; z-index: 1000; width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid rgba(255, 255, 255, 0.55); display: inline-flex; align-items: center; justify-content: center; font-size: 1.15rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
+        <span id="themeIcon">🌙</span>
+    </button>
+
+    <section id="appDashboardScreen" class="view-screen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
+        <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center exact to home screen, Role Selector right. Local Edge Privacy removed) -->
+        <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 10px auto 26px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
+            <!-- Left: Return to Home Button Glass Pill -->
+            <div style="flex: 1; min-width: 180px; display: flex; justify-content: flex-start; align-items: center;">
+                <button onclick="switchScreen('home')" class="glass-pill" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(16px) saturate(190%); -webkit-backdrop-filter: blur(16px) saturate(190%); padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 0.92rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 1.5px rgba(255,255,255,0.85); transition: all 0.2s;">
+                    <span>⬅</span> Return to Home
+                </button>
+            </div>
+
+            <!-- Center: Brand Name & Title on TOP CENTER with color exact to home screen (#2c3440 / #182C41 / light/dark theme contrast) -->
+            <div style="flex: 2; min-width: 320px; display: flex; justify-content: center; align-items: center; text-align: center;">
+                <div class="nav-brand top-center-brand" style="display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important;">
+                    <div class="brand-icon" style="font-size: 2rem !important; background: none !important; -webkit-background-clip: border-box !important; -webkit-text-fill-color: initial !important; color: initial !important; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)) !important; display: inline-block !important;">🧠</div>
+                    <div class="brand-text">
+                        <h1 class="font-serif-italic top-center-title" style="font-size: 1.85rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #182C41 !important; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;">NeuroSense AI</h1>
+                    </div>
+                    <span class="badge badge-ai" style="margin-left: 4px;">Multimodal Check-in Dashboard</span>
+                </div>
+            </div>
+            
+            <!-- Right Controls: Role Switcher Glass Pill (Local Edge Privacy removed exact to user request) -->
+            <div style="flex: 1; min-width: 220px; display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
+                <div class="role-selector glass-pill" style="display: inline-flex; gap: 6px; background: rgba(255,255,255,0.06); padding: 5px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(16px) saturate(190%); -webkit-backdrop-filter: blur(16px) saturate(190%); box-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 1.5px rgba(255,255,255,0.85);">
+                    <button id="btnRoleStudent" class="role-btn active" onclick="switchRole('student')" style="border-radius: 999px; padding: 8px 20px; font-weight: 700;">
+                        <span>🎓</span> Student Check-In
+                    </button>
+                    <button id="btnRoleCounselor" class="role-btn" onclick="switchRole('counselor')" style="border-radius: 999px; padding: 8px 20px; font-weight: 700;">
+                        <span>🩺</span> Clinical Dashboard
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Container -->
+        <main class="dashboard-container" style="padding: 0;">
+            <!-- STUDENT PORTAL VIEW -->
+            <section id="studentPortal" class="role-view active">
+                <!-- Multimodal Input Workspace -->
+            <div class="input-grid">
+                <!-- Left: Voice & Audio Recording Card -->
+                <div class="input-card glass-card">
+                    <div class="card-header">
+                        <h3>🎙️ Voice & Speech Acoustic Check-in</h3>
+                        <span class="status-indicator ready" id="micStatusText">Ready to record</span>
+                    </div>
+                    <p class="card-desc">Upload an audio file or load our 195-biomarker sample voice profile to test acoustic stress attribution.</p>
+                    
+                    <div class="audio-visualizer-container">
+                        <canvas id="waveformCanvas" width="400" height="100"></canvas>
+                        <div class="timer-display" id="recordingTimer">Ready to analyze</div>
+                    </div>
+
+                    <div class="audio-actions">
+                        <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioFileUpload(event)" style="display: none;">
+                        <button id="btnUploadAudio" class="btn btn-secondary" onclick="document.getElementById('audioFileInput').click()">
+                            <span>📁</span> Upload Audio File
+                        </button>
+                        <button id="btnSimulateAudio" class="btn btn-secondary" onclick="loadSampleVoiceProfile()">
+                            <span>🧪</span> Load Sample Stressed Voice
+                        </button>
+                        <button id="btnRunAudioAnalysis" class="btn btn-gradient btn-large" style="margin-top: 6px; width: 100%; font-weight: 700;" onclick="runSingleModalityAnalysis('audio')">
+                            <span>⚡</span> Run Voice Check-in Analysis
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Text & Narrative Journal Card -->
+                <div class="input-card glass-card">
+                    <div class="card-header">
+                        <h3>📝 Narrative Journal Entry</h3>
+                        <span class="word-counter" id="wordCountText">0 words</span>
+                    </div>
+                    <p class="card-desc">Type your thoughts or edit the automatic speech transcription generated by Whisper.</p>
+                    
+                    <textarea id="journalTextarea" placeholder="e.g., 'I have three university exams coming up next week and the assignment deadlines for coursework are making me feel overwhelmed completely...'" rows="6" oninput="updateWordCount()"></textarea>
+
+                    <div class="quick-prompts">
+                        <span>Quick Load:</span>
+                        <button class="prompt-chip" onclick="loadPrompt('academic')">📚 Academic Overload</button>
+                        <button class="prompt-chip" onclick="loadPrompt('personal')">💔 Personal / Family Stress</button>
+                        <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful & Calm</button>
+                    </div>
+
+                    <div class="analyze-footer">
+                        <button id="btnRunTextAnalysis" class="btn btn-gradient btn-large" onclick="runSingleModalityAnalysis('text')">
+                            <span>⚡</span> Run Narrative Text Check-in Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Results & CBT Assistant Section (Hidden until analyzed) -->
+            <div id="analysisResultsSection" class="results-section glass-card hidden" style="display: none !important;">
+                <div class="results-header">
+                    <h2>🧠 Multimodal Assessment & Explainability Breakdown</h2>
+                    <span id="resultModalityBadge" class="badge badge-dual">Single-Modality Active</span>
+                </div>
+
+                <div class="results-grid">
+                    <!-- Gauge & Overall Summary -->
+                    <div class="result-box gauge-box">
+                        <h4>Overall Mental Health Risk Score</h4>
+                        <div class="stress-gauge-wrapper">
+                            <div class="gauge-circle">
+                                <span class="gauge-number" id="stressScoreNumber">0%</span>
+                                <span class="gauge-tier" id="riskTierText">Minimal / Normal</span>
+                            </div>
+                        </div>
+                        <div class="primary-origin">
+                            <span>Detected Stress Category:</span>
+                            <strong id="stressCategoryText">Calm / Normal</strong>
+                        </div>
+                        <div class="fusion-weights-bar">
+                            <div class="weight-label">Late Decision Fusion Weights:</div>
+                            <div class="progress-bar">
+                                <div id="textWeightBar" class="progress-fill fill-text" style="width: 50%" title="Text Weight">Text (50%)</div>
+                                <div id="audioWeightBar" class="progress-fill fill-audio" style="width: 50%" title="Audio Weight">Speech (50%)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIME Token-Level Word Explainability -->
+                    <div id="limeBoxWrapper" class="result-box xai-text-box">
+                        <div class="xai-header">
+                            <h4>🔍 Linguistic XAI Word Attribution (LIME)</h4>
+                            <span class="xai-legend">
+                                <span class="legend-dot dot-red"></span> High Stress
+                                <span class="legend-dot dot-yellow"></span> Mild Stress
+                                <span class="legend-dot dot-green"></span> Calm
+                            </span>
+                        </div>
+                        <p class="xai-subtext">Hover or view words below to see their exact + / - contribution weight to the classification decision.</p>
+                        <div id="limeHighlightedText" class="lime-token-box">
+                            No text analyzed yet.
+                        </div>
+                    </div>
+
+                    <!-- SHAP Acoustic Feature Explainer -->
+                    <div id="shapBoxWrapper" class="result-box xai-audio-box">
+                        <h4>🎵 Speech Acoustic Feature Attribution (SHAP / RFE)</h4>
+                        <p class="xai-subtext" id="shapSummaryText">Top acoustic biomarkers driving vocal emotion prediction:</p>
+                        <div class="chart-container-small">
+                            <canvas id="shapChartCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End of analysisResultsSection -->
+
+            <!-- Always-Visible CBT Empathy Companion & Interactive Chatbot Island -->
+            <div id="cbtCompanionIsland" class="cbt-card glass-card-accent" style="margin-top: 28px; margin-bottom: 24px;">
+                <div class="cbt-header">
+                    <div class="cbt-title">
+                        <span class="cbt-icon">🌱</span>
+                        <div>
+                            <h3 id="cbtGreetingText">NeuroSense CBT Empathy Assistant</h3>
+                            <p id="cbtValidationText">Personalized psychological support generated based on your analysis.</p>
+                        </div>
+                    </div>
+                    <span class="cbt-tag">Cognitive Behavioral Therapy Engine</span>
+                </div>
+
+                <div class="cbt-body">
+                    <div class="cbt-exercise-box">
+                        <h4 id="cbtExerciseTitle">5-4-3-2-1 Sensory Grounding Technique</h4>
+                        <div id="cbtExerciseDetails" class="cbt-steps">
+                            Grounding steps will appear here upon running a check-in analysis.
+                        </div>
+                    </div>
+                    <div class="cbt-coping-box">
+                        <h4>💡 Actionable Cognitive Reframing Strategy</h4>
+                        <p id="cbtCopingText">Take one small actionable step at a time and practice gentle self-compassion.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Chatbot with the CBT Assistant -->
+                <div class="cbt-chat-container">
+                    <h4>💬 Chat directly with your CBT Companion</h4>
+                    <div id="cbtChatMessages" class="chat-messages-box">
+                        <div class="chat-msg bot-msg">
+                            <strong>NeuroSense Assistant:</strong> Hello! I am here to listen and help you reframe stressful thoughts. How can I support you right now?
+                        </div>
+                    </div>
+                    <div class="chat-input-bar">
+                        <input type="text" id="cbtChatInput" placeholder="Ask a question or practice reframing a thought..." onkeypress="handleChatKeyPress(event)">
+                        <button class="btn btn-primary" onclick="sendCBTChat()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Longitudinal Heatmap Island removed per user request -->
+            <div class="heatmap-section" style="display: none !important;"></div>
+        </section>
+
+        <!-- CLINICAL COUNSELOR DASHBOARD VIEW -->
+        <section id="counselorPortal" class="role-view hidden">
+            <div class="hero-banner counselor-banner glass-card">
+                <div class="hero-content">
+                    <h2>🩺 University Counselor & Clinical Triage Portal</h2>
+                    <p>Real-time population-level monitoring across student cohorts. Prioritize high-risk students using explainable acoustic and linguistic biomarkers to initiate timely psychological support.</p>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-pill alert-pill">
+                        <span class="stat-value">3</span>
+                        <span class="stat-label">High-Risk Alerts</span>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-value">1,500</span>
+                        <span class="stat-label">Student Records</span>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-value">0.05s</span>
+                        <span class="stat-label">Inference Speed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Row -->
+            <div class="analytics-row grid-2">
+                <div class="chart-card glass-card">
+                    <h3>📊 Campus-Wide Stress Category Distribution</h3>
+                    <canvas id="categoryDistributionChart"></canvas>
+                </div>
+                <div class="chart-card glass-card">
+                    <h3>📈 Semester Exam Week Stress Velocity</h3>
+                    <canvas id="longitudinalTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Student Triage Table -->
+            <div class="triage-table-card glass-card">
+                <div class="card-header">
+                    <h3>🚨 Student Risk Triage & Explainability Table</h3>
+                    <div class="table-actions">
+                        <input type="text" id="triageSearchInput" placeholder="Search student ID or department..." oninput="filterTriageTable()">
+                        <button class="btn btn-secondary btn-sm" onclick="exportClinicalReport()">📑 Export Clinical PDF/Summary</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="clinical-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Department / Year</th>
+                                <th>Modality Evaluated</th>
+                                <th>Stress Category</th>
+                                <th>Risk Score</th>
+                                <th>Primary Acoustic / Linguistic Biomarker (XAI)</th>
+                                <th>Triage Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="triageTableBody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer glass-card" style="display: none !important;">
+        <p>⚡ <strong>NeuroSense AI</strong> — Final Year B.Tech Research Project | Built with FastAPI, scikit-learn Rank-Based Ensemble, LIME, SHAP, and OpenAI Whisper.</p>
+    </footer>
+    </section>
+
+    <!-- Scripts -->
+    <script src="/static/js/charts.js?v=20260709_glass130"></script>
+    <script src="/static/js/audio_recorder.js?v=20260709_glass130"></script>
+    <script src="/static/js/main.js?v=20260709_glass130"></script>
+</body>
+</html>
