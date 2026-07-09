@@ -85,10 +85,6 @@ def ensure_pipelines_loaded():
         cbt_assistant = CBTEmpathyAssistant()
     print("[API Startup] All pipelines initialized successfully!")
 
-@app.on_event("startup")
-def load_pipelines():
-    ensure_pipelines_loaded()
-
 # Serve static frontend files
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 if not os.path.exists(FRONTEND_DIR):
