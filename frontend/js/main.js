@@ -255,6 +255,8 @@ function switchDashboardView(viewName) {
         if (activeBtn && slider) {
             slider.style.left = `${activeBtn.offsetLeft}px`;
             slider.style.width = `${activeBtn.offsetWidth}px`;
+            slider.style.top = `${activeBtn.offsetTop}px`;
+            slider.style.height = `${activeBtn.offsetHeight}px`;
         }
     }, 15);
     
@@ -329,6 +331,8 @@ function setupLiquidDockBehavior() {
         if (activeBtn && slider) {
             slider.style.left = `${activeBtn.offsetLeft}px`;
             slider.style.width = `${activeBtn.offsetWidth}px`;
+            slider.style.top = `${activeBtn.offsetTop}px`;
+            slider.style.height = `${activeBtn.offsetHeight}px`;
         }
     });
 }
