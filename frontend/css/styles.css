@@ -80,15 +80,12 @@
     --shadow-glass: 0 16px 40px rgba(0, 0, 0, 0.15), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);
 }
 
-/* ==================== EXACT RIVR HERO SECTION SPECIFICATION STYLES ==================== */
+/* ==================== EXACT FLOWPATH HERO SECTION SPECIFICATION STYLES ==================== */
 #lumoraHomeScreen.w-full.h-screen {
     width: 100% !important;
     height: 100vh !important;
-    display: flex;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 12px !important;
-    background-color: #f0f0f0 !important;
+    padding: 0 !important;
+    background: transparent !important;
     z-index: 2;
     font-family: var(--font-helvetica);
     overflow: hidden !important;
@@ -98,12 +95,6 @@
 #lumoraHomeScreen[style*="display:none"],
 #lumoraHomeScreen.hidden-screen {
     display: none !important;
-}
-
-@media (min-width: 768px) {
-    #lumoraHomeScreen.w-full.h-screen {
-        padding: 20px !important;
-    }
 }
 
 .rivr-section {

@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/styles.css?v=20260709_glass130">
     <style id="ios-dashboard-glass">
         @font-face {
@@ -641,16 +642,16 @@
         <div class="glow-orb orb-3"></div>
     </div>
 
-    <!-- ==================== SCREEN 1: FLOWPATH / NEUROSENSE AI FULLSCREEN HERO SCREEN ==================== -->
-    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2; font-family: 'Helvetica Now Text', -apple-system, sans-serif;">
+    <!-- ==================== SCREEN 1: FLOWPATH-STYLE FULLSCREEN HERO ==================== -->
+    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2;">
         <!-- Looping video background with object-cover -->
         <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4"></video>
-        <!-- Subtle dark overlay on top of video -->
+        <!-- Subtle dark overlay -->
         <div class="absolute inset-0 bg-black/10 z-0 pointer-events-none"></div>
 
-        <!-- Top Navigation (not fixed/sticky) -->
+        <!-- Navigation (top, not fixed/sticky) -->
         <header class="w-full relative z-20 px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5 flex items-center justify-between">
-            <!-- Logo: Inline SVG diamond shape (28x28) with two overlapping diamond paths at 0.9 and 0.5 opacity, plus text -->
+            <!-- Logo: Inline SVG diamond (28x28) + brand name -->
             <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchScreen('home')">
                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0">
                     <path d="M14 2L26 14L14 26L2 14L14 2Z" fill="white" fill-opacity="0.9"/>
@@ -659,7 +660,7 @@
                 <span class="text-white text-lg sm:text-xl font-medium tracking-tight">NeuroSense AI</span>
             </div>
 
-            <!-- Desktop Nav (Hidden on Mobile) -->
+            <!-- Desktop Nav (hidden on mobile) -->
             <nav class="hidden md:flex items-center gap-6 lg:gap-8">
                 <!-- Dropdown 1: Product -->
                 <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
@@ -667,10 +668,10 @@
                         <span>Product</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[180px] shadow-xl animate-dropdown z-50">
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Dual-Modality Screening</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">LIME Text Explainability</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">SHAP Audio Attribution</a>
+                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[160px] shadow-xl animate-dropdown z-50">
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Dual-Modality Screening</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">LIME Text Explainability</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">SHAP Audio Attribution</a>
                     </div>
                 </div>
 
@@ -680,10 +681,10 @@
                         <span>Solutions</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[180px] shadow-xl animate-dropdown z-50">
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Student Check-in Portal</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Clinical CBT Assistant</a>
-                        <a href="/docs" target="_blank" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">API Reference</a>
+                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[160px] shadow-xl animate-dropdown z-50">
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Student Check-in Portal</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Clinical CBT Assistant</a>
+                        <a href="/docs" target="_blank" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">API Reference</a>
                     </div>
                 </div>
 
@@ -693,75 +694,80 @@
                         <span>About</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[180px] shadow-xl animate-dropdown z-50">
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Our Research & Mission</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Clinical Validation</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/10 cursor-pointer">Reach Us</a>
+                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[160px] shadow-xl animate-dropdown z-50">
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Our Research &amp; Mission</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Clinical Validation</a>
+                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Reach Us</a>
                     </div>
                 </div>
 
-                <!-- No Dropdown: Check-In / Dashboard -->
-                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium py-2 cursor-pointer">Check-in</a>
+                <!-- No Dropdown: Plans -->
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium py-2 cursor-pointer">Plans</a>
             </nav>
 
             <!-- Desktop CTA -->
             <div class="hidden md:flex items-center gap-4">
                 <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium cursor-pointer">Log in</a>
-                <button onclick="switchScreen('dashboard')" class="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium hover:bg-white/15 transition-all cursor-pointer border border-white/20 shadow-sm">
+                <button onclick="switchScreen('dashboard')" class="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium hover:bg-white/15 transition-all cursor-pointer">
                     Try it free
                 </button>
             </div>
 
             <!-- Mobile Menu Toggle Button -->
             <button onclick="toggleMobileHeroMenu()" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 focus:outline-none transition-all duration-300 relative z-30" aria-label="Toggle Menu">
-                <svg id="heroMenuIconOpen" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                <svg id="heroMenuIconClose" class="w-6 h-6 hidden transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <svg id="heroMenuIconOpen" class="w-6 h-6 transition-all duration-300 origin-center" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg id="heroMenuIconClose" class="w-6 h-6 hidden transition-all duration-300 origin-center" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </header>
 
-        <!-- Mobile Menu (Sliding dropdown panel) -->
+        <!-- Mobile Menu (slides in with cubic-bezier easing) -->
         <div id="heroMobileMenu" class="hidden md:hidden absolute top-16 left-4 right-4 bg-[#2C221C]/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/15 z-50 transition-all duration-400" style="transition-timing-function: cubic-bezier(0.16,1,0.3,1);">
             <div class="flex flex-col gap-4 text-left">
                 <div>
                     <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">Product</span>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">Dual-Modality Screening</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">LIME Text Explainability</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">SHAP Audio Attribution</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Dual-Modality Screening</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">LIME Text Explainability</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">SHAP Audio Attribution</a>
                 </div>
                 <div class="border-t border-white/10 pt-3">
                     <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">Solutions</span>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">Student Check-in Portal</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm">Clinical CBT Assistant</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Student Check-in Portal</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Clinical CBT Assistant</a>
+                </div>
+                <div class="border-t border-white/10 pt-3">
+                    <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">About</span>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Our Research &amp; Mission</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Clinical Validation</a>
+                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Reach Us</a>
                 </div>
                 <div class="border-t border-white/10 pt-3 flex flex-col gap-2">
-                    <a onclick="switchScreen('dashboard')" class="w-full text-center py-2 text-white/90 hover:text-white text-sm font-medium">Log in</a>
-                    <button onclick="switchScreen('dashboard')" class="w-full liquid-glass rounded-full py-2.5 text-white text-sm font-medium border border-white/20">
+                    <a onclick="switchScreen('dashboard')" class="w-full text-center py-2 text-white/90 hover:text-white text-sm font-medium cursor-pointer">Log in</a>
+                    <button onclick="switchScreen('dashboard')" class="w-full liquid-glass rounded-full py-2.5 text-white text-sm font-medium border border-white/20 cursor-pointer">
                         Try it free
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Hero Content (top-aligned below nav, not vertically centered) -->
-        <div class="flex-1 flex items-start justify-center relative z-10 pt-16 sm:pt-20 md:pt-24 px-4 w-full">
-            <div class="text-center max-w-3xl mx-auto flex flex-col items-center">
-                <!-- Heading h1 exact to prompt with custom span styling -->
-                <h1 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-[-0.02em] font-normal">
-                    Bridge the<br class="hidden sm:inline">
-                    gaps. <span class="text-white/60">Ditch the</span><br class="hidden sm:inline">
-                    <span class="text-white/60">guesswork.</span>
+        <!-- Hero Content (vertically and horizontally centered) -->
+        <div class="flex-1 flex items-center justify-center relative z-10 px-4 sm:px-6 w-full -mt-10 sm:-mt-14">
+            <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center">
+                <!-- Heading h1 -->
+                <h1 class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] tracking-[-0.02em]">
+                    Detect early.<br class="hidden sm:inline">
+                    Explain clearly. <span class="text-white/60">Support with</span><br class="hidden sm:inline">
+                    <span class="text-white/60">clinical CBT.</span>
                 </h1>
 
-                <!-- Subheading p exact to prompt -->
-                <p class="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mt-6 sm:mt-8 font-normal">
-                    NeuroSense AI unifies speech acoustics and linguistic analysis, so student counselors spend less energy plugging gaps and more on real clinical progress.
+                <!-- Subheading p -->
+                <p class="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mt-6 sm:mt-8">
+                    NeuroSense AI unifies voice acoustics and written reflections into real-time explainable triage, so your team spends less energy on guesswork and more on genuine clinical progress.
                 </p>
 
-                <!-- Single CTA Button exact to user request: "and a single button to dashboard just like before" -->
-                <div class="flex items-center justify-center mt-8 sm:mt-10">
-                    <button onclick="switchScreen('dashboard')" class="px-8 py-3.5 sm:py-4 liquid-glass rounded-full text-white text-base sm:text-lg font-semibold hover:bg-white/15 shadow-2xl transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-3 border border-white/30 cursor-pointer group">
-                        <span>Launch Check-in Dashboard</span>
-                        <svg class="w-5 h-5 text-white/80 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                <!-- CTA button centered -->
+                <div class="flex items-center justify-center mt-6 sm:mt-8">
+                    <button onclick="switchScreen('dashboard')" class="px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-gray-900 text-sm sm:text-base font-semibold rounded-full hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer">
+                        Begin your check-in
                     </button>
                 </div>
             </div>
