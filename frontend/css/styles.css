@@ -1820,3 +1820,295 @@ textarea:focus {
     }
 }
 
+[data-theme="light"] .btn-secondary:hover,
+[data-theme="light"] #btnUploadAudio:hover,
+[data-theme="light"] #btnSimulateAudio:hover {
+    background: #ffffff !important;
+    border-color: var(--accent-cyan) !important;
+    color: #0284c7 !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15) !important;
+}
+
+[data-theme="light"] .btn-gradient,
+[data-theme="light"] #btnRunAudioAnalysis,
+[data-theme="light"] #btnRunTextAnalysis {
+    background: linear-gradient(135deg, #60a5fa 0%, #818cf8 50%, #c084fc 100%) !important;
+    color: #0f172a !important;
+    box-shadow: 0 6px 20px rgba(96, 165, 250, 0.35) !important;
+    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-theme="light"] .prompt-chip {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border: 1px solid rgba(203, 213, 225, 0.85) !important;
+    color: #334155 !important;
+}
+
+[data-theme="light"] .prompt-chip:hover {
+    background: #ffffff !important;
+    border-color: var(--accent-cyan) !important;
+    color: #0284c7 !important;
+}
+
+[data-theme="light"] .status-indicator.ready {
+    background: rgba(209, 250, 229, 0.9) !important;
+    color: #059669 !important;
+    border: 1px solid rgba(16, 185, 129, 0.5) !important;
+}
+
+[data-theme="light"] .word-counter {
+    background: rgba(255, 255, 255, 0.88) !important;
+    color: #475569 !important;
+    border: 1px solid rgba(203, 213, 225, 0.8) !important;
+}
+
+[data-theme="light"] .role-btn {
+    color: #475569;
+}
+
+[data-theme="light"] .role-btn.active {
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(203, 213, 225, 0.85) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+[data-theme="light"] .badge-ai {
+    background: rgba(255, 255, 255, 0.88) !important;
+    color: #0284c7 !important;
+    border: 1px solid rgba(2, 132, 199, 0.4) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+}
+
+[data-theme="light"] .clinical-table th {
+    background: rgba(255, 255, 255, 0.85);
+    color: #0f172a;
+    border-bottom: 2px solid rgba(203, 213, 225, 0.8);
+}
+
+[data-theme="light"] .clinical-table td {
+    border-bottom: 1px solid rgba(203, 213, 225, 0.6);
+    color: #1e293b;
+}
+
+[data-theme="light"] .chat-messages {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
+[data-theme="light"] .bot-msg {
+    background: rgba(255, 255, 255, 0.92);
+    color: #0f172a;
+    border: 1px solid rgba(203, 213, 225, 0.85);
+}
+
+[data-theme="light"] .calendar-cell {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="light"] .heat-calm { background: rgba(209, 250, 229, 0.85); color: #065f46; }
+[data-theme="light"] .heat-mild { background: rgba(224, 242, 254, 0.85); color: #0369a1; }
+[data-theme="light"] .heat-mod  { background: rgba(255, 237, 213, 0.85); color: #9a3412; }
+[data-theme="light"] .heat-sev  { background: rgba(255, 228, 230, 0.85); color: #9f1239; }
+
+/* ==========================================================================
+   Responsive Mobile & Tablet Layout Rules (Phones & Tablets)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .desktop-only {
+        display: none !important;
+    }
+    .mobile-only {
+        display: inline-flex !important;
+    }
+    #appDashboardScreen {
+        padding: 10px 14px !important;
+    }
+    .dashboard-container {
+        padding: 0 10px 30px 10px !important;
+    }
+    .results-grid, .grid-2, .grid-3, .counselor-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .input-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+    .navbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        margin: 6px auto 16px auto !important;
+        border-radius: 24px !important;
+        gap: 14px !important;
+    }
+    .navbar > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        gap: 12px !important;
+    }
+    .nav-controls {
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+    .role-selector {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        width: 100% !important;
+        padding: 4px !important;
+        gap: 4px !important;
+    }
+    .role-btn {
+        justify-content: center !important;
+        padding: 10px 8px !important;
+        font-size: 0.82rem !important;
+        width: 100% !important;
+    }
+    .toggle-group {
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+    .btn-theme-toggle {
+        justify-content: center !important;
+        width: 100% !important;
+    }
+    .glass-card, .glass-card-accent, .hero-banner, .counselor-banner {
+        padding: 18px 16px !important;
+        border-radius: 20px !important;
+    }
+    .audio-actions {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+    .audio-actions .btn, .audio-actions button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    .quick-prompts {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+    .prompt-chip {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 8px 12px !important;
+    }
+    .video-switcher {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+    .action-pill-box {
+        flex-direction: column !important;
+        padding: 12px !important;
+        text-align: center !important;
+    }
+    .action-pill-box button {
+        width: 100% !important;
+    }
+}
+
+/* ==========================================================================
+   Desktop Side-by-Side vs Mobile Single-Column Modality Split Layout
+   ========================================================================== */
+@media (min-width: 1024px) {
+    .modality-split-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 28px !important;
+        align-items: stretch !important;
+        width: 100% !important;
+    }
+    .modality-split-grid .input-card,
+    .modality-split-grid .results-section {
+        margin-bottom: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        gap: 16px !important;
+        height: 100% !important;
+        min-height: 540px !important;
+    }
+    .modality-split-grid .input-card .audio-actions {
+        margin-top: auto !important;
+    }
+    .modality-split-grid .input-card #journalTextarea {
+        flex: 1 1 auto !important;
+        min-height: 150px !important;
+    }
+    .modality-split-grid .results-section .results-grid {
+        flex: 1 1 auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        gap: 20px !important;
+    }
+    .desktop-extra-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 24px !important;
+        width: 100% !important;
+    }
+    .extra-info-card {
+        padding: 22px !important;
+        border-radius: 20px !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    .extra-info-card:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .modality-split-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 24px !important;
+        width: 100% !important;
+    }
+    .modality-split-grid .results-section.hidden {
+        display: none !important;
+    }
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+/* Liquid Glass Dock Pill Animation */
+.liquid-glass {
+    position: fixed;
+    z-index: 1000;
+}
+
+/* Ensure mobile sliding dock is completely visible and fits any phone screen */
+@media (max-width: 900px) {
+    #bottomGlassDock {
+        bottom: 16px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 20px) !important;
+        max-width: 450px !important;
+        padding: 6px !important;
+        gap: 2px !important;
+        justify-content: space-between !important;
+    }
+    #bottomGlassDock .dock-btn {
+        flex: 1 !important;
+        padding: 9px 6px !important;
+        font-size: 0.8rem !important;
+        letter-spacing: -0.2px !important;
+        gap: 4px !important;
+    }
+    #bottomGlassDock .dock-btn span:first-child {
+        font-size: 1.05rem !important;
+    }
+}

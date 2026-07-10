@@ -158,8 +158,181 @@ function switchScreen(screenName) {
         if (typeof currentAnalysisResult !== 'undefined' && currentAnalysisResult && currentAnalysisResult.audio_xai && currentAnalysisResult.audio_xai.top_acoustic_drivers) {
             renderSHAPChart(currentAnalysisResult.audio_xai.top_acoustic_drivers);
         }
+        
+        if (typeof setupLiquidDockBehavior === 'function') setupLiquidDockBehavior();
+        switchDashboardView('voice');
     }
 }
+
+/**
+ * Switches active dashboard tab view between Voice, Text, and CBT/GPT Assistant
+ */
+function switchDashboardView(viewName) {
+    const vVoice = document.getElementById('viewVoice');
+    const vText = document.getElementById('viewText');
+    const vCBT = document.getElementById('viewCBT');
+    
+    const btnVoice = document.getElementById('dockBtnVoice');
+    const btnText = document.getElementById('dockBtnText');
+    const btnCBT = document.getElementById('dockBtnCBT');
+    
+    if (vVoice) vVoice.style.setProperty('display', 'none', 'important');
+    if (vText) vText.style.setProperty('display', 'none', 'important');
+    if (vCBT) vCBT.style.setProperty('display', 'none', 'important');
+    
+    if (btnVoice) { btnVoice.classList.remove('active'); btnVoice.style.background = 'transparent'; btnVoice.style.boxShadow = 'none'; btnVoice.style.color = 'rgba(255,255,255,0.78)'; }
+    if (btnText) { btnText.classList.remove('active'); btnText.style.background = 'transparent'; btnText.style.boxShadow = 'none'; btnText.style.color = 'rgba(255,255,255,0.78)'; }
+    if (btnCBT) { btnCBT.classList.remove('active'); btnCBT.style.background = 'transparent'; btnCBT.style.boxShadow = 'none'; btnCBT.style.color = 'rgba(255,255,255,0.78)'; }
+    
+    if (viewName === 'voice') {
+        if (vVoice) vVoice.style.setProperty('display', 'block', 'important');
+        if (btnVoice) { btnVoice.classList.add('active'); btnVoice.style.color = '#ffffff'; }
+        const audioRes = document.getElementById('audioAnalysisResults');
+        const shapBox = document.getElementById('shapBoxWrapper');
+        if (window.innerWidth >= 1024) {
+            if (audioRes) {
+                audioRes.classList.remove('hidden');
+                audioRes.style.setProperty('display', 'block', 'important');
+            }
+            if (shapBox) {
+                if (currentAnalysisResult && (currentAnalysisResult.audio_xai || currentAnalysisResult.audio_analysis)) {
+                    shapBox.style.setProperty('display', 'block', 'important');
+                } else {
+                    shapBox.style.setProperty('display', 'none', 'important');
+                }
+            }
+        } else {
+            if (audioRes && (!currentAnalysisResult || (!currentAnalysisResult.audio_xai && !currentAnalysisResult.audio_analysis))) {
+                audioRes.classList.add('hidden');
+                audioRes.style.setProperty('display', 'none', 'important');
+            }
+        }
+        if (typeof initVisualizer === 'function') initVisualizer();
+        if (typeof renderVoiceEmotionChart === 'function') renderVoiceEmotionChart(currentAnalysisResult ? currentAnalysisResult.audio_analysis : null);
+        if (typeof renderSHAPChart === 'function') {
+            const drivers = (currentAnalysisResult && currentAnalysisResult.audio_xai && currentAnalysisResult.audio_xai.top_acoustic_drivers) ? currentAnalysisResult.audio_xai.top_acoustic_drivers : [
+                { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
+                { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
+                { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
+                { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
+            ];
+            renderSHAPChart(drivers, 'voiceShapChartCanvas');
+        }
+    } else if (viewName === 'text') {
+        if (vText) vText.style.setProperty('display', 'block', 'important');
+        if (btnText) { btnText.classList.add('active'); btnText.style.color = '#ffffff'; }
+        const textRes = document.getElementById('textAnalysisResults');
+        const limeBox = document.getElementById('limeBoxWrapper');
+        if (window.innerWidth >= 1024) {
+            if (textRes) {
+                textRes.classList.remove('hidden');
+                textRes.style.setProperty('display', 'block', 'important');
+            }
+            if (limeBox) {
+                if (currentAnalysisResult && (currentAnalysisResult.text_xai || currentAnalysisResult.text_analysis)) {
+                    limeBox.style.setProperty('display', 'block', 'important');
+                } else {
+                    limeBox.style.setProperty('display', 'none', 'important');
+                }
+            }
+        } else {
+            if (textRes && (!currentAnalysisResult || (!currentAnalysisResult.text_xai && !currentAnalysisResult.text_analysis))) {
+                textRes.classList.add('hidden');
+                textRes.style.setProperty('display', 'none', 'important');
+            }
+        }
+        if (typeof renderTextValenceChart === 'function') renderTextValenceChart(currentAnalysisResult ? currentAnalysisResult.text_analysis : null);
+    } else if (viewName === 'cbt') {
+        if (vCBT) vCBT.style.setProperty('display', 'block', 'important');
+        if (btnCBT) { btnCBT.classList.add('active'); btnCBT.style.color = '#ffffff'; }
+        if (typeof renderCBTArousalChart === 'function') renderCBTArousalChart();
+    }
+    
+    // Smoothly slide our liquid indicator pill (#dockLiquidSlider) right under the active tab button
+    setTimeout(() => {
+        const activeBtn = document.getElementById(viewName === 'voice' ? 'dockBtnVoice' : viewName === 'text' ? 'dockBtnText' : 'dockBtnCBT');
+        const slider = document.getElementById('dockLiquidSlider');
+        if (activeBtn && slider) {
+            slider.style.left = `${activeBtn.offsetLeft}px`;
+            slider.style.width = `${activeBtn.offsetWidth}px`;
+        }
+    }, 15);
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/**
+ * Sets up Apple Music style liquid glass dock sliding & dragging behavior
+ */
+function setupLiquidDockBehavior() {
+    const dock = document.getElementById('bottomGlassDock');
+    if (!dock) return;
+    
+    let isDraggingDock = false;
+    let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+    
+    dock.addEventListener('mousedown', (e) => {
+        if (e.target.tagName.toLowerCase() === 'button') return;
+        isDraggingDock = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        const rect = dock.getBoundingClientRect();
+        initialLeft = rect.left + rect.width / 2;
+        initialTop = rect.top;
+        dock.style.cursor = 'grabbing';
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+        if (!isDraggingDock) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        dock.style.transform = 'none';
+        dock.style.left = `${Math.max(120, Math.min(window.innerWidth - 120, initialLeft + dx))}px`;
+        dock.style.top = `${Math.max(15, Math.min(window.innerHeight - 80, initialTop + dy))}px`;
+    });
+    
+    window.addEventListener('mouseup', () => {
+        if (isDraggingDock) {
+            isDraggingDock = false;
+            dock.style.cursor = 'grab';
+        }
+    });
+    
+    dock.addEventListener('touchstart', (e) => {
+        if (e.target.tagName.toLowerCase() === 'button') return;
+        const touch = e.touches[0];
+        isDraggingDock = true;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        const rect = dock.getBoundingClientRect();
+        initialLeft = rect.left + rect.width / 2;
+        initialTop = rect.top;
+    }, { passive: true });
+    
+    window.addEventListener('touchmove', (e) => {
+        if (!isDraggingDock) return;
+        const touch = e.touches[0];
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        dock.style.transform = 'none';
+        dock.style.left = `${Math.max(120, Math.min(window.innerWidth - 120, initialLeft + dx))}px`;
+        dock.style.top = `${Math.max(15, Math.min(window.innerHeight - 80, initialTop + dy))}px`;
+    }, { passive: true });
+    
+    window.addEventListener('touchend', () => {
+        isDraggingDock = false;
+    });
+
+    window.addEventListener('resize', () => {
+        const activeBtn = dock.querySelector('.dock-btn.active');
+        const slider = document.getElementById('dockLiquidSlider');
+        if (activeBtn && slider) {
+            slider.style.left = `${activeBtn.offsetLeft}px`;
+            slider.style.width = `${activeBtn.offsetWidth}px`;
+        }
+    });
+}
+
 
 /**
  * Toggles fullscreen mobile menu on Home Screen
@@ -562,56 +735,89 @@ async function runSingleModalityAnalysis(modality) {
  */
 function displayAnalysisResults(res, modality = 'both') {
     const section = document.getElementById('analysisResultsSection');
-    section.classList.remove('hidden');
-    section.style.setProperty('display', 'block', 'important');
+    if (section) {
+        section.classList.remove('hidden');
+        section.style.setProperty('display', 'block', 'important');
+    }
     
     // Toggle visibility of LIME vs SHAP islands based on single modality tested
     const limeBox = document.getElementById('limeBoxWrapper');
     const shapBox = document.getElementById('shapBoxWrapper');
+    const audioRes = document.getElementById('audioAnalysisResults');
+    const textRes = document.getElementById('textAnalysisResults');
+    const scoreNum = Math.round(res.combined_stress_score || 0);
     
     if (modality === 'audio') {
         if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
-        document.getElementById('resultModalityBadge').innerText = "🎙️ Voice Acoustic Analysis Active";
+        if (audioRes) {
+            audioRes.classList.remove('hidden');
+            audioRes.style.setProperty('display', 'block', 'important');
+        }
+        const aNum = document.getElementById('audioStressScoreNumber');
+        const aTier = document.getElementById('audioRiskTierText');
+        const aCat = document.getElementById('audioStressCategoryText');
+        if (aNum) aNum.innerText = `${scoreNum}%`;
+        if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
+        if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
+        const badge = document.getElementById('resultModalityBadge');
+        if (badge) badge.innerText = "🎙️ Voice Acoustic Analysis Active";
     } else if (modality === 'text') {
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
-        document.getElementById('resultModalityBadge').innerText = "📝 Narrative Text Analysis Active";
+        if (textRes) {
+            textRes.classList.remove('hidden');
+            textRes.style.setProperty('display', 'block', 'important');
+        }
+        const tNum = document.getElementById('textStressScoreNumber');
+        const tTier = document.getElementById('textRiskTierText');
+        const tCat = document.getElementById('textStressCategoryText');
+        if (tNum) tNum.innerText = `${scoreNum}%`;
+        if (tTier) tTier.innerText = res.risk_tier || "Minimal / Normal";
+        if (tCat) tCat.innerText = res.final_stress_category || "Calm / Baseline";
+        const badge = document.getElementById('resultModalityBadge');
+        if (badge) badge.innerText = "📝 Narrative Text Analysis Active";
     } else {
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
-        document.getElementById('resultModalityBadge').innerText = res.modality_status || "Dual-Modality Active";
+        if (audioRes) { audioRes.classList.remove('hidden'); audioRes.style.setProperty('display', 'block', 'important'); }
+        if (textRes) { textRes.classList.remove('hidden'); textRes.style.setProperty('display', 'block', 'important'); }
+        const badge = document.getElementById('resultModalityBadge');
+        if (badge) badge.innerText = res.modality_status || "Dual-Modality Active";
     }
     
     // 1. Update Modality Badge & Stress Score
-    const scoreNum = Math.round(res.combined_stress_score || 0);
-    document.getElementById('stressScoreNumber').innerText = `${scoreNum}%`;
+    const numElem = document.getElementById('stressScoreNumber');
+    if (numElem) numElem.innerText = `${scoreNum}%`;
     
     const tierText = document.getElementById('riskTierText');
-    tierText.innerText = res.risk_tier || "Minimal / Normal";
+    if (tierText) tierText.innerText = res.risk_tier || "Minimal / Normal";
     
     // Update Gauge Color
     const circle = document.querySelector('.gauge-circle');
-    if (res.color_code === 'red') {
-        circle.style.borderColor = '#f43f5e';
-        circle.style.boxShadow = '0 0 30px rgba(244, 63, 94, 0.4)';
-        tierText.style.color = '#f43f5e';
-    } else if (res.color_code === 'orange') {
-        circle.style.borderColor = '#fb923c';
-        circle.style.boxShadow = '0 0 30px rgba(251, 146, 60, 0.4)';
-        tierText.style.color = '#fb923c';
-    } else if (res.color_code === 'blue') {
-        circle.style.borderColor = '#38bdf8';
-        circle.style.boxShadow = '0 0 30px rgba(56, 189, 248, 0.4)';
-        tierText.style.color = '#38bdf8';
-    } else {
-        circle.style.borderColor = '#34d399';
-        circle.style.boxShadow = '0 0 30px rgba(52, 211, 153, 0.4)';
-        tierText.style.color = '#34d399';
+    if (circle && tierText) {
+        if (res.color_code === 'red') {
+            circle.style.borderColor = '#f43f5e';
+            circle.style.boxShadow = '0 0 30px rgba(244, 63, 94, 0.4)';
+            tierText.style.color = '#f43f5e';
+        } else if (res.color_code === 'orange') {
+            circle.style.borderColor = '#fb923c';
+            circle.style.boxShadow = '0 0 30px rgba(251, 146, 60, 0.4)';
+            tierText.style.color = '#fb923c';
+        } else if (res.color_code === 'blue') {
+            circle.style.borderColor = '#38bdf8';
+            circle.style.boxShadow = '0 0 30px rgba(56, 189, 248, 0.4)';
+            tierText.style.color = '#38bdf8';
+        } else {
+            circle.style.borderColor = '#34d399';
+            circle.style.boxShadow = '0 0 30px rgba(52, 211, 153, 0.4)';
+            tierText.style.color = '#34d399';
+        }
     }
     
     // Category
-    document.getElementById('stressCategoryText').innerText = res.final_stress_category || "Calm / Normal";
+    const catElem = document.getElementById('stressCategoryText');
+    if (catElem) catElem.innerText = res.final_stress_category || "Calm / Normal";
     
     // 2. Update Fusion Weight Bars based on modality
     const tBar = document.getElementById('textWeightBar');
@@ -632,43 +838,58 @@ function displayAnalysisResults(res, modality = 'both') {
     
     // 3. Update LIME Token XAI
     const limeContainer = document.getElementById('limeHighlightedText');
-    if (res.text_xai && res.text_xai.html_highlighted) {
-        limeContainer.innerHTML = res.text_xai.html_highlighted;
-    } else if (res.text_analysis && res.text_analysis.metadata) {
-        limeContainer.innerHTML = `<p>Analyzed ${res.text_analysis.metadata.word_count} words. Pronoun ratio: ${res.text_analysis.metadata.first_person_ratio}.</p>`;
-    } else {
-        limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
+    if (limeContainer) {
+        if (res.text_xai && res.text_xai.html_highlighted) {
+            limeContainer.innerHTML = res.text_xai.html_highlighted;
+        } else if (res.text_analysis && res.text_analysis.metadata) {
+            limeContainer.innerHTML = `<p>Analyzed ${res.text_analysis.metadata.word_count} words. Pronoun ratio: ${res.text_analysis.metadata.first_person_ratio}.</p>`;
+        } else {
+            limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
+        }
     }
     
     // 4. Update SHAP Audio Drivers Bar Chart
+    const shapSummary = document.getElementById('shapSummaryText');
     if (res.audio_xai && res.audio_xai.top_acoustic_drivers) {
-        document.getElementById('shapSummaryText').innerText = res.audio_xai.summary || "Top acoustic biomarkers driving vocal emotion prediction:";
-        renderSHAPChart(res.audio_xai.top_acoustic_drivers);
-    } else if (simulatedAudioVector) {
-        renderSHAPChart([
+        if (shapSummary) shapSummary.innerText = res.audio_xai.summary || "Top acoustic biomarkers driving vocal emotion prediction:";
+        if (typeof renderSHAPChart === 'function') renderSHAPChart(res.audio_xai.top_acoustic_drivers);
+    } else if (typeof simulatedAudioVector !== 'undefined' && simulatedAudioVector) {
+        if (typeof renderSHAPChart === 'function') renderSHAPChart([
             { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
             { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
             { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
             { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
         ]);
     } else {
-        document.getElementById('shapSummaryText').innerText = "No acoustic recording provided for SHAP evaluation.";
-        renderSHAPChart([]);
+        if (shapSummary) shapSummary.innerText = "No acoustic recording provided for SHAP evaluation.";
+        if (typeof renderSHAPChart === 'function') renderSHAPChart([]);
     }
     
     // 5. Update CBT Empathy & Intervention
     if (res.cbt_intervention) {
         const cbt = res.cbt_intervention;
-        document.getElementById('cbtGreetingText').innerText = cbt.greeting || "NeuroSense CBT Empathy Assistant";
-        document.getElementById('cbtValidationText').innerText = cbt.empathetic_validation || "Personalized psychological support generated based on your analysis.";
-        document.getElementById('cbtExerciseTitle').innerText = cbt.recommended_exercise || "Recommended Grounding Exercise";
-        document.getElementById('cbtExerciseDetails').innerText = cbt.exercise_details || "Practice deep slow breathing for 2 minutes.";
-        document.getElementById('cbtCopingText').innerText = cbt.coping_strategy || "Take one small actionable step at a time.";
+        const gText = document.getElementById('cbtGreetingText');
+        const vText = document.getElementById('cbtValidationText');
+        const eTitle = document.getElementById('cbtExerciseTitle');
+        const eDet = document.getElementById('cbtExerciseDetails');
+        const cText = document.getElementById('cbtCopingText');
+        if (gText) gText.innerText = cbt.greeting || "NeuroSense CBT Empathy Assistant";
+        if (vText) vText.innerText = cbt.empathetic_validation || "Personalized psychological support generated based on your analysis.";
+        if (eTitle) eTitle.innerText = cbt.recommended_exercise || "Recommended Grounding Exercise";
+        if (eDet) eDet.innerText = cbt.exercise_details || "Practice deep slow breathing for 2 minutes.";
+        if (cText) cText.innerText = cbt.coping_strategy || "Take one small actionable step at a time.";
     }
     
     // Scroll smoothly down to results after browser calculates new layout height
     setTimeout(() => {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.innerWidth < 1024) {
+            const targetRes = modality === 'audio' ? document.getElementById('audioAnalysisResults') : modality === 'text' ? document.getElementById('textAnalysisResults') : section;
+            if (targetRes) {
+                targetRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        } else {
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }, 120);
 }
 
