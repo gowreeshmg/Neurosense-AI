@@ -6,6 +6,7 @@
     <title>NeuroSense AI — Dual-Modality Mental Health Detection & Explainable CBT System</title>
     <!-- PWA & Mobile Home Screen App Icons -->
     <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/static/img/neurosense-logo.svg">
     <link rel="icon" type="image/png" href="/static/img/neurosense-logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -659,8 +660,9 @@
 
         <!-- Navigation (top) - remains white always -->
         <header class="w-full relative z-30 px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5 flex items-center justify-between">
-            <!-- Left: "NeuroSense AI" in white, italic, Instrument Serif font -->
-            <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchScreen('home')">
+            <!-- Left: "NeuroSense AI" in white, italic, Instrument Serif font with custom brand logo mark -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchScreen('home')">
+                <img src="/static/img/neurosense-logo.svg" alt="NeuroSense AI Logo" class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[0_2px_10px_rgba(0,242,254,0.35)] transition-transform hover:scale-105" />
                 <span class="text-white text-xl sm:text-2xl tracking-tight font-normal" style="font-family: 'Instrument Serif', serif; font-style: italic;">NeuroSense AI</span>
             </div>
 
@@ -810,7 +812,9 @@
             <!-- Center: Brand Name & Title on TOP CENTER exact to home screen -->
             <div style="flex: 2; min-width: 320px; display: flex; justify-content: center; align-items: center; text-align: center;">
                 <div class="nav-brand top-center-brand" style="display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important;">
-                    <div class="brand-icon" style="font-size: 2rem !important; background: none !important; -webkit-background-clip: border-box !important; -webkit-text-fill-color: initial !important; color: initial !important; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)) !important; display: inline-block !important;">🧠</div>
+                    <div class="brand-icon" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; margin-right: 2px;">
+                        <img src="/static/img/neurosense-logo.svg" alt="NeuroSense AI Logo" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 242, 254, 0.45)); transition: transform 0.3s ease;" />
+                    </div>
                     <div class="brand-text">
                         <h1 class="font-serif-italic top-center-title" style="font-size: 1.85rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important;">NeuroSense AI</h1>
                     </div>
