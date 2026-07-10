@@ -574,6 +574,17 @@ body.on-dashboard {
     box-shadow: var(--shadow-glass);
 }
 
+/* Completely transparent glass islands & cards when on dashboard (since background is already blurred) */
+body.on-dashboard .glass-card,
+body.on-dashboard .glass-card-accent,
+body.on-dashboard .glass-pill,
+body.on-dashboard .round-glass-btn,
+body.on-dashboard .role-selector {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
 /* Navigation Bar */
 .navbar {
     display: flex;

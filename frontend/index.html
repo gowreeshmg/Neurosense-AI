@@ -117,10 +117,10 @@
             width: 50px !important;
             height: 50px !important;
             border-radius: 50% !important;
-            background: rgba(255, 255, 255, 0.15) !important;
-            backdrop-filter: blur(28px) saturate(210%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.55) !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.45) !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -132,26 +132,32 @@
         }
         #btnThemeToggle.round-glass-btn:hover {
             transform: scale(1.1) rotate(15deg) !important;
-            background: rgba(255, 255, 255, 0.28) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
             box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
         }
 
         /* =========================================================================
            2. DARK MODE SLEEK GLASS ISLANDS & ELEGANT HIGH-CONTRAST TYPOGRAPHY
            ========================================================================= */
-        /* Outer Islands: Sleek translucent dark slate/obsidian glass so background is visible with rich contrast */
-        body.on-dashboard:not([data-theme="light"]) .glass-card,
-        body.on-dashboard:not([data-theme="light"]) .glass-card-accent,
-        body.on-dashboard:not([data-theme="light"]) .hero-banner,
-        body.on-dashboard:not([data-theme="light"]) .counselor-banner,
-        body.on-dashboard:not([data-theme="light"]) .counselor-card,
-        body.on-dashboard:not([data-theme="light"]) .footer,
-        body.on-dashboard:not([data-theme="light"]) .navbar-top-controls .glass-pill {
-            background: rgba(15, 23, 42, 0.48) !important;
-            backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.18) !important;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.22) !important;
+        /* Outer Islands & Glass Pills: Completely Transparent so the blurred background shines through cleanly */
+        body.on-dashboard .glass-card,
+        body.on-dashboard .glass-card-accent,
+        body.on-dashboard .hero-banner,
+        body.on-dashboard .counselor-banner,
+        body.on-dashboard .counselor-card,
+        body.on-dashboard .footer,
+        body.on-dashboard .navbar-top-controls .glass-pill,
+        body.on-dashboard .navbar-top-controls button.glass-pill,
+        body.on-dashboard .navbar-top-controls div.glass-pill,
+        body.on-dashboard .role-selector.glass-pill,
+        body.on-dashboard .role-selector,
+        body.on-dashboard .glass-pill,
+        body.on-dashboard #btnThemeToggle.round-glass-btn {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
         }
 
         /* Inner Islands ("islands inside other islands should be darker so that its easily visible and would also looks good") */
@@ -162,7 +168,6 @@
         body.on-dashboard:not([data-theme="light"]) .xai-text-box,
         body.on-dashboard:not([data-theme="light"]) .xai-audio-box,
         body.on-dashboard:not([data-theme="light"]) .gauge-box,
-        body.on-dashboard:not([data-theme="light"]) .role-selector,
         body.on-dashboard:not([data-theme="light"]) .toggle-group,
         body.on-dashboard:not([data-theme="light"]) .prompt-chip,
         body.on-dashboard:not([data-theme="light"]) .btn-secondary,
@@ -174,9 +179,9 @@
         body.on-dashboard:not([data-theme="light"]) .chat-input-bar input,
         body.on-dashboard:not([data-theme="light"]) .stat-pill,
         body.on-dashboard:not([data-theme="light"]) .progress-bar {
-            background: rgba(6, 11, 22, 0.68) !important;
-            backdrop-filter: blur(16px) saturate(160%) !important;
-            -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+            background: rgba(6, 11, 22, 0.55) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
             border: 1px solid rgba(255, 255, 255, 0.14) !important;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35) !important;
         }
@@ -762,7 +767,7 @@
         <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 10px auto 26px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
             <!-- Left: Return to Home Button Glass Pill -->
             <div style="flex: 1; min-width: 180px; display: flex; justify-content: flex-start; align-items: center;">
-                <button onclick="switchScreen('home')" class="glass-pill" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(16px) saturate(190%); -webkit-backdrop-filter: blur(16px) saturate(190%); padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 0.92rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 1.5px rgba(255,255,255,0.85); transition: all 0.2s;">
+                <button onclick="switchScreen('home')" class="glass-pill" style="display: inline-flex; align-items: center; gap: 8px; background: transparent !important; border: 1px solid rgba(255,255,255,0.45); backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 0.92rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 1.5px rgba(255,255,255,0.85); transition: all 0.2s;">
                     <span>⬅</span> Return to Home
                 </button>
             </div>
@@ -780,7 +785,7 @@
             
             <!-- Right Controls: Role Switcher Glass Pill (Local Edge Privacy removed exact to user request) -->
             <div style="flex: 1; min-width: 220px; display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
-                <div class="role-selector glass-pill" style="display: inline-flex; gap: 6px; background: rgba(255,255,255,0.06); padding: 5px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.45); backdrop-filter: blur(16px) saturate(190%); -webkit-backdrop-filter: blur(16px) saturate(190%); box-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 1.5px rgba(255,255,255,0.85);">
+                <div class="role-selector glass-pill" style="display: inline-flex; gap: 6px; background: transparent !important; padding: 5px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.45); backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 1.5px rgba(255,255,255,0.85);">
                     <button id="btnRoleStudent" class="role-btn active" onclick="switchRole('student')" style="border-radius: 999px; padding: 8px 20px; font-weight: 700;">
                         <span>🎓</span> Student Check-In
                     </button>
