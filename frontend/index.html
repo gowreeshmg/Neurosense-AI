@@ -758,7 +758,7 @@
     </div>
 
     <!-- Top Right Round Glassmorphism Theme Toggle Island Button (hidden on home screen by default) -->
-    <button id="btnThemeToggle" class="round-glass-btn" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" title="Click: Switch Theme | Double-Click: Blur & Atmosphere Controls" style="display: none !important; position: fixed; top: 16px; right: 20px; z-index: 1000; width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid rgba(255, 255, 255, 0.55); align-items: center; justify-content: center; font-size: 1.15rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
+    <button id="btnThemeToggle" class="round-glass-btn" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" title="Click: Switch Theme | Double-Click: Blur & Atmosphere Controls" style="display: none !important; position: fixed; top: 16px; right: 20px; z-index: 1000; width: 38px; height: 38px; border-radius: 50%; background: var(--bg-card, rgba(255, 255, 255, 0.15)); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.45)); align-items: center; justify-content: center; font-size: 1.15rem; cursor: pointer; box-shadow: var(--shadow-glass); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
         <span id="themeIcon">🌙</span>
     </button>
 
@@ -805,7 +805,7 @@
         <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 10px auto 26px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
             <!-- Left: Return to Home Button Glass Pill -->
             <div style="flex: 1; min-width: 180px; display: flex; justify-content: flex-start; align-items: center;">
-                <button onclick="switchScreen('home')" class="glass-pill" style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important; border: 1px solid var(--border-glass, rgba(255,255,255,0.45)) !important; backdrop-filter: blur(28px) saturate(210%) !important; -webkit-backdrop-filter: blur(28px) saturate(210%) !important; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 0.92rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.22), inset 0 1px 1.5px rgba(255,255,255,0.85); transition: all 0.2s;">
+                <button onclick="switchScreen('home')" class="glass-pill" style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important; border: 1px solid var(--border-glass, rgba(255,255,255,0.45)) !important; backdrop-filter: blur(28px) saturate(210%) !important; -webkit-backdrop-filter: blur(28px) saturate(210%) !important; padding: 10px 22px; border-radius: 999px; font-weight: 700; font-size: 0.92rem; color: var(--text-primary, #FFFFFF) !important; cursor: pointer; box-shadow: var(--shadow-glass) !important; transition: all 0.2s;">
                     <span>⬅</span> Return to Home
                 </button>
             </div>
@@ -823,7 +823,7 @@
             
             <!-- Right Controls: Role Switcher Glass Pill -->
             <div style="flex: 1; min-width: 220px; display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
-                <div class="role-selector glass-pill" style="display: inline-flex; gap: 6px; background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important; padding: 5px; border-radius: 999px; border: 1px solid var(--border-glass, rgba(255,255,255,0.45)) !important; backdrop-filter: blur(28px) saturate(210%) !important; -webkit-backdrop-filter: blur(28px) saturate(210%) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.22), inset 0 1px 1.5px rgba(255,255,255,0.85);">
+                <div class="role-selector glass-pill" style="display: inline-flex; gap: 6px; background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important; padding: 5px; border-radius: 999px; border: 1px solid var(--border-glass, rgba(255,255,255,0.45)) !important; backdrop-filter: blur(28px) saturate(210%) !important; -webkit-backdrop-filter: blur(28px) saturate(210%) !important; box-shadow: var(--shadow-glass) !important;">
                     <button id="btnRoleStudent" class="role-btn active" onclick="switchRole('student')" style="border-radius: 999px; padding: 8px 20px; font-weight: 700;">
                         <span>🎓</span> Student Check-In
                     </button>
