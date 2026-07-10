@@ -5,21 +5,28 @@
 let currentAnalysisResult = null;
 let currentRole = 'student';
 
+const SVG_MOON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.45)); color: #00F2FE;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+const SVG_SUN = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 6px rgba(251, 191, 36, 0.55)); color: #F59E0B;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+
+function updateThemeIconUI(themeName) {
+    const icon = document.getElementById('themeIcon');
+    const text = document.getElementById('themeText');
+    if (themeName === 'light') {
+        if (icon) icon.innerHTML = SVG_SUN;
+        if (text) text.innerText = 'Light Mode';
+    } else {
+        if (icon) icon.innerHTML = SVG_MOON;
+        if (text) text.innerText = 'Dark Mode';
+    }
+}
+
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Check saved theme preference
     const savedTheme = localStorage.getItem('neurosense_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.body.setAttribute('data-theme', savedTheme);
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (savedTheme === 'light') {
-        if (icon) icon.innerText = '☀️';
-        if (text) text.innerText = 'Light Mode';
-    } else {
-        if (icon) icon.innerText = '🌙';
-        if (text) text.innerText = 'Dark Mode';
-    }
+    updateThemeIconUI(savedTheme);
 
     // Check saved dashboard blur setting
     const savedBlur = localStorage.getItem('lumora_dashboard_blur');
@@ -29,11 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setDashboardBlur(14);
     }
 
-    // Ensure theme toggle is hidden on initial home screen load & active videos initialize
+    // Ensure theme toggle and return home button are hidden on initial home screen load
     const themeBtn = document.getElementById('btnThemeToggle');
+    const returnHomeBtn = document.getElementById('btnReturnHomeFixed');
     const homeScreen = document.getElementById('lumoraHomeScreen');
-    if (themeBtn && homeScreen && !homeScreen.classList.contains('hidden-screen')) {
-        themeBtn.style.setProperty('display', 'none', 'important');
+    if (homeScreen && !homeScreen.classList.contains('hidden-screen')) {
+        if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
+        if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'none', 'important');
     }
     for (let i = 0; i < 4; i++) {
         const vid = document.getElementById(`bgVideo${i}`);
@@ -83,15 +92,7 @@ function toggleTheme() {
     document.body.setAttribute('data-theme', next);
     localStorage.setItem('neurosense_theme', next);
     
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (next === 'light') {
-        if (icon) icon.innerText = '☀️';
-        if (text) text.innerText = 'Light Mode';
-    } else {
-        if (icon) icon.innerText = '🌙';
-        if (text) text.innerText = 'Dark Mode';
-    }
+    updateThemeIconUI(next);
     
     // Re-render active charts if needed to match new contrast
     if (currentRole === 'counselor') {
@@ -111,6 +112,7 @@ function switchScreen(screenName) {
     const appBg = document.querySelector('.app-background');
     const dashboardVideoBg = document.getElementById('dashboardBgVideoContainer');
     const themeBtn = document.getElementById('btnThemeToggle');
+    const returnHomeBtn = document.getElementById('btnReturnHomeFixed');
     
     if (screenName === 'home') {
         if (homeScreen) {
@@ -124,6 +126,7 @@ function switchScreen(screenName) {
         if (dashboardVideoBg) dashboardVideoBg.style.setProperty('display', 'none', 'important');
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
         if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
+        if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'none', 'important');
         document.body.style.backgroundColor = '';
         document.body.classList.remove('on-dashboard');
         window.scrollTo(0, 0);
@@ -141,6 +144,7 @@ function switchScreen(screenName) {
         }
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
         if (themeBtn) themeBtn.style.setProperty('display', 'inline-flex', 'important');
+        if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'inline-flex', 'important');
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.classList.add('on-dashboard');
         window.scrollTo(0, 0);
@@ -457,15 +461,7 @@ function switchBgVideo(targetIdx, targetTheme) {
         document.body.setAttribute('data-theme', targetTheme);
         localStorage.setItem('neurosense_theme', targetTheme);
         
-        const icon = document.getElementById('themeIcon');
-        const text = document.getElementById('themeText');
-        if (targetTheme === 'light') {
-            if (icon) icon.innerText = '🌙';
-            if (text) text.innerText = 'Dark Mode';
-        } else {
-            if (icon) icon.innerText = '☀️';
-            if (text) text.innerText = 'Light Mode';
-        }
+        updateThemeIconUI(targetTheme);
     }
 }
 

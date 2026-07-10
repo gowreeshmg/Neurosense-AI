@@ -758,9 +758,18 @@
         <div class="dashboard-video-tint" style="display: none !important; background: transparent !important;"></div>
     </div>
 
+    <!-- Top Left Round Glassmorphism Return Home Island Button (hidden on home screen by default, shown on dashboard) -->
+    <button id="btnReturnHomeFixed" class="round-glass-btn" onclick="switchScreen('home')" title="Return to Home Screen" style="display: none !important; position: fixed; top: 16px; left: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: var(--bg-card, rgba(255, 255, 255, 0.15)); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.45)); align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; box-shadow: var(--shadow-glass); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.35)); color: var(--text-primary, #FFFFFF);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </span>
+    </button>
+
     <!-- Top Right Round Glassmorphism Theme Toggle Island Button (hidden on home screen by default) -->
     <button id="btnThemeToggle" class="round-glass-btn" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" title="Click: Switch Theme | Double-Click: Blur & Atmosphere Controls" style="display: none !important; position: fixed; top: 16px; right: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: var(--bg-card, rgba(255, 255, 255, 0.15)); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.45)); align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; box-shadow: var(--shadow-glass); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
-        <span id="themeIcon">🌙</span>
+        <span id="themeIcon" style="display: inline-flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.45)); color: #00F2FE;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
     </button>
 
     <!-- Floating Blur & Atmosphere Control Island (Opened by double-clicking theme button) -->
@@ -804,17 +813,8 @@
     <section id="appDashboardScreen" class="view-screen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
         <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center exact to home screen, Role Selector right. Local Edge Privacy removed) -->
         <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 10px auto 26px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
-            <!-- Left: Return to Home Button (Small Round 44px Button exactly matching Theme Toggle) -->
-            <div class="back-home-slot" style="flex: 1; min-width: 180px; display: flex; justify-content: flex-start; align-items: center;">
-                <!-- Desktop Back Button -->
-                <button onclick="switchScreen('home')" class="round-glass-btn desktop-only" title="Return to Home" style="width: 44px !important; height: 44px !important; border-radius: 50% !important; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important; border: 1px solid var(--border-glass, rgba(255,255,255,0.45)) !important; backdrop-filter: blur(28px) saturate(210%) !important; -webkit-backdrop-filter: blur(28px) saturate(210%) !important; font-size: 1.28rem !important; color: var(--text-primary, #FFFFFF) !important; cursor: pointer; box-shadow: var(--shadow-glass) !important; transition: all 0.2s; padding: 0;">
-                    <span>⬅</span>
-                </button>
-            </div>
-            <!-- Mobile Fixed Top-Left Back Button -->
-            <button onclick="switchScreen('home')" class="round-glass-btn mobile-only" title="Return to Home" style="display: none !important; position: fixed; top: 16px; left: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; align-items: center; justify-content: center; background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important; border: 1px solid var(--border-glass, rgba(255,255,255,0.45)) !important; backdrop-filter: blur(28px) saturate(210%) !important; -webkit-backdrop-filter: blur(28px) saturate(210%) !important; font-size: 1.28rem !important; color: var(--text-primary, #FFFFFF) !important; cursor: pointer; box-shadow: var(--shadow-glass) !important; transition: all 0.2s; padding: 0;">
-                <span>⬅</span>
-            </button>
+            <!-- Left: Spacer slot (Back button is fixed top-left symmetrically) -->
+            <div class="back-home-slot" style="flex: 1; min-width: 180px;"></div>
 
             <!-- Center: Brand Name & Title on TOP CENTER exact to home screen -->
             <div style="flex: 2; min-width: 320px; display: flex; justify-content: center; align-items: center; text-align: center;">
@@ -844,17 +844,17 @@
                     <div id="dockLiquidSlider" style="position: absolute; top: 7px; left: 10px; height: calc(100% - 14px); width: 148px; border-radius: 999px; background: rgba(255, 255, 255, 0.24) !important; border: 1px solid rgba(255, 255, 255, 0.48); backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.22), inset 0 1px 1px rgba(255,255,255,0.7); transition: all 0.42s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; z-index: 1;"></div>
                     
                     <button id="dockBtnVoice" class="dock-btn active" onclick="switchDashboardView('voice')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: #ffffff; white-space: nowrap;">
-                        <span style="font-size: 1.15rem;">🎙️</span>
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #00F2FE; filter: drop-shadow(0 2px 5px rgba(0, 242, 254, 0.4));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
                         <span class="dock-label-desktop desktop-only">Voice Check-in</span>
                         <span class="dock-label-mobile mobile-only" style="display: none;">Voice</span>
                     </button>
                     <button id="dockBtnText" class="dock-btn" onclick="switchDashboardView('text')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
-                        <span style="font-size: 1.15rem;">✍️</span>
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #38BDF8; filter: drop-shadow(0 2px 5px rgba(56, 189, 248, 0.4));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>
                         <span class="dock-label-desktop desktop-only">Text Narrative</span>
                         <span class="dock-label-mobile mobile-only" style="display: none;">Narrative</span>
                     </button>
                     <button id="dockBtnCBT" class="dock-btn" onclick="switchDashboardView('cbt')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
-                        <span style="font-size: 1.15rem;">💬</span>
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #D946EF; filter: drop-shadow(0 2px 5px rgba(217, 70, 239, 0.4));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="1.3" fill="currentColor"/><circle cx="8" cy="10" r="1.3" fill="currentColor"/><circle cx="16" cy="10" r="1.3" fill="currentColor"/></svg></span>
                         <span class="dock-label-desktop desktop-only">CBT Assistant & GPT</span>
                         <span class="dock-label-mobile mobile-only" style="display: none;">Assistant</span>
                     </button>
