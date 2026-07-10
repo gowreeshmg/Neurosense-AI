@@ -21,16 +21,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (text) text.innerText = 'Dark Mode';
     }
 
-    // Ensure theme toggle is hidden on initial home screen load & active video is set
+    // Ensure theme toggle is hidden on initial home screen load & active videos initialize
     const themeBtn = document.getElementById('btnThemeToggle');
     const homeScreen = document.getElementById('lumoraHomeScreen');
     if (themeBtn && homeScreen && !homeScreen.classList.contains('hidden-screen')) {
         themeBtn.style.setProperty('display', 'none', 'important');
     }
-    const vid0 = document.getElementById('bgVideo0');
-    if (vid0) {
-        vid0.style.setProperty('opacity', '1', 'important');
-        vid0.style.setProperty('z-index', '2', 'important');
+    for (let i = 0; i < 4; i++) {
+        const vid = document.getElementById(`bgVideo${i}`);
+        if (vid) {
+            if (i === 0) {
+                vid.style.setProperty('display', 'block', 'important');
+                vid.style.setProperty('opacity', '1', 'important');
+                vid.style.setProperty('z-index', '2', 'important');
+            } else {
+                vid.style.setProperty('opacity', '0', 'important');
+                vid.style.setProperty('z-index', '1', 'important');
+            }
+            if (vid.paused) {
+                vid.play().catch(e => console.log("Init video play:", e));
+            }
+        }
     }
 
     drawRestingWaveform();
@@ -118,8 +129,7 @@ function switchScreen(screenName) {
             dashboardScreen.style.setProperty('display', 'block', 'important');
         }
         if (dashboardVideoBg) {
-            dashboardVideoBg.style.setProperty('display', 'block', 'important');
-            dashboardVideoBg.style.setProperty('z-index', '0', 'important');
+            dashboardVideoBg.style.setProperty('display', 'none', 'important');
         }
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
         if (themeBtn) themeBtn.style.setProperty('display', 'inline-flex', 'important');
@@ -215,10 +225,14 @@ function switchBgVideo(targetIdx, targetTheme) {
         if (vid) {
             if (i === targetIdx) {
                 vid.classList.add('active');
+                vid.style.setProperty('display', 'block', 'important');
                 vid.style.setProperty('opacity', '1', 'important');
                 vid.style.setProperty('z-index', '2', 'important');
-                if (vid.play) {
-                    vid.play().catch(err => console.log("Video play:", err));
+                if (vid.paused || vid.readyState < 3 || vid.currentTime === 0) {
+                    vid.load();
+                    vid.play().catch(err => console.log("Video play error:", err));
+                } else {
+                    vid.play().catch(err => console.log("Video play error:", err));
                 }
             } else {
                 vid.classList.remove('active');

@@ -85,11 +85,12 @@
     width: 100% !important;
     height: 100vh !important;
     padding: 0 !important;
-    background: #000000 !important;
+    background: transparent !important;
     z-index: 2;
     overflow: hidden !important;
 }
 
+#globalAmbientBgContainer .bg-video,
 #lumoraHomeScreen .bg-video {
     position: absolute;
     inset: 0;
@@ -98,10 +99,11 @@
     object-fit: cover;
     opacity: 0 !important;
     z-index: 1 !important;
-    transition: opacity 1000ms ease-in-out !important;
+    transition: opacity 800ms ease-in-out !important;
     pointer-events: none;
 }
 
+#globalAmbientBgContainer .bg-video.active,
 #lumoraHomeScreen .bg-video.active {
     opacity: 1 !important;
     z-index: 2 !important;

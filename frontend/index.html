@@ -74,9 +74,7 @@
             background: transparent !important;
         }
         #dashboardBgVideoContainer {
-            z-index: 0 !important;
-            opacity: 1 !important;
-            pointer-events: none !important;
+            display: none !important;
         }
         #appDashboardScreen {
             position: relative !important;
@@ -86,16 +84,15 @@
         /* =========================================================================
            1. UNIVERSAL iPHONE iOS LIQUID GLASS ISLAND HIERARCHY (OUTER vs INNER)
            ========================================================================= */
-        /* Make Dashboard Video Background 100% Unblurred Exact Like Home Screen */
-        #dashboardBgVideoContainer video {
-            filter: none !important;
-            opacity: 1 !important;
-            object-fit: cover !important;
-            object-position: center !important;
-        }
-        #dashboardBgVideoContainer .dashboard-video-tint {
-            background: transparent !important;
-            display: none !important;
+        #globalAmbientBgContainer {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            background: #000000;
+            pointer-events: none;
         }
 
         /* Fix Brain Emoji Visibility on Windows/Edge/Chrome */
@@ -642,16 +639,18 @@
         <div class="glow-orb orb-3"></div>
     </div>
 
-    <!-- ==================== SCREEN 1: LUMORA-STYLE FULLSCREEN HERO (NEUROSENSE AI) ==================== -->
-    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col justify-between bg-black" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2; background: #000000;">
-        <!-- Background Video Layer (4 stacked videos, index 0 active by default) -->
+    <!-- ==================== SHARED GLOBAL AMBIENT BACKGROUND LAYER (Active across Home Screen & Dashboard) ==================== -->
+    <div id="globalAmbientBgContainer" class="fixed inset-0 w-full h-full pointer-events-none" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; background: #000000;">
         <video id="bgVideo0" autoplay muted loop playsinline preload="auto" class="bg-video active absolute inset-0 w-full h-full object-cover" style="opacity: 1; z-index: 2; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4"></video>
         <video id="bgVideo1" autoplay muted loop playsinline preload="auto" class="bg-video absolute inset-0 w-full h-full object-cover" style="opacity: 0; z-index: 1; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4"></video>
         <video id="bgVideo2" autoplay muted loop playsinline preload="auto" class="bg-video absolute inset-0 w-full h-full object-cover" style="opacity: 0; z-index: 1; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081042_df7202bf-bd80-4b2b-bbc6-1f09ba2870e9.mp4"></video>
         <video id="bgVideo3" autoplay muted loop playsinline preload="auto" class="bg-video absolute inset-0 w-full h-full object-cover" style="opacity: 0; z-index: 1; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4"></video>
-
         <!-- Transparent PNG Overlay (z-index 10) with continuous train-bob animation -->
         <img src="https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png" alt="Overlay" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-10 animate-train-bob" style="transform: scale(1.03);">
+    </div>
+
+    <!-- ==================== SCREEN 1: LUMORA-STYLE FULLSCREEN HERO (NEUROSENSE AI) ==================== -->
+    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col justify-between" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2; background: transparent !important;">
 
         <!-- Navigation (top) - remains white always -->
         <header class="w-full relative z-30 px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5 flex items-center justify-between">
