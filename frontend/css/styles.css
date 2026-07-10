@@ -122,145 +122,6 @@ body.on-dashboard #globalAmbientBgContainer .bg-video.active {
     transform: scale(var(--dashboard-bg-scale, 1.06)) !important;
 }
 
-/* =========================================================================
-   DASHBOARD VIBRANT COLOR POP & HIGH-ENERGY NEON ACCENTS
-   ========================================================================= */
-/* Left Card: Voice & Speech Check-in -> Vibrant Electric Cyan (#00F2FE) */
-body.on-dashboard .input-grid > .input-card:nth-child(1) {
-    border: 1px solid rgba(0, 242, 254, 0.45) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 32px rgba(0, 242, 254, 0.18), inset 0 1px 2px rgba(0, 242, 254, 0.4) !important;
-}
-body.on-dashboard .input-grid > .input-card:nth-child(1) .card-header h3 {
-    background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.55)) !important;
-    font-weight: 800 !important;
-}
-body.on-dashboard #btnUploadAudio,
-body.on-dashboard #btnSimulateAudio {
-    border: 1px solid #00F2FE !important;
-    color: #00F2FE !important;
-    font-weight: 700 !important;
-    background: rgba(0, 242, 254, 0.08) !important;
-    box-shadow: 0 0 14px rgba(0, 242, 254, 0.25) !important;
-}
-body.on-dashboard #btnUploadAudio:hover,
-body.on-dashboard #btnSimulateAudio:hover {
-    background: rgba(0, 242, 254, 0.22) !important;
-    box-shadow: 0 0 22px rgba(0, 242, 254, 0.5) !important;
-    transform: translateY(-2px) !important;
-}
-body.on-dashboard #btnRunAudioAnalysis {
-    background: linear-gradient(135deg, #00F2FE 0%, #00C6FF 100%) !important;
-    color: #001220 !important;
-    font-weight: 800 !important;
-    box-shadow: 0 0 26px rgba(0, 242, 254, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
-    text-shadow: none !important;
-}
-body.on-dashboard #btnRunAudioAnalysis:hover {
-    transform: translateY(-2px) scale(1.01) !important;
-    box-shadow: 0 0 35px rgba(0, 242, 254, 0.95), inset 0 1px 3px rgba(255, 255, 255, 1) !important;
-}
-
-/* Right Card: Narrative Journal Entry -> Vibrant Neon Magenta & Pink (#FF007F) */
-body.on-dashboard .input-grid > .input-card:nth-child(2) {
-    border: 1px solid rgba(255, 0, 127, 0.45) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 32px rgba(255, 0, 127, 0.18), inset 0 1px 2px rgba(255, 0, 127, 0.4) !important;
-}
-body.on-dashboard .input-grid > .input-card:nth-child(2) .card-header h3 {
-    background: linear-gradient(135deg, #FF007F 0%, #BF55EC 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 0 12px rgba(255, 0, 127, 0.55)) !important;
-    font-weight: 800 !important;
-}
-body.on-dashboard #btnRunTextAnalysis {
-    background: linear-gradient(135deg, #FF007F 0%, #9F05FF 100%) !important;
-    color: #FFFFFF !important;
-    font-weight: 800 !important;
-    box-shadow: 0 0 26px rgba(255, 0, 127, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.85) !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
-}
-body.on-dashboard #btnRunTextAnalysis:hover {
-    transform: translateY(-2px) scale(1.01) !important;
-    box-shadow: 0 0 35px rgba(255, 0, 127, 0.95), inset 0 1px 3px rgba(255, 255, 255, 1) !important;
-}
-
-/* Bottom Cards (CBT Empathy & Grounding) -> Vibrant Neon Lime & Emerald (#00FF87 / #10B981) */
-body.on-dashboard .cbt-chat-container,
-body.on-dashboard .cbt-exercise-box,
-body.on-dashboard .cbt-coping-box {
-    border: 1px solid rgba(0, 255, 135, 0.45) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 28px rgba(0, 255, 135, 0.15), inset 0 1px 2px rgba(0, 255, 135, 0.35) !important;
-}
-body.on-dashboard .cbt-chat-container h3,
-body.on-dashboard .cbt-chat-container h4,
-body.on-dashboard .cbt-exercise-box h4,
-body.on-dashboard .cbt-coping-box h4 {
-    background: linear-gradient(135deg, #00FF87 0%, #60EFFF 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 0 10px rgba(0, 255, 135, 0.5)) !important;
-    font-weight: 800 !important;
-}
-
-/* Role Selector Buttons Pop */
-body.on-dashboard #btnRoleStudent.active {
-    background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%) !important;
-    color: #FFFFFF !important;
-    font-weight: 800 !important;
-    box-shadow: 0 0 22px rgba(0, 198, 255, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
-}
-body.on-dashboard #btnRoleCounselor.active {
-    background: linear-gradient(135deg, #FF00A8 0%, #7A00FF 100%) !important;
-    color: #FFFFFF !important;
-    font-weight: 800 !important;
-    box-shadow: 0 0 22px rgba(255, 0, 168, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
-}
-
-/* Quick Prompts Chips Pop with Colored Jewel Borders */
-body.on-dashboard .quick-prompts .prompt-chip:nth-child(2) {
-    border: 1px solid #38BDF8 !important;
-    color: #38BDF8 !important;
-    background: rgba(56, 189, 248, 0.12) !important;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
-}
-body.on-dashboard .quick-prompts .prompt-chip:nth-child(3) {
-    border: 1px solid #FF007F !important;
-    color: #FF6B9D !important;
-    background: rgba(255, 0, 127, 0.12) !important;
-    box-shadow: 0 0 12px rgba(255, 0, 127, 0.25) !important;
-}
-body.on-dashboard .quick-prompts .prompt-chip:nth-child(4) {
-    border: 1px solid #00FF87 !important;
-    color: #4ADE80 !important;
-    background: rgba(0, 255, 135, 0.12) !important;
-    box-shadow: 0 0 12px rgba(0, 255, 135, 0.25) !important;
-}
-body.on-dashboard .quick-prompts .prompt-chip:hover {
-    transform: scale(1.05) translateY(-1px) !important;
-    filter: brightness(1.25) !important;
-}
-
-/* Status Badges Brightness Pop */
-body.on-dashboard .status-indicator.ready {
-    background: rgba(0, 255, 135, 0.2) !important;
-    border: 1px solid #00FF87 !important;
-    color: #00FF87 !important;
-    box-shadow: 0 0 15px rgba(0, 255, 135, 0.45) !important;
-    font-weight: 800 !important;
-}
-body.on-dashboard .word-counter {
-    background: rgba(0, 242, 254, 0.2) !important;
-    border: 1px solid #00F2FE !important;
-    color: #00F2FE !important;
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.45) !important;
-    font-weight: 800 !important;
-    padding: 4px 12px !important;
-    border-radius: 999px !important;
-}
-
 #homeHeroContent {
     transition: color 700ms ease-in-out !important;
 }
@@ -718,15 +579,17 @@ body.on-dashboard {
     box-shadow: var(--shadow-glass);
 }
 
-/* Completely transparent glass islands & cards when on dashboard (since background is already blurred) */
+/* True iOS Liquid Glassmorphism islands & cards on dashboard (exact to Apple Vision Pro / iOS frosted glass style) */
 body.on-dashboard .glass-card,
 body.on-dashboard .glass-card-accent,
 body.on-dashboard .glass-pill,
 body.on-dashboard .round-glass-btn,
 body.on-dashboard .role-selector {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    background: var(--bg-card, rgba(255, 255, 255, 0.15)) !important;
+    backdrop-filter: blur(28px) saturate(210%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.45)) !important;
+    box-shadow: var(--shadow-glass) !important;
 }
 
 /* Navigation Bar */

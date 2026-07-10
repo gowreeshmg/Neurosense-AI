@@ -259,11 +259,18 @@ function switchBgVideo(targetIdx, targetTheme) {
     
     // Apply 700ms hero content dark color transition for Deep Woods (index 2)
     const heroContent = document.getElementById('homeHeroContent');
-    if (heroContent) {
-        if (targetIdx === 2) {
-            heroContent.style.setProperty('color', '#182C41', 'important');
-        } else {
-            heroContent.style.setProperty('color', '#ffffff', 'important');
+    const topTitle = document.querySelector('.top-center-title');
+    if (targetIdx === 2) {
+        if (heroContent) heroContent.style.setProperty('color', '#182C41', 'important');
+        if (topTitle) {
+            topTitle.style.setProperty('color', '#182C41', 'important');
+            topTitle.style.setProperty('text-shadow', '0 1px 3px rgba(255, 255, 255, 0.85)', 'important');
+        }
+    } else {
+        if (heroContent) heroContent.style.setProperty('color', '#ffffff', 'important');
+        if (topTitle) {
+            topTitle.style.setProperty('color', '#ffffff', 'important');
+            topTitle.style.setProperty('text-shadow', '0 2px 10px rgba(0, 0, 0, 0.65)', 'important');
         }
     }
     
