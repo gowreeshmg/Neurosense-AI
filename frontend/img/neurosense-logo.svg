@@ -1,132 +1,187 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <!-- iOS Dark Mesh Background Gradient -->
-    <linearGradient id="iosBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#080C14" />
-      <stop offset="40%" stop-color="#11192E" />
-      <stop offset="80%" stop-color="#1A153B" />
-      <stop offset="100%" stop-color="#22123E" />
+    <!-- iOS 18 / VisionOS Cosmic Obsidian Background -->
+    <linearGradient id="iosCanvasBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060913" />
+      <stop offset="35%" stop-color="#0E1628" />
+      <stop offset="75%" stop-color="#181336" />
+      <stop offset="100%" stop-color="#210F3B" />
     </linearGradient>
 
-    <!-- iOS Top Rim Glass Stroke -->
-    <linearGradient id="iosRimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.38" />
-      <stop offset="35%" stop-color="#FFFFFF" stop-opacity="0.12" />
+    <!-- Deep Ambient Aurora Glows Behind Lens -->
+    <radialGradient id="auroraCyan" cx="30%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#00F2FE" stop-opacity="0.32" />
+      <stop offset="100%" stop-color="#00F2FE" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="auroraMagenta" cx="75%" cy="75%" r="60%">
+      <stop offset="0%" stop-color="#FF416C" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#8A2387" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Floating Glassmorphic Lens Fill Gradient -->
+    <linearGradient id="glassLensFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.22" />
+      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#121826" stop-opacity="0.45" />
+    </linearGradient>
+
+    <!-- Glass Lens Inner Specular Rim Border -->
+    <linearGradient id="glassLensRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+      <stop offset="30%" stop-color="#00F2FE" stop-opacity="0.45" />
+      <stop offset="70%" stop-color="#D946EF" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.15" />
+    </linearGradient>
+
+    <!-- Outer App Icon Superellipse Rim Stroke -->
+    <linearGradient id="iosOuterRim" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45" />
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.12" />
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.03" />
     </linearGradient>
 
-    <!-- Upper Glass Sheen Reflection -->
-    <linearGradient id="glassSheen" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.16" />
+    <!-- Upper Diagonal Glass Sheen Reflection -->
+    <linearGradient id="diagonalSheen" x1="0%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.24" />
+      <stop offset="35%" stop-color="#FFFFFF" stop-opacity="0.08" />
+      <stop offset="65%" stop-color="#FFFFFF" stop-opacity="0.0" />
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
     </linearGradient>
 
-    <!-- Apple Intelligence / Siri Fluid Ribbons -->
-    <linearGradient id="siriCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Apple Intelligence / Neural Loop Gradients -->
+    <linearGradient id="neuralStrand1" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#00F2FE" />
-      <stop offset="100%" stop-color="#4FACFE" />
+      <stop offset="50%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#9B51E0" />
     </linearGradient>
-
-    <linearGradient id="siriPink" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF416C" />
-      <stop offset="100%" stop-color="#8A2387" />
-    </linearGradient>
-
-    <linearGradient id="siriPurple" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#D946EF" />
-      <stop offset="50%" stop-color="#9B51E0" />
-      <stop offset="100%" stop-color="#4FACFE" />
-    </linearGradient>
-
-    <!-- Soundwave Pill Gradients -->
-    <linearGradient id="pillGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#00F2FE" />
-      <stop offset="100%" stop-color="#4FACFE" />
-    </linearGradient>
-
-    <linearGradient id="pillGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#D946EF" />
-      <stop offset="100%" stop-color="#8A2387" />
-    </linearGradient>
-
-    <linearGradient id="pillGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="neuralStrand2" x1="0%" y1="100%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#FF61D2" />
-      <stop offset="100%" stop-color="#FE5196" />
+      <stop offset="60%" stop-color="#D946EF" />
+      <stop offset="100%" stop-color="#00F2FE" />
     </linearGradient>
 
-    <!-- Center AI Core Glow -->
-    <radialGradient id="aiSpark" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#FFFFFF" />
+    <!-- Soundwave Glass Pillar Gradients -->
+    <linearGradient id="pillarCyan" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="20%" stop-color="#00F2FE" />
+      <stop offset="100%" stop-color="#0061ff" />
+    </linearGradient>
+    <linearGradient id="pillarPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+      <stop offset="20%" stop-color="#FF61D2" />
+      <stop offset="100%" stop-color="#8A2387" />
+    </linearGradient>
+    <linearGradient id="pillarCenter" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
       <stop offset="25%" stop-color="#00F2FE" />
-      <stop offset="70%" stop-color="#9B51E0" stop-opacity="0.5" />
-      <stop offset="100%" stop-color="#9B51E0" stop-opacity="0" />
-    </radialGradient>
+      <stop offset="60%" stop-color="#D946EF" />
+      <stop offset="100%" stop-color="#4FACFE" />
+    </linearGradient>
 
-    <!-- High-Contrast Outer Glow for iOS Depth -->
-    <filter id="iosGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="8" result="blur1" />
-      <feGaussianBlur stdDeviation="20" result="blur2" />
+    <!-- Glowing Shadows & Optical Filters -->
+    <filter id="shadowDeep" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#00F2FE" flood-opacity="0.18" />
+    </filter>
+
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur1" />
+      <feGaussianBlur stdDeviation="14" result="blur2" />
       <feMerge>
         <feMergeNode in="blur2" />
         <feMergeNode in="blur1" />
         <feMergeNode in="SourceGraphic" />
       </feMerge>
     </filter>
+
+    <!-- Superellipse Clip Path for exact iOS Icon radius (116px on 512 canvas) -->
+    <clipPath id="iosIconClip">
+      <rect x="0" y="0" width="512" height="512" rx="116" ry="116" />
+    </clipPath>
+
+    <!-- Inner Glass Lens Clip Path -->
+    <clipPath id="glassLensClip">
+      <rect x="68" y="68" width="376" height="376" rx="86" ry="86" />
+    </clipPath>
   </defs>
 
-  <!-- iOS App Icon Superellipse Full Bleed Background (512x512 with exact 116px radius) -->
-  <rect x="0" y="0" width="512" height="512" rx="116" ry="116" fill="url(#iosBgGrad)" />
-
-  <!-- Subtle Neural Infinity Ring Background Halo -->
-  <circle cx="256" cy="256" r="148" fill="none" stroke="url(#siriPurple)" stroke-opacity="0.14" stroke-width="3" stroke-dasharray="12 12" />
-  <circle cx="256" cy="256" r="105" fill="none" stroke="#00F2FE" stroke-opacity="0.08" stroke-width="1.5" />
-
-  <!-- EMBLEM: APPLE INTELLIGENCE STYLE DUAL-MODALITY LOOP & SOUNDWAVE -->
-  <g filter="url(#iosGlow)">
-    
-    <!-- LEFT SIDE: iOS Siri / Cognitive Neural Fluid Ribbon Loops -->
-    <!-- Bold curved organic pathways representing cognitive neural structure -->
-    <path d="M 170 150 C 120 200, 120 310, 170 360 C 200 390, 240 370, 256 340" fill="none" stroke="url(#siriCyan)" stroke-width="18" stroke-linecap="round" />
-    <path d="M 200 130 C 145 185, 150 280, 210 335" fill="none" stroke="url(#siriPink)" stroke-width="12" stroke-linecap="round" stroke-opacity="0.9" />
-    <path d="M 230 145 C 180 190, 190 270, 235 305" fill="none" stroke="url(#siriPurple)" stroke-width="8" stroke-linecap="round" stroke-opacity="0.8" />
-    
-    <!-- Bold Neural Nodes (Siri Glowing Orbs) -->
-    <circle cx="170" cy="150" r="14" fill="#00F2FE" />
-    <circle cx="170" cy="150" r="6" fill="#FFFFFF" />
-
-    <circle cx="140" cy="256" r="16" fill="#D946EF" />
-    <circle cx="140" cy="256" r="7" fill="#FFFFFF" />
-
-    <circle cx="170" cy="360" r="14" fill="#4FACFE" />
-    <circle cx="170" cy="360" r="6" fill="#FFFFFF" />
-
-    <circle cx="210" cy="335" r="11" fill="#FF61D2" />
-    <circle cx="210" cy="335" r="4.5" fill="#FFFFFF" />
-
-    <!-- RIGHT SIDE: iOS Voice Memos / Soundwave Precision Bars (High Contrast) -->
-    <!-- Soundwave Bar 1 (Left-Center Transition) -->
-    <rect x="252" y="212" width="20" height="88" rx="10" fill="url(#pillGrad1)" />
-    
-    <!-- Soundwave Bar 2 -->
-    <rect x="286" y="164" width="22" height="184" rx="11" fill="url(#pillGrad2)" />
-    
-    <!-- Soundwave Bar 3 (Main Peak Energy Bar) -->
-    <rect x="320" y="120" width="24" height="272" rx="12" fill="url(#pillGrad3)" />
-    
-    <!-- Soundwave Bar 4 -->
-    <rect x="358" y="156" width="22" height="200" rx="11" fill="url(#pillGrad2)" />
-    
-    <!-- Soundwave Bar 5 -->
-    <rect x="394" y="202" width="20" height="108" rx="10" fill="url(#pillGrad1)" />
+  <!-- 1. FULL BLEED iOS SUPERELLIPSE BASE -->
+  <g clip-path="url(#iosIconClip)">
+    <rect x="0" y="0" width="512" height="512" fill="url(#iosCanvasBg)" />
+    <circle cx="160" cy="160" r="220" fill="url(#auroraCyan)" />
+    <circle cx="360" cy="360" r="240" fill="url(#auroraMagenta)" />
   </g>
 
-  <!-- CENTER AI FUSION CORE (APPLE INTELLIGENCE SPARK) -->
-  <circle cx="256" cy="256" r="42" fill="url(#aiSpark)" />
-  <circle cx="256" cy="256" r="14" fill="#FFFFFF" filter="drop-shadow(0 0 8px #00F2FE)" />
+  <!-- 2. FLOATING VISION-OS GLASS LENS TILE (Centered Squircle Card) -->
+  <g filter="url(#shadowDeep)">
+    <rect x="68" y="68" width="376" height="376" rx="86" ry="86" fill="url(#glassLensFill)" />
+    <rect x="68" y="68" width="376" height="376" rx="86" ry="86" fill="none" stroke="url(#glassLensRim)" stroke-width="2" />
+  </g>
 
-  <!-- iOS App Icon Glass Sheen Overlay (Top Half Reflection) -->
-  <path d="M 0 0 L 512 0 L 512 220 Q 256 260 0 220 Z" fill="url(#glassSheen)" clip-path="inset(0 0 0 0 round 116px)" pointer-events="none" />
+  <!-- 3. INNER GLASS LENS CONTENTS (Dual Modality: Neural Loops + Acoustic Pillars) -->
+  <g clip-path="url(#glassLensClip)">
+    
+    <!-- Subtle Neural Orbit Rings inside Glass -->
+    <circle cx="256" cy="256" r="140" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.5" stroke-dasharray="8 8" />
+    <circle cx="256" cy="256" r="102" fill="none" stroke="url(#neuralStrand1)" stroke-opacity="0.15" stroke-width="2" />
 
-  <!-- iOS Glass Rim Border Highlight (1.5px inside) -->
-  <rect x="1.5" y="1.5" width="509" height="509" rx="114.5" ry="114.5" fill="none" stroke="url(#iosRimGrad)" stroke-width="3" pointer-events="none" />
+    <!-- LEFT & CENTER: Apple Intelligence Cognitive Synapse Curves -->
+    <g filter="url(#neonGlow)">
+      <!-- Main Outer Neural Ribbon Loop -->
+      <path d="M 124 186 C 84 236, 116 346, 178 356 C 224 364, 252 320, 256 256 C 260 192, 212 144, 168 156 C 138 164, 128 180, 124 186 Z" fill="none" stroke="url(#neuralStrand1)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" />
+      
+      <!-- Inner Synaptic Flow Loop -->
+      <path d="M 156 180 C 130 220, 140 310, 186 324 C 218 334, 246 296, 248 256 C 250 216, 220 176, 184 178 Z" fill="none" stroke="url(#neuralStrand2)" stroke-width="9" stroke-linecap="round" stroke-opacity="0.9" />
+      
+      <!-- Neural Nodes / Synaptic Orbs -->
+      <circle cx="168" cy="156" r="11" fill="#00F2FE" />
+      <circle cx="168" cy="156" r="4.5" fill="#FFFFFF" />
+
+      <circle cx="126" cy="256" r="13" fill="#D946EF" />
+      <circle cx="126" cy="256" r="5.5" fill="#FFFFFF" />
+
+      <circle cx="178" cy="356" r="12" fill="#4FACFE" />
+      <circle cx="178" cy="356" r="5" fill="#FFFFFF" />
+
+      <circle cx="224" cy="316" r="9" fill="#FF61D2" />
+      <circle cx="224" cy="316" r="3.5" fill="#FFFFFF" />
+    </g>
+
+    <!-- RIGHT & CENTER: Glass Acoustic Soundwave Pillars (Vocal Biomarkers) -->
+    <g filter="url(#neonGlow)">
+      <!-- Pillar 1 -->
+      <rect x="256" y="214" width="18" height="84" rx="9" fill="url(#pillarCyan)" />
+      <rect x="256" y="214" width="18" height="84" rx="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1" />
+
+      <!-- Pillar 2 -->
+      <rect x="288" y="168" width="20" height="176" rx="10" fill="url(#pillarPurple)" />
+      <rect x="288" y="168" width="20" height="176" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1" />
+
+      <!-- Pillar 3 (Center High-Energy Peak) -->
+      <rect x="322" y="118" width="24" height="276" rx="12" fill="url(#pillarCenter)" />
+      <rect x="322" y="118" width="24" height="276" rx="12" fill="none" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="1.5" />
+
+      <!-- Pillar 4 -->
+      <rect x="360" y="156" width="20" height="200" rx="10" fill="url(#pillarPurple)" />
+      <rect x="360" y="156" width="20" height="200" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1" />
+
+      <!-- Pillar 5 -->
+      <rect x="394" y="200" width="18" height="112" rx="9" fill="url(#pillarCyan)" />
+      <rect x="394" y="200" width="18" height="112" rx="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1" />
+    </g>
+
+    <!-- 4. CENTER AI FUSION STAR (Apple Intelligence Synapse Core) -->
+    <g filter="url(#neonGlow)" transform="translate(256, 256)">
+      <!-- Radiant 4-point Diamond Star where Text & Audio meet -->
+      <path d="M 0 -34 Q 0 0 34 0 Q 0 0 0 34 Q 0 0 -34 0 Q 0 0 0 -34 Z" fill="#FFFFFF" />
+      <path d="M 0 -20 Q 0 0 20 0 Q 0 0 0 20 Q 0 0 -20 0 Q 0 0 0 -20 Z" fill="#00F2FE" />
+      <circle cx="0" cy="0" r="5" fill="#FFFFFF" />
+    </g>
+  </g>
+
+  <!-- 5. VISION-OS DIAGONAL GLASS SHEEN across the entire iOS Icon -->
+  <path d="M 0 0 L 512 0 L 512 260 Q 256 300 0 160 Z" fill="url(#diagonalSheen)" clip-path="url(#iosIconClip)" pointer-events="none" />
+
+  <!-- 6. OUTER iOS ICON RIM HIGHLIGHT (Superellipse Border) -->
+  <rect x="1.5" y="1.5" width="509" height="509" rx="114.5" ry="114.5" fill="none" stroke="url(#iosOuterRim)" stroke-width="3" clip-path="url(#iosIconClip)" pointer-events="none" />
 </svg>
