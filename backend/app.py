@@ -107,6 +107,29 @@ def read_root():
         return FileResponse(index_file)
     return {"status": "NeuroSense AI API running smoothly. Visit /docs for OpenAPI specifications."}
 
+@app.get("/apple-touch-icon.png")
+@app.get("/apple-touch-icon-precomposed.png")
+def get_apple_touch_icon():
+    icon_file = FRONTEND_DIR / "img" / "apple-touch-icon.png"
+    if icon_file.exists():
+        return FileResponse(icon_file, media_type="image/png")
+    raise HTTPException(status_code=404)
+
+@app.get("/favicon.ico")
+@app.get("/favicon.png")
+def get_favicon():
+    icon_file = FRONTEND_DIR / "img" / "neurosense-logo.png"
+    if icon_file.exists():
+        return FileResponse(icon_file, media_type="image/png")
+    raise HTTPException(status_code=404)
+
+@app.get("/manifest.json")
+def get_manifest():
+    manifest_file = FRONTEND_DIR / "manifest.json"
+    if manifest_file.exists():
+        return FileResponse(manifest_file, media_type="application/json")
+    raise HTTPException(status_code=404)
+
 @app.post("/api/analyze/text", response_model=TextAnalyzeResponse)
 def analyze_text(req: TextAnalyzeRequest):
     if not text_clf or not text_clf.is_fitted:
