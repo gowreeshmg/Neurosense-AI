@@ -21,6 +21,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (text) text.innerText = 'Dark Mode';
     }
 
+    // Ensure theme toggle is hidden on initial home screen load & active video is set
+    const themeBtn = document.getElementById('btnThemeToggle');
+    const homeScreen = document.getElementById('lumoraHomeScreen');
+    if (themeBtn && homeScreen && !homeScreen.classList.contains('hidden-screen')) {
+        themeBtn.style.setProperty('display', 'none', 'important');
+    }
+    const vid0 = document.getElementById('bgVideo0');
+    if (vid0) {
+        vid0.style.setProperty('opacity', '1', 'important');
+        vid0.style.setProperty('z-index', '2', 'important');
+    }
+
     drawRestingWaveform();
     generateCalendarHeatmap();
     populateTriageTable();
@@ -79,6 +91,7 @@ function switchScreen(screenName) {
     const dashboardScreen = document.getElementById('appDashboardScreen');
     const appBg = document.querySelector('.app-background');
     const dashboardVideoBg = document.getElementById('dashboardBgVideoContainer');
+    const themeBtn = document.getElementById('btnThemeToggle');
     
     if (screenName === 'home') {
         if (homeScreen) {
@@ -91,6 +104,7 @@ function switchScreen(screenName) {
         }
         if (dashboardVideoBg) dashboardVideoBg.style.setProperty('display', 'none', 'important');
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
+        if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
         document.body.style.backgroundColor = '';
         document.body.classList.remove('on-dashboard');
         window.scrollTo(0, 0);
@@ -108,6 +122,7 @@ function switchScreen(screenName) {
             dashboardVideoBg.style.setProperty('z-index', '0', 'important');
         }
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
+        if (themeBtn) themeBtn.style.setProperty('display', 'inline-flex', 'important');
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.classList.add('on-dashboard');
         window.scrollTo(0, 0);
@@ -200,8 +215,15 @@ function switchBgVideo(targetIdx, targetTheme) {
         if (vid) {
             if (i === targetIdx) {
                 vid.classList.add('active');
+                vid.style.setProperty('opacity', '1', 'important');
+                vid.style.setProperty('z-index', '2', 'important');
+                if (vid.play) {
+                    vid.play().catch(err => console.log("Video play:", err));
+                }
             } else {
                 vid.classList.remove('active');
+                vid.style.setProperty('opacity', '0', 'important');
+                vid.style.setProperty('z-index', '1', 'important');
             }
         }
         if (btn) {
