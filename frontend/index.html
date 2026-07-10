@@ -749,24 +749,24 @@
             </div>
         </div>
 
-        <!-- Hero Content (vertically and horizontally centered) -->
-        <div class="flex-1 flex items-center justify-center relative z-10 px-4 sm:px-6 w-full -mt-10 sm:-mt-14">
-            <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center">
-                <!-- Heading h1 -->
-                <h1 class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] tracking-[-0.02em]">
-                    Detect early.<br class="hidden sm:inline">
-                    Explain clearly. <span class="text-white/60">Support with</span><br class="hidden sm:inline">
+        <!-- Hero Content (vertically and horizontally centered with desktop-scale text on mobile) -->
+        <div class="flex-1 flex items-center justify-center relative z-10 px-4 sm:px-6 w-full -mt-4 sm:-mt-8">
+            <div class="text-center max-w-4xl mx-auto flex flex-col items-center justify-center">
+                <!-- Heading h1 (exact same large text size and 3 lines across mobile and desktop) -->
+                <h1 class="text-white text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-7xl leading-[1.08] tracking-[-0.02em] font-medium">
+                    Detect early.<br>
+                    Explain clearly. <span class="text-white/60">Support with</span><br>
                     <span class="text-white/60">clinical CBT.</span>
                 </h1>
 
-                <!-- Subheading p -->
-                <p class="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mt-6 sm:mt-8">
+                <!-- Subheading p (fuller, larger text size on mobile matching desktop) -->
+                <p class="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mx-auto mt-6 sm:mt-8">
                     NeuroSense AI unifies voice acoustics and written reflections into real-time explainable triage, so your team spends less energy on guesswork and more on genuine clinical progress.
                 </p>
 
                 <!-- CTA button centered -->
-                <div class="flex items-center justify-center mt-6 sm:mt-8">
-                    <button onclick="switchScreen('dashboard')" class="px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-gray-900 text-sm sm:text-base font-semibold rounded-full hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-center mt-8 sm:mt-10">
+                    <button onclick="switchScreen('dashboard')" class="px-7 sm:px-8 py-3.5 sm:py-4 bg-white text-gray-900 text-base sm:text-lg font-semibold rounded-full hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer">
                         Begin your check-in
                     </button>
                 </div>
