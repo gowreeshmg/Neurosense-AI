@@ -99,7 +99,9 @@
     object-fit: cover;
     opacity: 0 !important;
     z-index: 1 !important;
-    transition: opacity 800ms ease-in-out !important;
+    filter: blur(0px) brightness(1);
+    transform: scale(1);
+    transition: opacity 800ms ease-in-out, filter 700ms ease-in-out, transform 700ms ease-in-out !important;
     pointer-events: none;
 }
 
@@ -107,6 +109,12 @@
 #lumoraHomeScreen .bg-video.active {
     opacity: 1 !important;
     z-index: 2 !important;
+}
+
+/* Cinematic subtle blur & dim when in Dashboard interface */
+body.on-dashboard #globalAmbientBgContainer .bg-video.active {
+    filter: blur(14px) brightness(0.82) !important;
+    transform: scale(1.06) !important;
 }
 
 #homeHeroContent {
