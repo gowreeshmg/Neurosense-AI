@@ -149,6 +149,44 @@ let activeVideoIdx = 0;
 let isVideoTransitioning = false;
 
 /**
+ * Toggles the Lumora Hero mobile navigation overlay with Menu/X crossfade animation
+ */
+function toggleHeroMobileMenu() {
+    const menu = document.getElementById('heroMobileMenu');
+    const openIcon = document.getElementById('menuOpenIcon');
+    const closeIcon = document.getElementById('menuCloseIcon');
+    if (!menu) return;
+    
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        menu.style.display = 'flex';
+        setTimeout(() => menu.style.opacity = '1', 10);
+        if (openIcon) {
+            openIcon.style.transform = 'rotate(90deg) scale(0.75)';
+            openIcon.classList.add('hidden');
+        }
+        if (closeIcon) {
+            closeIcon.classList.remove('hidden');
+            closeIcon.style.transform = 'rotate(0deg)';
+        }
+    } else {
+        menu.style.opacity = '0';
+        setTimeout(() => {
+            menu.classList.add('hidden');
+            menu.style.display = 'none';
+        }, 500);
+        if (openIcon) {
+            openIcon.classList.remove('hidden');
+            openIcon.style.transform = 'rotate(0deg) scale(1)';
+        }
+        if (closeIcon) {
+            closeIcon.style.transform = 'rotate(-90deg)';
+            closeIcon.classList.add('hidden');
+        }
+    }
+}
+
+/**
  * Crossfades between ambient atmosphere videos with 1000ms cooldown and 700ms hero color transition
  */
 function switchBgVideo(targetIdx, targetTheme) {

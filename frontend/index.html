@@ -642,134 +642,107 @@
         <div class="glow-orb orb-3"></div>
     </div>
 
-    <!-- ==================== SCREEN 1: FLOWPATH-STYLE FULLSCREEN HERO ==================== -->
-    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2;">
-        <!-- Looping video background with object-cover -->
-        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4"></video>
-        <!-- Subtle dark overlay -->
-        <div class="absolute inset-0 bg-black/10 z-0 pointer-events-none"></div>
+    <!-- ==================== SCREEN 1: LUMORA-STYLE FULLSCREEN HERO (NEUROSENSE AI) ==================== -->
+    <section id="lumoraHomeScreen" class="view-screen active h-screen w-full overflow-hidden relative flex flex-col justify-between bg-black" style="height: 100vh; width: 100%; overflow: hidden; position: relative; z-index: 2; background: #000000;">
+        <!-- Background Video Layer (4 stacked videos, index 0 active by default) -->
+        <video id="bgVideo0" autoplay muted loop playsinline class="bg-video active absolute inset-0 w-full h-full object-cover z-1" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4"></video>
+        <video id="bgVideo1" autoplay muted loop playsinline class="bg-video absolute inset-0 w-full h-full object-cover z-0 opacity-0" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4"></video>
+        <video id="bgVideo2" autoplay muted loop playsinline class="bg-video absolute inset-0 w-full h-full object-cover z-0 opacity-0" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081042_df7202bf-bd80-4b2b-bbc6-1f09ba2870e9.mp4"></video>
+        <video id="bgVideo3" autoplay muted loop playsinline class="bg-video absolute inset-0 w-full h-full object-cover z-0 opacity-0" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4"></video>
 
-        <!-- Navigation (top, not fixed/sticky) -->
-        <header class="w-full relative z-20 px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5 flex items-center justify-between">
-            <!-- Logo: Inline SVG diamond (28x28) + brand name -->
+        <!-- Transparent PNG Overlay (z-index 10) with continuous train-bob animation -->
+        <img src="https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png" alt="Overlay" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-10 animate-train-bob" style="transform: scale(1.03);">
+
+        <!-- Navigation (top) - remains white always -->
+        <header class="w-full relative z-30 px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5 flex items-center justify-between">
+            <!-- Left: "NeuroSense AI" in white, italic, Instrument Serif font -->
             <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchScreen('home')">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0">
-                    <path d="M14 2L26 14L14 26L2 14L14 2Z" fill="white" fill-opacity="0.9"/>
-                    <path d="M14 6L22 14L14 22L6 14L14 6Z" fill="white" fill-opacity="0.5"/>
-                </svg>
-                <span class="text-white text-lg sm:text-xl font-medium tracking-tight">NeuroSense AI</span>
+                <span class="text-white text-xl sm:text-2xl tracking-tight font-normal" style="font-family: 'Instrument Serif', serif; font-style: italic;">NeuroSense AI</span>
             </div>
 
-            <!-- Desktop Nav (hidden on mobile) -->
-            <nav class="hidden md:flex items-center gap-6 lg:gap-8">
-                <!-- Dropdown 1: Product -->
-                <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
-                    <button class="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2 focus:outline-none">
-                        <span>Product</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[160px] shadow-xl animate-dropdown z-50">
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Dual-Modality Screening</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">LIME Text Explainability</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">SHAP Audio Attribution</a>
-                    </div>
-                </div>
-
-                <!-- Dropdown 2: Solutions -->
-                <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
-                    <button class="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2 focus:outline-none">
-                        <span>Solutions</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[160px] shadow-xl animate-dropdown z-50">
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Student Check-in Portal</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Clinical CBT Assistant</a>
-                        <a href="/docs" target="_blank" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">API Reference</a>
-                    </div>
-                </div>
-
-                <!-- Dropdown 3: About -->
-                <div class="relative group" onmouseenter="this.querySelector('.dropdown-menu').classList.remove('hidden')" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
-                    <button class="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2 focus:outline-none">
-                        <span>About</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="dropdown-menu hidden !absolute top-full left-0 mt-1 liquid-glass rounded-xl py-3 px-2 min-w-[160px] shadow-xl animate-dropdown z-50">
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Our Research &amp; Mission</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Clinical Validation</a>
-                        <a onclick="switchScreen('dashboard')" class="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5 cursor-pointer">Reach Us</a>
-                    </div>
-                </div>
-
-                <!-- No Dropdown: Plans -->
-                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium py-2 cursor-pointer">Plans</a>
+            <!-- Right (desktop md+): A .liquid-glass pill containing nav links + solid white button -->
+            <nav class="hidden md:flex items-center liquid-glass rounded-full px-5 py-1.5 gap-6 border border-white/20 shadow-sm">
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium transition-colors cursor-pointer" style="font-family: system-ui, sans-serif;">Dual-Modality CBT</a>
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium transition-colors cursor-pointer" style="font-family: system-ui, sans-serif;">Clinical Validation</a>
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium transition-colors cursor-pointer" style="font-family: system-ui, sans-serif;">LIME & SHAP</a>
+                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium transition-colors cursor-pointer" style="font-family: system-ui, sans-serif;">Research</a>
+                <button onclick="switchScreen('dashboard')" class="ml-2 px-4 py-1.5 bg-white text-gray-900 text-sm font-semibold rounded-full hover:bg-white/90 shadow-sm transition-all cursor-pointer" style="font-family: system-ui, sans-serif;">
+                    Begin Check-in
+                </button>
             </nav>
 
-            <!-- Desktop CTA -->
-            <div class="hidden md:flex items-center gap-4">
-                <a onclick="switchScreen('dashboard')" class="text-white/90 hover:text-white text-sm font-medium cursor-pointer">Log in</a>
-                <button onclick="switchScreen('dashboard')" class="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium hover:bg-white/15 transition-all cursor-pointer">
-                    Try it free
-                </button>
-            </div>
-
-            <!-- Mobile Menu Toggle Button -->
-            <button onclick="toggleMobileHeroMenu()" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 focus:outline-none transition-all duration-300 relative z-30" aria-label="Toggle Menu">
-                <svg id="heroMenuIconOpen" class="w-6 h-6 transition-all duration-300 origin-center" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                <svg id="heroMenuIconClose" class="w-6 h-6 hidden transition-all duration-300 origin-center" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            <!-- Right (mobile): .liquid-glass rounded hamburger button -->
+            <button onclick="toggleHeroMobileMenu()" class="md:hidden liquid-glass p-2.5 rounded-full text-white hover:bg-white/10 transition-all z-50 cursor-pointer border border-white/20" aria-label="Toggle Menu">
+                <svg id="menuOpenIcon" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg id="menuCloseIcon" class="w-5 h-5 hidden transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </header>
 
-        <!-- Mobile Menu (slides in with cubic-bezier easing) -->
-        <div id="heroMobileMenu" class="hidden md:hidden absolute top-16 left-4 right-4 bg-[#2C221C]/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/15 z-50 transition-all duration-400" style="transition-timing-function: cubic-bezier(0.16,1,0.3,1);">
-            <div class="flex flex-col gap-4 text-left">
-                <div>
-                    <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">Product</span>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Dual-Modality Screening</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">LIME Text Explainability</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">SHAP Audio Attribution</a>
+        <!-- Mobile Menu Overlay (fixed, z-50) -->
+        <div id="heroMobileMenu" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden flex flex-col items-center justify-center p-6 transition-opacity duration-500" style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);">
+            <button onclick="toggleHeroMobileMenu()" class="absolute top-5 right-5 liquid-glass p-3 rounded-full text-white hover:bg-white/10 border border-white/20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <div class="flex flex-col items-center gap-6 w-full max-w-sm text-center">
+                <a onclick="switchScreen('dashboard'); toggleHeroMobileMenu();" class="text-white text-3xl font-medium tracking-tight transition-transform duration-500 hover:text-white/80 cursor-pointer" style="font-family: 'Instrument Serif', serif; font-style: italic;">Dual-Modality CBT</a>
+                <a onclick="switchScreen('dashboard'); toggleHeroMobileMenu();" class="text-white text-3xl font-medium tracking-tight transition-transform duration-500 hover:text-white/80 cursor-pointer" style="font-family: 'Instrument Serif', serif; font-style: italic;">Clinical Validation</a>
+                <a onclick="switchScreen('dashboard'); toggleHeroMobileMenu();" class="text-white text-3xl font-medium tracking-tight transition-transform duration-500 hover:text-white/80 cursor-pointer" style="font-family: 'Instrument Serif', serif; font-style: italic;">LIME & SHAP</a>
+                <a onclick="switchScreen('dashboard'); toggleHeroMobileMenu();" class="text-white text-3xl font-medium tracking-tight transition-transform duration-500 hover:text-white/80 cursor-pointer" style="font-family: 'Instrument Serif', serif; font-style: italic;">Research</a>
+                <button onclick="switchScreen('dashboard'); toggleHeroMobileMenu();" class="w-full mt-6 py-3.5 bg-white text-gray-900 text-lg font-semibold rounded-full shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer" style="font-family: system-ui, sans-serif;">
+                    Begin Check-in
+                </button>
+            </div>
+        </div>
+
+        <!-- Hero Content (centered, below nav) - transitions color via #homeHeroContent -->
+        <div id="homeHeroContent" class="flex-1 flex flex-col items-center justify-center relative z-20 px-4 sm:px-6 w-full text-white transition-colors duration-700 ease-in-out">
+            <div class="text-center max-w-4xl mx-auto flex flex-col items-center justify-center">
+                <!-- Badge: .liquid-glass rounded-full pill -->
+                <div class="liquid-glass rounded-full px-4 sm:px-5 py-1.5 sm:py-2 border border-white/20 mb-6 sm:mb-8 shadow-sm">
+                    <span class="text-xs sm:text-sm tracking-wide font-medium" style="font-family: system-ui, sans-serif; color: inherit;">
+                        Over 10,000 screening assessments powered by clinical CBT explainability
+                    </span>
                 </div>
-                <div class="border-t border-white/10 pt-3">
-                    <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">Solutions</span>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Student Check-in Portal</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Clinical CBT Assistant</a>
-                </div>
-                <div class="border-t border-white/10 pt-3">
-                    <span class="text-white/50 text-xs uppercase tracking-wider font-semibold block mb-2">About</span>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Our Research &amp; Mission</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Clinical Validation</a>
-                    <a onclick="switchScreen('dashboard')" class="block pl-3 py-1.5 text-white/90 hover:text-white text-sm cursor-pointer">Reach Us</a>
-                </div>
-                <div class="border-t border-white/10 pt-3 flex flex-col gap-2">
-                    <a onclick="switchScreen('dashboard')" class="w-full text-center py-2 text-white/90 hover:text-white text-sm font-medium cursor-pointer">Log in</a>
-                    <button onclick="switchScreen('dashboard')" class="w-full liquid-glass rounded-full py-2.5 text-white text-sm font-medium border border-white/20 cursor-pointer">
-                        Try it free
+
+                <!-- Heading: "Clarity in an Endlessly / Noisy Universe" -> "Clinical Clarity in an Endlessly / Complex Mind" -->
+                <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.08] max-w-4xl font-normal tracking-tight" style="font-family: 'Instrument Serif', serif; color: inherit;">
+                    Clinical Clarity in an Endlessly<br>
+                    Complex Mental Health Reality
+                </h1>
+
+                <!-- Subtext -->
+                <p class="text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto mt-5 sm:mt-7 opacity-80" style="font-family: system-ui, sans-serif; color: inherit;">
+                    Rise above subjective guesswork and unstructured intake notes. NeuroSense AI unifies voice biomarkers and written reflections into real-time explainable triage, guiding your team to genuine clinical breakthroughs.
+                </p>
+
+                <!-- Email / Check-in Pill: .liquid-glass rounded-full pill containing text input and solid white button -->
+                <div class="liquid-glass rounded-full p-1.5 pl-5 sm:pl-6 border border-white/20 w-full max-w-[320px] sm:max-w-sm mt-6 sm:mt-8 flex items-center justify-between shadow-md">
+                    <span class="text-xs sm:text-sm opacity-70 truncate mr-2" style="font-family: system-ui, sans-serif; color: inherit;">Enter patient ID or session...</span>
+                    <button onclick="switchScreen('dashboard')" class="px-5 sm:px-6 py-2 sm:py-2.5 bg-white text-gray-900 text-xs sm:text-sm font-semibold rounded-full hover:bg-white/90 shadow-sm transition-all flex-shrink-0 cursor-pointer" style="font-family: system-ui, sans-serif;">
+                        Begin Assessment
                     </button>
+                </div>
+
+                <!-- Video Switcher: Row of 4 text buttons with labels -->
+                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-6 mt-8 sm:mt-10">
+                    <button id="videoBtn0" onclick="switchBgVideo(0)" class="video-switch-btn active" style="font-family: system-ui, sans-serif;">Golden Hour</button>
+                    <button id="videoBtn1" onclick="switchBgVideo(1)" class="video-switch-btn" style="font-family: system-ui, sans-serif;">Still Water</button>
+                    <button id="videoBtn2" onclick="switchBgVideo(2)" class="video-switch-btn" style="font-family: system-ui, sans-serif;">Deep Woods</button>
+                    <button id="videoBtn3" onclick="switchBgVideo(3)" class="video-switch-btn" style="font-family: system-ui, sans-serif;">Quiet Dawn</button>
                 </div>
             </div>
         </div>
 
-        <!-- Hero Content (vertically and horizontally centered with desktop-scale text on mobile) -->
-        <div class="flex-1 flex items-center justify-center relative z-10 px-4 sm:px-6 w-full -mt-4 sm:-mt-8">
-            <div class="text-center max-w-4xl mx-auto flex flex-col items-center justify-center">
-                <!-- Heading h1 (exact same large text size and 3 lines across mobile and desktop) -->
-                <h1 class="text-white text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-7xl leading-[1.08] tracking-[-0.02em] font-medium">
-                    Detect early.<br>
-                    Explain clearly. <span class="text-white/60">Support with</span><br>
-                    <span class="text-white/60">clinical CBT.</span>
-                </h1>
-
-                <!-- Subheading p (fuller, larger text size on mobile matching desktop) -->
-                <p class="text-white/80 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mx-auto mt-6 sm:mt-8">
-                    NeuroSense AI unifies voice acoustics and written reflections into real-time explainable triage, so your team spends less energy on guesswork and more on genuine clinical progress.
-                </p>
-
-                <!-- CTA button centered -->
-                <div class="flex items-center justify-center mt-8 sm:mt-10">
-                    <button onclick="switchScreen('dashboard')" class="px-7 sm:px-8 py-3.5 sm:py-4 bg-white text-gray-900 text-base sm:text-lg font-semibold rounded-full hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer">
-                        Begin your check-in
-                    </button>
-                </div>
+        <!-- Bottom Stats (pushed to bottom via flex-1 spacer or placed at bottom) - remains white always -->
+        <div class="w-full relative z-30 px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-center text-center">
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-white/70 text-xs sm:text-sm tracking-wide" style="font-family: system-ui, -apple-system, sans-serif;">
+                <span>60+ Clinical Triage Sessions</span>
+                <span class="hidden sm:inline opacity-40">|</span>
+                <span>12,000+ Analyzed Biomarkers</span>
+                <span class="hidden sm:inline opacity-40">|</span>
+                <span>94% XAI Diagnostic Accuracy</span>
+                <span class="hidden sm:inline opacity-40">|</span>
+                <span>Intentional-First Design</span>
             </div>
         </div>
     </section>

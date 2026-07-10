@@ -80,15 +80,44 @@
     --shadow-glass: 0 16px 40px rgba(0, 0, 0, 0.15), inset 0 1px 1.5px rgba(255, 255, 255, 0.85);
 }
 
-/* ==================== EXACT FLOWPATH HERO SECTION SPECIFICATION STYLES ==================== */
+/* ==================== EXACT LUMORA HERO SECTION SPECIFICATION STYLES ==================== */
 #lumoraHomeScreen.w-full.h-screen {
     width: 100% !important;
     height: 100vh !important;
     padding: 0 !important;
-    background: transparent !important;
+    background: #000000 !important;
     z-index: 2;
-    font-family: var(--font-helvetica);
     overflow: hidden !important;
+}
+
+#lumoraHomeScreen .bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 1000ms ease-in-out !important;
+    pointer-events: none;
+}
+
+#lumoraHomeScreen .bg-video.active {
+    opacity: 1 !important;
+    z-index: 1 !important;
+}
+
+#homeHeroContent {
+    transition: color 700ms ease-in-out !important;
+}
+
+@keyframes trainBob {
+    0%, 100% { transform: scale(1.03) translateY(0); }
+    50% { transform: scale(1.03) translateY(-6px); }
+}
+
+.animate-train-bob {
+    animation: trainBob 3s ease-in-out infinite;
 }
 
 #lumoraHomeScreen[style*="display: none"],
