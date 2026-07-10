@@ -35,14 +35,14 @@
     </filter>
   </defs>
 
-  <!-- 1. Superellipse Rounded Rectangle Background (Exact iOS Radius) -->
-  <rect x="0" y="0" width="512" height="512" rx="116" ry="116" fill="url(#appBg)" />
+  <!-- 1. Full-Bleed Square Background (No Transparent Corners for iOS/Android PWA) -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#appBg)" />
 
-  <!-- Subtle Outer Rim Highlight for Clean App Border -->
-  <rect x="2" y="2" width="508" height="508" rx="114" ry="114" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="2" />
+  <!-- Subtle Inner Safe-Zone Rim Highlight -->
+  <rect x="12" y="12" width="488" height="488" rx="100" ry="100" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="2" />
 
-  <!-- 2. MAIN CENTER EMBLEM: Clean, Bold Stylized Brain Hemisphere + Soundwave -->
-  <g filter="url(#cleanShadow)">
+  <!-- 2. MAIN CENTER EMBLEM: Clean, Bold Stylized Brain Hemisphere + Soundwave (Scaled to Safe Zone) -->
+  <g filter="url(#cleanShadow)" transform="matrix(0.86 0 0 0.86 35.8 35.8)">
     
     <!-- LEFT BRAIN LOBE (Cognitive & Text Analysis) -->
     <!-- Sleek, organic curved outline representing the left hemisphere -->
@@ -66,7 +66,7 @@
 
   <!-- 3. CENTER DUAL-MODALITY SOUNDWAVE PULSE (Vocal Biomarkers Pulse Line) -->
   <!-- A clean, bold ECG/audio pulse line cutting right across the center axis -->
-  <g filter="url(#softGlow)">
+  <g filter="url(#softGlow)" transform="matrix(0.86 0 0 0.86 35.8 35.8)">
     <path d="M 140 248 L 206 248 L 226 200 L 256 304 L 286 192 L 306 248 L 372 248" 
           fill="none" stroke="url(#waveGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
     <!-- Bright Center Node -->
