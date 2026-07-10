@@ -520,6 +520,11 @@ body.on-dashboard {
     border-radius: 0 !important;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative !important;
+    z-index: 50 !important;
+    pointer-events: auto !important;
+    user-select: none;
 }
 
 .video-switch-btn:hover {

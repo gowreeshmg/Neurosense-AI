@@ -205,8 +205,8 @@ function toggleHeroMobileMenu() {
  * Crossfades between ambient atmosphere videos with 1000ms cooldown and 700ms hero color transition
  */
 function switchBgVideo(targetIdx, targetTheme) {
-    if (activeVideoIdx === targetIdx || isVideoTransitioning) return;
-    isVideoTransitioning = true;
+    if (activeVideoIdx === targetIdx) return;
+    activeVideoIdx = targetIdx;
     
     // Update active video class & buttons
     for (let i = 0; i < 4; i++) {
@@ -239,9 +239,9 @@ function switchBgVideo(targetIdx, targetTheme) {
     const heroContent = document.getElementById('homeHeroContent');
     if (heroContent) {
         if (targetIdx === 2) {
-            heroContent.style.color = '#182C41';
+            heroContent.style.setProperty('color', '#182C41', 'important');
         } else {
-            heroContent.style.color = '#ffffff';
+            heroContent.style.setProperty('color', '#ffffff', 'important');
         }
     }
     
@@ -261,13 +261,6 @@ function switchBgVideo(targetIdx, targetTheme) {
             if (text) text.innerText = 'Light Mode';
         }
     }
-    
-    activeVideoIdx = targetIdx;
-    
-    // 1000ms cooldown matching CSS opacity crossfade
-    setTimeout(() => {
-        isVideoTransitioning = false;
-    }, 1000);
 }
 
 /**
