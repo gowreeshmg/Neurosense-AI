@@ -21,6 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (text) text.innerText = 'Dark Mode';
     }
 
+    // Check saved dashboard blur setting
+    const savedBlur = localStorage.getItem('lumora_dashboard_blur');
+    if (savedBlur !== null && typeof setDashboardBlur === 'function') {
+        setDashboardBlur(Number(savedBlur));
+    } else if (typeof setDashboardBlur === 'function') {
+        setDashboardBlur(14);
+    }
+
     // Ensure theme toggle is hidden on initial home screen load & active videos initialize
     const themeBtn = document.getElementById('btnThemeToggle');
     const homeScreen = document.getElementById('lumoraHomeScreen');
@@ -275,6 +283,77 @@ function switchBgVideo(targetIdx, targetTheme) {
             if (text) text.innerText = 'Light Mode';
         }
     }
+}
+
+// ==========================================
+// BACKGROUND BLUR & ATMOSPHERE POPUP CONTROL
+// ==========================================
+function toggleBlurControlPopover() {
+    const pop = document.getElementById('blurControlPopover');
+    if (!pop) return;
+    if (pop.style.display === 'none' || pop.classList.contains('hidden')) {
+        pop.style.display = 'block';
+        pop.classList.remove('hidden');
+    } else {
+        pop.style.display = 'none';
+        pop.classList.add('hidden');
+    }
+}
+
+function handleThemeBtnDoubleClick(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    if (window.themeClickTimeout) {
+        clearTimeout(window.themeClickTimeout);
+        window.themeClickTimeout = null;
+    }
+    toggleBlurControlPopover();
+}
+
+function handleThemeBtnClick(event) {
+    if (window.themeClickTimeout) return;
+    window.themeClickTimeout = setTimeout(() => {
+        toggleTheme();
+        window.themeClickTimeout = null;
+    }, 220);
+}
+
+function setDashboardBlur(blurVal) {
+    const val = Math.max(0, Math.min(40, Number(blurVal)));
+    document.documentElement.style.setProperty('--dashboard-bg-blur', `${val}px`);
+    const scaleVal = val > 0 ? (1 + (val * 0.0045)).toFixed(3) : 1;
+    document.documentElement.style.setProperty('--dashboard-bg-scale', scaleVal);
+    
+    const slider = document.getElementById('sliderBlurIntensity');
+    if (slider && Number(slider.value) !== val) slider.value = val;
+    
+    const text = document.getElementById('blurIntensityValueText');
+    if (text) text.innerText = `${val}px`;
+    
+    const chk = document.getElementById('chkBlurToggle');
+    if (chk) chk.checked = val > 0;
+    
+    localStorage.setItem('lumora_dashboard_blur', val);
+}
+
+function handleBlurSliderChange(val) {
+    setDashboardBlur(val);
+}
+
+function handleBlurToggleChange(isChecked) {
+    if (!isChecked) {
+        setDashboardBlur(0);
+    } else {
+        const saved = localStorage.getItem('lumora_dashboard_blur');
+        const prevVal = saved && Number(saved) > 0 ? Number(saved) : 14;
+        setDashboardBlur(prevVal);
+    }
+}
+
+function applyBlurPreset(val) {
+    setDashboardBlur(val);
 }
 
 /**
