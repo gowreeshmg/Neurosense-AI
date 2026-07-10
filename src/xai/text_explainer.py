@@ -15,7 +15,10 @@ class TextExplainerLIME:
     def __init__(self, text_classifier=None):
         self.text_classifier = text_classifier or LinguisticStressClassifier()
         if not self.text_classifier.is_fitted:
-            self.text_classifier.load_model()
+            try:
+                self.text_classifier.load_model()
+            except Exception:
+                pass
             
     def explain_instance(self, text, top_k=8):
         """

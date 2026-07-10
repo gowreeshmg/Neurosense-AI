@@ -1,7 +1,10 @@
 import os
 import sys
 import numpy as np
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))

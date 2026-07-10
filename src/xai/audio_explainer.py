@@ -16,7 +16,10 @@ class AudioExplainerSHAP:
     def __init__(self, audio_classifier=None):
         self.audio_classifier = audio_classifier or AudioEnsemblePipeline()
         if not self.audio_classifier.is_fitted:
-            self.audio_classifier.load_model()
+            try:
+                self.audio_classifier.load_model()
+            except Exception:
+                pass
             
     def _get_feature_name(self, index):
         """

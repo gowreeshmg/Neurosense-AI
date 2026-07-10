@@ -1,6 +1,9 @@
 import os
 import random
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
 from pathlib import Path
 import sys
 

@@ -240,7 +240,12 @@ async def analyze_audio_file(
         print(f"[API Audio Upload] Saved temporary audio file to {temp_path}")
         
         # 1. Extract 195 features
-        features_195 = extract_195_features_from_audio(temp_path)
+        try:
+            from src.data_prep.audio_processor import extract_195_features_from_audio
+            features_195 = extract_195_features_from_audio(temp_path)
+        except Exception as e:
+            print(f"[API Audio Upload] Could not run audio_processor: {e}")
+            features_195 = np.zeros(TOTAL_AUDIO_FEATURES)
         
         # 2. Transcribe speech to text via Whisper
         transcribed_text = ""
