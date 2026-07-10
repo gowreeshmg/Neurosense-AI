@@ -2091,8 +2091,25 @@ textarea:focus {
 
 /* Ensure mobile sliding dock is completely visible and fits any phone screen like Apple Music */
 @media (max-width: 900px) {
+    /* Top controls mobile layout: move name down below fixed corner buttons */
+    header.navbar-top-controls {
+        margin: 38px auto 14px auto !important;
+        justify-content: center !important;
+    }
+    header.navbar-top-controls .back-home-slot {
+        display: none !important;
+    }
+    #appDashboardScreen {
+        padding: 8px 14px !important;
+    }
+    /* Move main dashboard content island up slightly */
+    .dashboard-container {
+        margin-top: -6px !important;
+        padding: 0 10px 88px 10px !important;
+    }
+    /* Move bottom dock island slightly up and centered */
     #bottomGlassDock {
-        bottom: 14px !important;
+        bottom: 22px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         width: calc(100vw - 28px) !important;
