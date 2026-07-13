@@ -146,19 +146,28 @@ class CBTEmpathyAssistant:
         if is_unrelated_to_mental_health(user_message):
             return UNRELATED_PROJECT_REPLY
 
-        # Short, punchy system prompt — less context = faster token processing
+        # Check history and user message to see if user is correcting the topic or asking for exercises
+        recent_text = user_message.lower() + " " + " ".join([t.get("content", "").lower() for t in (history[-8:] if history else [])])
+        if any(kw in recent_text for kw in ["not academic", "isn't academic", "not school", "not studying", "it is not academic", "it's not academic"]):
+            context_instruction = "IMPORTANT: The user explicitly stated their stress is NOT academic stress. Do NOT mention school, exams, or academic tasks. Ask directly about what general life situation or emotions are causing their stress, or answer their direct request with actionable stress relief."
+        elif any(kw in user_message.lower() for kw in ["exercise", "exercises", "technique", "techniques", "practice", "breathing", "reduce my stress", "calm"]):
+            context_instruction = "The user is specifically asking for actionable stress reduction exercises and coping techniques. Provide clear step-by-step CBT or grounding exercises directly answering their request right now."
+        else:
+            context_instruction = f"User's detected stress context: {current_stress_category}."
+
+        # Short, punchy system prompt with full conversation awareness
         system_prompt = (
             "You are 'NeuroSense Assistant', a compassionate CBT AI counselor. "
-            "STRICT RULE: Only answer topics related to mental health, stress, anxiety, depression, burnout, relationships, or emotional well-being. "
-            f"For ANY unrelated topic reply EXACTLY: '{UNRELATED_PROJECT_REPLY}' "
-            f"User's detected stress context: {current_stress_category}. "
-            "Give an empathetic, warm, actionable CBT response. Be concise — under 80 words. No generic advice."
+            "STRICT RULE: Only answer topics related to mental health, stress, anxiety, depression, burnout, relationships, lifestyle habits, or emotional well-being. "
+            f"For ANY explicitly unrelated topic (like coding syntax, math problems, recipe ingredients) reply EXACTLY: '{UNRELATED_PROJECT_REPLY}' "
+            f"{context_instruction} "
+            "Always remember and directly respond to the user's exact question and previous chat history. Be concise — under 85 words. Never repeat a previous question."
         )
 
-        # Build conversation history — only last 4 turns to keep context short
+        # Build conversation history — up to last 8 turns to retain full memory
         messages = [{"role": "system", "content": system_prompt}]
         if history and isinstance(history, list):
-            for turn in history[-4:]:
+            for turn in history[-8:]:
                 role = turn.get("role", "user")
                 content = turn.get("content", "").strip()
                 if role in ["user", "assistant"] and content:
@@ -236,11 +245,14 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] OpenAI backup failed: {e}")
 
-        # STEP 4: Dynamic contextual inquiry (No pre-built or canned advice scripts)
-        return (
-            f"Thank you for sharing your thoughts on '{user_message[:45]}'. "
-            f"Considering your current {current_stress_category} context, what specific feeling or aspect of this situation would you like us to explore and reframe together first?"
-        )
+        # STEP 4: Intelligent offline fallback tailored directly to user's question without loops
+        u_lower = user_message.lower()
+        if any(kw in u_lower for kw in ["not academic", "isn't academic", "not school", "not studying", "it is not academic"]):
+            return "I understand completely and apologize for assuming academic stress. Let's focus purely on what you are experiencing right now. What personal or daily situation is currently causing you the most tension or fatigue?"
+        elif any(kw in u_lower for kw in ["exercise", "exercises", "technique", "techniques", "practice", "reduce my stress", "calm"]):
+            return "Here is a powerful stress reduction technique right now: try the 4-7-8 Relaxation Cycle. Inhale quietly through your nose for 4 seconds, hold your breath gently for 7 seconds, and exhale completely through your mouth for 8 seconds. Repeat this 3 times to immediately lower your heart rate."
+        else:
+            return f"I hear you. Regarding '{user_message[:55]}', your feelings are completely valid. What one specific step can we take right now to help you feel more grounded and supported?"
 
 if __name__ == "__main__":
     bot = CBTEmpathyAssistant()

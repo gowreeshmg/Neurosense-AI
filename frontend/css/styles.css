@@ -116,6 +116,21 @@
     --dashboard-bg-scale: 1.06;
 }
 
+/* Ensure custom uploaded images, live photos, and videos cover exactly 100% of screen */
+#globalAmbientBgContainer .bg-custom-media,
+#bgCustomImage,
+#bgCustomVideo {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    pointer-events: none !important;
+    transition: opacity 800ms ease-in-out, filter 700ms ease-in-out, transform 700ms ease-in-out !important;
+}
+
 /* Enforce strictly zero blur on Home Screen for all custom and built-in backgrounds */
 body:not(.on-dashboard) #globalAmbientBgContainer .bg-video,
 body:not(.on-dashboard) #globalAmbientBgContainer .bg-custom-media,

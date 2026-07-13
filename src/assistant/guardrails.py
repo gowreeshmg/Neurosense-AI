@@ -50,16 +50,17 @@ def is_unrelated_to_mental_health(text: str) -> bool:
             if not any(sk in t_lower for sk in ["stress", "anxi", "depress", "panic", "overwhelm", "deadlin", "exam", "worry", "worried", "burnout", "feel", "sad"]):
                 return True
 
-    # 2. Allow general conversational greetings and check-ins
+    # 2. Allow general conversational greetings, check-ins, corrections, and help requests
     greetings = [
         "hello", "hi", "hey", "start", "good morning", "good afternoon", 
         "good evening", "how are you", "who are you", "what can you do", 
-        "help", "test", "check-in", "checkin", "thank you", "thanks", "chat", "talk"
+        "help", "test", "check-in", "checkin", "thank you", "thanks", "chat", "talk",
+        "yes", "no", "ok", "okay", "please", "not academic", "it is not"
     ]
     if any(t_lower.startswith(g) or t_lower.endswith(g) or g == t_lower for g in greetings):
         return False
 
-    # 3. Check for mental health, emotional, relationship, CBT, stress, and lifestyle keywords
+    # 3. Check for mental health, emotional, relationship, CBT, stress, exercise, and lifestyle keywords
     mental_health_keywords = [
         "stress", "anxi", "depress", "burnout", "lonel", "alone", "sad", "unhappy", "overwhelm",
         "mental", "health", "feel", "feeling", "mood", "emot", "calm", "relax", "breath",
@@ -73,7 +74,11 @@ def is_unrelated_to_mental_health(text: str) -> bool:
         "psycholog", "psychiat", "doctor", "trauma", "ptsd", "adhd", "focus", "concentration",
         "overthinking", "catastroph", "distortion", "reframe", "reframing", "pomodoro",
         "talk", "chat", "listen", "advice", "support", "struggl", "problem", "issue", "hard",
-        "tough", "bad", "good", "better", "worse", "pain", "hurting", "neurosense", "mind"
+        "tough", "bad", "good", "better", "worse", "pain", "hurting", "neurosense", "mind",
+        "exercise", "exercises", "technique", "techniques", "strategy", "strategies",
+        "practice", "reduce", "solution", "what should i do", "how to", "can you",
+        "guide", "tips", "remedy", "relief", "calm down", "not academic", "not about",
+        "it is not", "academic"
     ]
     
     for kw in mental_health_keywords:
@@ -82,7 +87,7 @@ def is_unrelated_to_mental_health(text: str) -> bool:
             
     # 4. If it contains zero mental health or greeting keywords, classify as unrelated
     words = re.findall(r'\w+', t_lower)
-    if len(words) >= 3:
+    if len(words) >= 4:
         return True
         
     return False

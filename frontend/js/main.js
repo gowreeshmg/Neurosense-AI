@@ -131,12 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const fileName = (savedMedia.name || localStorage.getItem('neurosense_bg_name') || '').toLowerCase();
-                const isVideo = (savedMedia.type && savedMedia.type.toLowerCase().startsWith('video/')) ||
-                                /\.(mp4|mov|webm|m4v|mkv|avi|3gp|gif)$/i.test(fileName) ||
-                                localStorage.getItem('neurosense_bg_type') === 'video';
+                const isVideo = ((savedMedia.type && savedMedia.type.toLowerCase().startsWith('video/')) ||
+                                /\.(mp4|mov|webm|m4v|mkv|avi|3gp)$/i.test(fileName) ||
+                                (localStorage.getItem('neurosense_bg_type') === 'video' && !/\.(gif|webp|heic|png|jpg|jpeg)$/i.test(fileName))) &&
+                                !(savedMedia.type && savedMedia.type.toLowerCase().startsWith('image/'));
 
                 if (isVideo && vidEl) {
                     if (imgEl) { imgEl.style.setProperty('display', 'none', 'important'); imgEl.classList.remove('active'); }
+                    vidEl.setAttribute('muted', '');
+                    vidEl.setAttribute('playsinline', '');
+                    vidEl.setAttribute('autoplay', '');
+                    vidEl.setAttribute('loop', '');
                     vidEl.muted = true; vidEl.loop = true; vidEl.playsInline = true; vidEl.autoplay = true;
                     vidEl.src = fileUrl;
                     vidEl.style.setProperty('display', 'block', 'important');
@@ -818,9 +823,11 @@ function handleCustomBackgroundUpload(event) {
 
     // Case-insensitive detection for video & live photo files (.MOV, .MP4, etc.)
     const fileName = file.name.toLowerCase();
-    const isVideo = file.type.toLowerCase().startsWith('video/') ||
-                    /\.(mp4|mov|webm|m4v|mkv|avi|3gp|gif)$/i.test(fileName) ||
-                    (file.type === '' && /\.(mp4|mov|webm|m4v)$/i.test(fileName));
+    const isVideo = ((file.type.toLowerCase().startsWith('video/') ||
+                    /\.(mp4|mov|webm|m4v|mkv|avi|3gp)$/i.test(fileName) ||
+                    (file.type === '' && /\.(mp4|mov|webm|m4v)$/i.test(fileName))) &&
+                    !/\.(gif|webp|heic|png|jpg|jpeg)$/i.test(fileName)) &&
+                    !file.type.toLowerCase().startsWith('image/');
 
     localStorage.setItem('neurosense_bg_type', isVideo ? 'video' : 'image');
 
@@ -831,6 +838,10 @@ function handleCustomBackgroundUpload(event) {
             imgEl.classList.remove('active');
         }
         if (vidEl) {
+            vidEl.setAttribute('muted', '');
+            vidEl.setAttribute('playsinline', '');
+            vidEl.setAttribute('autoplay', '');
+            vidEl.setAttribute('loop', '');
             vidEl.muted = true;
             vidEl.loop = true;
             vidEl.playsInline = true;
@@ -2182,3 +2193,19 @@ function togglePrivacyGuard(btnEl) {
         btnEl.style.color = '#38BDF8';
     }
 }
+
+// Auto-resume any paused background media on visibility or window focus changes
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        const activeVid = document.querySelector('#bgCustomVideo.active, #globalAmbientBgContainer .bg-video.active');
+        if (activeVid && activeVid.paused) {
+            activeVid.play().catch(() => {});
+        }
+    }
+});
+window.addEventListener('focus', () => {
+    const activeVid = document.querySelector('#bgCustomVideo.active, #globalAmbientBgContainer .bg-video.active');
+    if (activeVid && activeVid.paused) {
+        activeVid.play().catch(() => {});
+    }
+});
