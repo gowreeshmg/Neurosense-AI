@@ -18,12 +18,18 @@ class CBTEmpathyAssistant:
     Supports 100% FREE live AI via Groq (Llama 3.3 70B Free) or Google Gemini Free Tier, as well as OpenAI.
     """
     def __init__(self):
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(override=True)
+        except Exception:
+            pass
         self.openai_key = os.getenv("OPENAI_API_KEY")
         self.groq_key = os.getenv("GROQ_API_KEY")
         self.gemini_key = os.getenv("GEMINI_API_KEY")
         
         self.gemini_client = None
-        self.gemini_models = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemma-4-31b-it"]
+        self.gemini_models = ["gemini-flash-latest"]
+        self.gemini_quota_exceeded = False
         
         self.groq_client = None
         self.groq_model = "llama-3.3-70b-versatile"
@@ -161,8 +167,9 @@ class CBTEmpathyAssistant:
         if not messages or messages[-1].get("content") != user_message:
             messages.append({"role": "user", "content": user_message})
 
-        # STEP 1: Try Main Assistant — Google Gemini (Timeout 12.0 seconds)
-        if self.gemini_client:
+        # STEP 1: Try Main Assistant — Google Gemini (Timeout 3.5 seconds)
+        # If Gemini already exceeded its daily free tier quota, skip directly to Llama 3.3 for zero latency!
+        if self.gemini_client and not self.gemini_quota_exceeded:
             for model_id in self.gemini_models:
                 try:
                     response = self.gemini_client.chat.completions.create(
@@ -170,7 +177,7 @@ class CBTEmpathyAssistant:
                         messages=messages,
                         temperature=0.7,
                         max_tokens=650,
-                        timeout=12.0
+                        timeout=3.5
                     )
                     reply = response.choices[0].message.content.strip()
                     reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
@@ -180,11 +187,15 @@ class CBTEmpathyAssistant:
                     if reply:
                         return reply
                 except Exception as e:
-                    print(f"[CBT Assistant] Gemini ({model_id}) timed out (>12s) or hit quota limit: {e}")
-                    continue
-            print("[CBT Assistant] Gemini main assistant unavailable/timed out (>12s or quota reached). Switching automatically to Llama 3.3 (Groq)...")
+                    print(f"[CBT Assistant] Gemini ({model_id}) timed out (>3.5s) or hit quota limit: {e}")
+                    if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower() or "404" in str(e):
+                        self.gemini_quota_exceeded = True
+                        print("[CBT Assistant] Gemini free tier quota exceeded. Switching permanently to Llama 3.3 (Groq) for instant 0-delay replies!")
+                    break
+            if not self.gemini_quota_exceeded:
+                print("[CBT Assistant] Gemini main assistant slow (>3.5s). Switching instantly to Llama 3.3 (Groq)...")
 
-        # STEP 2: Automatic Failover — Llama 3.3 70B via Groq Free API (Timeout 12.0 seconds)
+        # STEP 2: Automatic Failover — Llama 3.3 70B via Groq Free API (Timeout 8.0 seconds)
         if self.groq_client:
             try:
                 response = self.groq_client.chat.completions.create(
@@ -192,7 +203,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.7,
                     max_tokens=650,
-                    timeout=12.0
+                    timeout=8.0
                 )
                 reply = response.choices[0].message.content.strip()
                 reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
