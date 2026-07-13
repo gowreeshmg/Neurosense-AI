@@ -20,6 +20,64 @@ function updateThemeIconUI(themeName) {
     }
 }
 
+// ==========================================
+// Persistent Background Storage (IndexedDB)
+// ==========================================
+function openCustomBgDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('neurosense_bg_db', 1);
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('custom_media')) {
+                db.createObjectStore('custom_media');
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (e) => reject(e);
+    });
+}
+
+async function saveCustomBgToIndexedDB(file) {
+    try {
+        const db = await openCustomBgDB();
+        const tx = db.transaction('custom_media', 'readwrite');
+        const store = tx.objectStore('custom_media');
+        store.put(file, 'saved_background');
+        return new Promise((resolve) => {
+            tx.oncomplete = () => resolve(true);
+        });
+    } catch (err) {
+        console.error('Error saving background to IndexedDB:', err);
+    }
+}
+
+async function loadCustomBgFromIndexedDB() {
+    try {
+        const db = await openCustomBgDB();
+        const tx = db.transaction('custom_media', 'readonly');
+        const store = tx.objectStore('custom_media');
+        const getReq = store.get('saved_background');
+        return new Promise((resolve) => {
+            getReq.onsuccess = () => resolve(getReq.result);
+            getReq.onerror = () => resolve(null);
+        });
+    } catch (err) {
+        console.error('Error loading background from IndexedDB:', err);
+        return null;
+    }
+}
+
+async function clearCustomBgFromIndexedDB() {
+    try {
+        const db = await openCustomBgDB();
+        const tx = db.transaction('custom_media', 'readwrite');
+        const store = tx.objectStore('custom_media');
+        store.delete('saved_background');
+    } catch (err) {
+        console.error('Error clearing background from IndexedDB:', err);
+    }
+}
+
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Check saved theme preference
@@ -51,22 +109,97 @@ document.addEventListener('DOMContentLoaded', () => {
         if (topControls) topControls.style.setProperty('display', 'none', 'important');
         if (bottomDock) bottomDock.style.setProperty('display', 'none', 'important');
     }
-    for (let i = 0; i < 4; i++) {
-        const vid = document.getElementById(`bgVideo${i}`);
-        if (vid) {
-            if (i === 0) {
-                vid.style.setProperty('display', 'block', 'important');
-                vid.style.setProperty('opacity', '1', 'important');
-                vid.style.setProperty('z-index', '2', 'important');
-            } else {
-                vid.style.setProperty('opacity', '0', 'important');
-                vid.style.setProperty('z-index', '1', 'important');
+    // Load persistent background (either custom media from IndexedDB or saved default video index)
+    const useCustom = localStorage.getItem('neurosense_use_custom_bg') === 'true';
+    if (useCustom) {
+        loadCustomBgFromIndexedDB().then(savedMedia => {
+            if (savedMedia) {
+                const imgEl = document.getElementById('bgCustomImage');
+                const vidEl = document.getElementById('bgCustomVideo');
+                const overlayTree = document.getElementById('bgOverlayTree');
+                const statusEl = document.getElementById('customBgStatusText');
+                const fileUrl = URL.createObjectURL(savedMedia);
+
+                if (overlayTree) overlayTree.style.setProperty('display', 'none', 'important');
+                for (let i = 0; i < 4; i++) {
+                    const defVid = document.getElementById(`bgVideo${i}`);
+                    if (defVid) {
+                        defVid.style.setProperty('opacity', '0', 'important');
+                        defVid.style.setProperty('display', 'none', 'important');
+                        defVid.classList.remove('active');
+                    }
+                }
+
+                const fileName = (savedMedia.name || localStorage.getItem('neurosense_bg_name') || '').toLowerCase();
+                const isVideo = (savedMedia.type && savedMedia.type.toLowerCase().startsWith('video/')) ||
+                                /\.(mp4|mov|webm|m4v|mkv|avi|3gp|gif)$/i.test(fileName) ||
+                                localStorage.getItem('neurosense_bg_type') === 'video';
+
+                if (isVideo && vidEl) {
+                    if (imgEl) { imgEl.style.setProperty('display', 'none', 'important'); imgEl.classList.remove('active'); }
+                    vidEl.muted = true; vidEl.loop = true; vidEl.playsInline = true; vidEl.autoplay = true;
+                    vidEl.src = fileUrl;
+                    vidEl.style.setProperty('display', 'block', 'important');
+                    vidEl.style.setProperty('opacity', '1', 'important');
+                    vidEl.style.setProperty('z-index', '30', 'important');
+                    vidEl.classList.add('active');
+                    vidEl.load();
+                    vidEl.play().catch(() => {});
+                } else if (imgEl) {
+                    if (vidEl) { vidEl.pause(); vidEl.style.setProperty('display', 'none', 'important'); vidEl.classList.remove('active'); }
+                    imgEl.src = fileUrl;
+                    imgEl.style.setProperty('display', 'block', 'important');
+                    imgEl.style.setProperty('opacity', '1', 'important');
+                    imgEl.style.setProperty('z-index', '30', 'important');
+                    imgEl.classList.add('active');
+                }
+                if (statusEl) {
+                    statusEl.innerText = `✓ Active: ${(fileName || 'custom media').slice(0, 24)}`;
+                    statusEl.style.display = 'block';
+                }
+                // Re-apply exact blur across newly loaded custom background
+                if (typeof setDashboardBlur === 'function') {
+                    const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
+                    setDashboardBlur(Number(currBlur));
+                }
+                return;
             }
-            if (vid.paused) {
-                vid.play().catch(e => console.log("Init video play:", e));
+            fallbackToDefaultVideo();
+        });
+    } else {
+        fallbackToDefaultVideo();
+    }
+
+    function fallbackToDefaultVideo() {
+        const savedIdx = Number(localStorage.getItem('neurosense_active_bg_index') || 0);
+        window.activeVideoIdx = savedIdx;
+        for (let i = 0; i < 4; i++) {
+            const vid = document.getElementById(`bgVideo${i}`);
+            const btn = document.getElementById(`videoBtn${i}`);
+            if (vid) {
+                if (i === savedIdx) {
+                    vid.classList.add('active');
+                    vid.style.setProperty('display', 'block', 'important');
+                    vid.style.setProperty('opacity', '1', 'important');
+                    vid.style.setProperty('z-index', '2', 'important');
+                    if (vid.paused) vid.play().catch(() => {});
+                } else {
+                    vid.classList.remove('active');
+                    vid.style.setProperty('opacity', '0', 'important');
+                    vid.style.setProperty('z-index', '1', 'important');
+                }
+            }
+            if (btn) {
+                if (i === savedIdx) btn.classList.add('active');
+                else btn.classList.remove('active');
             }
         }
+        if (typeof setDashboardBlur === 'function') {
+            const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
+            setDashboardBlur(Number(currBlur));
+        }
     }
+
 
     drawRestingWaveform();
     generateCalendarHeatmap();
@@ -551,6 +684,13 @@ function switchBgVideo(targetIdx, targetTheme) {
         
         updateThemeIconUI(targetTheme);
     }
+
+    localStorage.setItem('neurosense_active_bg_index', targetIdx);
+    localStorage.setItem('neurosense_use_custom_bg', 'false');
+    if (typeof setDashboardBlur === 'function') {
+        const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
+        setDashboardBlur(Number(currBlur));
+    }
 }
 
 // ==========================================
@@ -604,6 +744,13 @@ function setDashboardBlur(blurVal) {
     if (chk) chk.checked = val > 0;
     
     localStorage.setItem('lumora_dashboard_blur', val);
+
+    // Apply inline blur & scale directly to all background elements so they stay exactly like that on this device
+    const activeMediaList = document.querySelectorAll('#globalAmbientBgContainer .bg-video, #globalAmbientBgContainer .bg-custom-media');
+    activeMediaList.forEach(el => {
+        el.style.setProperty('filter', `blur(${val}px) brightness(0.82)`, 'important');
+        el.style.setProperty('transform', `scale(${scaleVal})`, 'important');
+    });
 }
 
 function handleBlurSliderChange(val) {
@@ -627,6 +774,10 @@ function applyBlurPreset(val) {
 function handleCustomBackgroundUpload(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
+
+    saveCustomBgToIndexedDB(file);
+    localStorage.setItem('neurosense_use_custom_bg', 'true');
+    localStorage.setItem('neurosense_bg_name', file.name);
 
     const imgEl = document.getElementById('bgCustomImage');
     const vidEl = document.getElementById('bgCustomVideo');
@@ -653,6 +804,8 @@ function handleCustomBackgroundUpload(event) {
     const isVideo = file.type.toLowerCase().startsWith('video/') ||
                     /\.(mp4|mov|webm|m4v|mkv|avi|3gp|gif)$/i.test(fileName) ||
                     (file.type === '' && /\.(mp4|mov|webm|m4v)$/i.test(fileName));
+
+    localStorage.setItem('neurosense_bg_type', isVideo ? 'video' : 'image');
 
     if (isVideo) {
         if (imgEl) {
@@ -695,9 +848,17 @@ function handleCustomBackgroundUpload(event) {
         statusEl.innerText = `✓ Active: ${file.name.slice(0, 24)}`;
         statusEl.style.display = 'block';
     }
+
+    if (typeof setDashboardBlur === 'function') {
+        const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
+        setDashboardBlur(Number(currBlur));
+    }
 }
 
 function resetCustomBackground() {
+    clearCustomBgFromIndexedDB();
+    localStorage.setItem('neurosense_use_custom_bg', 'false');
+
     const imgEl = document.getElementById('bgCustomImage');
     const vidEl = document.getElementById('bgCustomVideo');
     const statusEl = document.getElementById('customBgStatusText');
@@ -726,7 +887,7 @@ function resetCustomBackground() {
     }
 
     // Restore default active video
-    const currentVideoIdx = typeof activeVideoIdx !== 'undefined' ? activeVideoIdx : (window.activeBgIndex || 0);
+    const currentVideoIdx = typeof activeVideoIdx !== 'undefined' ? activeVideoIdx : Number(localStorage.getItem('neurosense_active_bg_index') || 0);
     for (let i = 0; i < 4; i++) {
         const defVid = document.getElementById(`bgVideo${i}`);
         if (defVid) {
@@ -742,6 +903,11 @@ function resetCustomBackground() {
                 defVid.classList.remove('active');
             }
         }
+    }
+
+    if (typeof setDashboardBlur === 'function') {
+        const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
+        setDashboardBlur(Number(currBlur));
     }
 }
 

@@ -2129,6 +2129,40 @@ textarea:focus {
         flex-direction: column !important;
         gap: 24px !important;
         width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    .split-col-left,
+    .split-col-right,
+    .modality-split-grid .split-col-left,
+    .modality-split-grid .split-col-right {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    .split-col-right .results-section,
+    .modality-split-grid .results-section,
+    #textAnalysisResults,
+    #audioAnalysisResults {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        overflow-x: hidden !important;
+    }
+    .modality-split-grid .results-section .results-grid {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        gap: 16px !important;
     }
     .modality-split-grid .results-section.hidden {
         display: none !important;
@@ -2326,14 +2360,20 @@ header.navbar-top-controls .top-center-title {
     #studentPortal,
     .modality-view,
     .modality-split-grid,
-    .split-col-left {
+    .split-col-left,
+    .split-col-right,
+    .results-section,
+    #audioAnalysisResults,
+    #textAnalysisResults {
         width: 100% !important;
+        max-width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: center !important;
+        align-items: stretch !important;
         justify-content: flex-start !important;
         position: relative !important;
         z-index: 2 !important;
+        box-sizing: border-box !important;
     }
     /* Card header: title and status on separate lines, comfortable spacing */
     #viewVoice .card-header,
