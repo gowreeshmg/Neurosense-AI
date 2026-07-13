@@ -120,6 +120,8 @@ function switchScreen(screenName) {
     const dashboardVideoBg = document.getElementById('dashboardBgVideoContainer');
     const themeBtn = document.getElementById('btnThemeToggle');
     const returnHomeBtn = document.getElementById('btnReturnHomeFixed');
+    const topControls = document.querySelector('header.navbar-top-controls');
+    const bottomDock = document.getElementById('bottomGlassDock');
     
     if (screenName === 'home') {
         if (homeScreen) {
@@ -134,6 +136,9 @@ function switchScreen(screenName) {
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
         if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
         if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'none', 'important');
+        // Hide dashboard chrome on Home Screen
+        if (topControls) topControls.style.setProperty('display', 'none', 'important');
+        if (bottomDock) bottomDock.style.setProperty('display', 'none', 'important');
         document.body.style.backgroundColor = '';
         document.body.classList.remove('on-dashboard');
         window.scrollTo(0, 0);
@@ -164,6 +169,9 @@ function switchScreen(screenName) {
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
         if (themeBtn) themeBtn.style.setProperty('display', 'inline-flex', 'important');
         if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'inline-flex', 'important');
+        // Restore dashboard chrome: top header and bottom dock
+        if (topControls) topControls.style.setProperty('display', 'flex', 'important');
+        if (bottomDock) bottomDock.style.setProperty('display', 'inline-flex', 'important');
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.classList.add('on-dashboard');
         window.scrollTo(0, 0);
