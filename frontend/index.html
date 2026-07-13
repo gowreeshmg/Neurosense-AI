@@ -1200,35 +1200,37 @@
                     </div>
                 </div>
 
-                <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Pure ChatGPT Unified Layout without Nested Islands) -->
-                <div id="viewCBT" class="modality-view" style="display: none !important; padding: 4px 14px 10px 14px; max-width: 900px; margin: 0 auto; box-sizing: border-box;">
-                    <!-- ONE Single Unified Big Glass Island -->
-                    <div id="cbtCompanionIsland" class="cbt-card glass-card-accent" style="padding: 22px 28px !important; display: flex; flex-direction: column; height: calc(100vh - 180px); max-height: 660px; min-height: 400px; box-sizing: border-box; justify-content: space-between; border-radius: 28px;">
+                <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Single Full-Screen Assistant Island where entire area is Chat) -->
+                <div id="viewCBT" class="modality-view" style="display: none !important; padding: 4px 14px 14px 14px; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box;">
+                    <!-- ONE Single Unified Big Full-Screen Glass Island -->
+                    <div id="cbtCompanionIsland" class="cbt-card glass-card-accent" style="padding: 26px 36px !important; display: flex; flex-direction: column; height: calc(100vh - 165px); max-height: none !important; min-height: 580px; width: 100%; box-sizing: border-box; justify-content: space-between; border-radius: 28px;">
                         
-                        <!-- Sleek Minimal Header -->
-                        <div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.12); flex-shrink: 0;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span style="font-size: 1.6rem;">🤖</span>
+                        <!-- Sleek Minimal Header explaining AI name & capabilities -->
+                        <div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.14); flex-shrink: 0; flex-wrap: wrap; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <span style="font-size: 2rem;">🤖</span>
                                 <div>
-                                    <h3 id="cbtGreetingText" style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #fff;">NeuroSense GPT & CBT Assistant</h3>
-                                    <p id="cbtValidationText" style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 2px 0 0 0;">Interactive Cognitive Behavioral Therapy & AI companion.</p>
+                                    <h3 id="cbtGreetingText" style="margin: 0; font-size: 1.4rem; font-weight: 800; color: #fff;">NeuroSense GPT & CBT Assistant</h3>
+                                    <p id="cbtValidationText" style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin: 4px 0 0 0;">Interactive Cognitive Behavioral Therapy Companion. Ask about psychological wellbeing, stress reduction, relationship challenges, or request 5-4-3-2-1 grounding exercises.</p>
                                 </div>
                             </div>
-                            <span class="badge badge-ai desktop-only" style="margin: 0;">GPT-4 Cognitive Engine</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="badge badge-ai" style="margin: 0; font-size: 0.85rem; padding: 6px 14px;">Gemini / GPT Multimodal Engine</span>
+                            </div>
                         </div>
 
-                        <!-- Direct Chat Messages Area (NO nested boxes or borders around it!) -->
-                        <div id="cbtChatMessages" class="chat-messages-box" style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 8px 4px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; background: transparent !important; border: none !important; box-shadow: none !important; box-sizing: border-box;">
+                        <!-- Direct Full-Island Chat Messages Area (No inner boxes, fills entire island cleanly!) -->
+                        <div id="cbtChatMessages" class="chat-messages-box" style="flex: 1 1 auto; min-height: 0; max-height: none !important; overflow-y: auto; padding: 12px 6px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; background: transparent !important; border: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%;">
                             <div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
-                            <div class="chat-msg bot-msg">
-                                <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. How are you feeling today, or what's on your mind?
+                            <div class="chat-msg bot-msg" style="max-width: 82%; font-size: 0.96rem; padding: 14px 18px; border-radius: 16px; line-height: 1.6;">
+                                <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
                             </div>
                         </div>
 
                         <!-- Sleek Pill Input Bar at bottom of the same unified island -->
-                        <div class="chat-input-bar" style="display: flex; gap: 10px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0;">
-                            <input type="text" id="cbtChatInput" placeholder="Message NeuroSense GPT..." onkeypress="handleChatKeyPress(event)" style="flex: 1 1 auto; min-width: 0; padding: 14px 20px; border-radius: 999px; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.28); color: #fff; font-size: 0.95rem; box-sizing: border-box; outline: none; transition: border-color 0.2s ease;">
-                            <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 999px; padding: 14px 24px; font-weight: 700; font-size: 0.95rem; white-space: nowrap; box-sizing: border-box; box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);">Send 🚀</button>
+                        <div class="chat-input-bar" style="display: flex; gap: 12px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0;">
+                            <input type="text" id="cbtChatInput" placeholder="Message NeuroSense GPT about stress, emotions, or coping strategies..." onkeypress="handleChatKeyPress(event)" style="flex: 1 1 auto; min-width: 0; padding: 16px 22px; border-radius: 999px; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.28); color: #fff; font-size: 0.96rem; box-sizing: border-box; outline: none; transition: border-color 0.2s ease;">
+                            <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 999px; padding: 16px 28px; font-weight: 700; font-size: 0.96rem; white-space: nowrap; box-sizing: border-box; box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);">Send 🚀</button>
                         </div>
                     </div>
                 </div>

@@ -1456,6 +1456,14 @@ textarea:focus {
     padding-right: 8px;
 }
 
+/* Ensure full screen height for chat inside Assistant Island */
+#cbtCompanionIsland .chat-messages-box,
+#viewCBT .chat-messages-box {
+    max-height: none !important;
+    height: auto !important;
+    flex: 1 1 auto !important;
+}
+
 .chat-msg {
     padding: 12px 16px;
     border-radius: 14px;
