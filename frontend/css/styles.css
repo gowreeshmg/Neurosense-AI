@@ -2199,9 +2199,9 @@ body[data-theme="light"] #dockLiquidSlider {
 
 /* Ensure mobile sliding dock is completely visible and fits any phone screen cleanly */
 @media (max-width: 900px) {
-    /* Top controls mobile layout: move name below fixed corner buttons and center right across screen */
+    /* Top controls mobile layout: move name below fixed corner buttons on top center without being too below */
     header.navbar-top-controls {
-        margin: 74px auto 18px auto !important;
+        margin: 48px auto 8px auto !important;
         justify-content: center !important;
         text-align: center !important;
         width: 100% !important;
@@ -2210,7 +2210,7 @@ body[data-theme="light"] #dockLiquidSlider {
         display: none !important;
     }
     #appDashboardScreen {
-        padding: 6px 10px !important;
+        padding: 4px 10px !important;
     }
     /* Move main dashboard content island to sit centered in viewport cleanly above bottom dock */
     .dashboard-container {
@@ -2220,6 +2220,29 @@ body[data-theme="light"] #dockLiquidSlider {
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
+    }
+    /* On mobile, first check-in card fits screen right between top header and bottom dock without scroll */
+    #viewVoice .split-col-left .input-card,
+    #viewText .split-col-left .input-card {
+        height: calc(100vh - 188px) !important;
+        max-height: 560px !important;
+        min-height: 380px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        margin-bottom: 24px !important;
+        padding: 16px 18px !important;
+    }
+    #viewText #journalTextarea {
+        flex: 1 1 auto !important;
+        min-height: 90px !important;
+        max-height: 160px !important;
+        margin-bottom: 12px !important;
+    }
+    #viewVoice .audio-actions,
+    #viewText .text-actions {
+        flex-shrink: 0 !important;
+        margin-top: auto !important;
     }
     /* Move bottom dock island slightly up and centered */
     #bottomGlassDock {
