@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const topControls = document.querySelector('header.navbar-top-controls');
     const bottomDock = document.getElementById('bottomGlassDock');
     if (homeScreen && !homeScreen.classList.contains('hidden-screen')) {
-        if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
+        if (themeBtn) themeBtn.style.setProperty('display', 'inline-flex', 'important');
         if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'none', 'important');
         if (dashboardScreen) dashboardScreen.style.setProperty('display', 'none', 'important');
         if (topControls) topControls.style.setProperty('display', 'none', 'important');
@@ -134,7 +134,7 @@ function switchScreen(screenName) {
         }
         if (dashboardVideoBg) dashboardVideoBg.style.setProperty('display', 'none', 'important');
         if (appBg) appBg.style.setProperty('display', 'none', 'important');
-        if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
+        if (themeBtn) themeBtn.style.setProperty('display', 'inline-flex', 'important');
         if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'none', 'important');
         // Hide dashboard chrome on Home Screen
         if (topControls) topControls.style.setProperty('display', 'none', 'important');
@@ -478,6 +478,23 @@ function switchBgVideo(targetIdx, targetTheme) {
     if (activeVideoIdx === targetIdx) return;
     activeVideoIdx = targetIdx;
     
+    // Hide custom media and restore tree overlay when returning to built-in atmosphere videos
+    const custImg = document.getElementById('bgCustomImage');
+    const custVid = document.getElementById('bgCustomVideo');
+    const overlayTree = document.getElementById('bgOverlayTree');
+    if (custImg) {
+        custImg.style.setProperty('display', 'none', 'important');
+        custImg.classList.remove('active');
+    }
+    if (custVid) {
+        custVid.pause();
+        custVid.style.setProperty('display', 'none', 'important');
+        custVid.classList.remove('active');
+    }
+    if (overlayTree) {
+        overlayTree.style.setProperty('display', 'block', 'important');
+    }
+
     // Update active video class & buttons
     for (let i = 0; i < 4; i++) {
         const vid = document.getElementById(`bgVideo${i}`);
@@ -614,42 +631,62 @@ function handleCustomBackgroundUpload(event) {
     const imgEl = document.getElementById('bgCustomImage');
     const vidEl = document.getElementById('bgCustomVideo');
     const statusEl = document.getElementById('customBgStatusText');
+    const overlayTree = document.getElementById('bgOverlayTree');
 
     const fileUrl = URL.createObjectURL(file);
 
-    // Hide default videos and remove active classes
+    // Hide default videos and the tree overlay so custom photo/video is complete fullscreen without overlap
+    if (overlayTree) {
+        overlayTree.style.setProperty('display', 'none', 'important');
+    }
     for (let i = 0; i < 4; i++) {
         const defVid = document.getElementById(`bgVideo${i}`);
         if (defVid) {
-            defVid.style.opacity = '0';
+            defVid.style.setProperty('opacity', '0', 'important');
+            defVid.style.setProperty('display', 'none', 'important');
             defVid.classList.remove('active');
         }
     }
 
-    const isVideo = file.type.startsWith('video/') || file.name.endsWith('.mp4') || file.name.endsWith('.mov');
+    // Case-insensitive detection for video & live photo files (.MOV, .MP4, etc.)
+    const fileName = file.name.toLowerCase();
+    const isVideo = file.type.toLowerCase().startsWith('video/') ||
+                    /\.(mp4|mov|webm|m4v|mkv|avi|3gp|gif)$/i.test(fileName) ||
+                    (file.type === '' && /\.(mp4|mov|webm|m4v)$/i.test(fileName));
 
     if (isVideo) {
         if (imgEl) {
-            imgEl.style.display = 'none';
+            imgEl.style.setProperty('display', 'none', 'important');
+            imgEl.style.setProperty('opacity', '0', 'important');
             imgEl.classList.remove('active');
         }
         if (vidEl) {
+            vidEl.muted = true;
+            vidEl.loop = true;
+            vidEl.playsInline = true;
+            vidEl.autoplay = true;
             vidEl.src = fileUrl;
-            vidEl.style.display = 'block';
-            vidEl.style.opacity = '1';
+            vidEl.style.setProperty('display', 'block', 'important');
+            vidEl.style.setProperty('opacity', '1', 'important');
+            vidEl.style.setProperty('z-index', '30', 'important');
             vidEl.classList.add('active');
-            vidEl.play().catch(() => {});
+            vidEl.load();
+            vidEl.play().catch(err => {
+                console.log("Custom video playback error:", err);
+            });
         }
     } else {
         if (vidEl) {
             vidEl.pause();
-            vidEl.style.display = 'none';
+            vidEl.style.setProperty('display', 'none', 'important');
+            vidEl.style.setProperty('opacity', '0', 'important');
             vidEl.classList.remove('active');
         }
         if (imgEl) {
             imgEl.src = fileUrl;
-            imgEl.style.display = 'block';
-            imgEl.style.opacity = '1';
+            imgEl.style.setProperty('display', 'block', 'important');
+            imgEl.style.setProperty('opacity', '1', 'important');
+            imgEl.style.setProperty('z-index', '30', 'important');
             imgEl.classList.add('active');
         }
     }
@@ -665,30 +702,46 @@ function resetCustomBackground() {
     const vidEl = document.getElementById('bgCustomVideo');
     const statusEl = document.getElementById('customBgStatusText');
     const fileInput = document.getElementById('customBgFileInput');
+    const overlayTree = document.getElementById('bgOverlayTree');
 
     if (fileInput) fileInput.value = '';
     if (imgEl) {
-        imgEl.style.display = 'none';
+        imgEl.style.setProperty('display', 'none', 'important');
+        imgEl.style.setProperty('opacity', '0', 'important');
         imgEl.classList.remove('active');
         imgEl.src = '';
     }
     if (vidEl) {
         vidEl.pause();
-        vidEl.style.display = 'none';
+        vidEl.style.setProperty('display', 'none', 'important');
+        vidEl.style.setProperty('opacity', '0', 'important');
         vidEl.classList.remove('active');
         vidEl.src = '';
     }
     if (statusEl) {
         statusEl.style.display = 'none';
     }
+    if (overlayTree) {
+        overlayTree.style.setProperty('display', 'block', 'important');
+    }
 
     // Restore default active video
-    const currentVideoIdx = window.activeBgIndex || 0;
-    const defVid = document.getElementById(`bgVideo${currentVideoIdx}`);
-    if (defVid) {
-        defVid.style.opacity = '1';
-        defVid.classList.add('active');
-        defVid.play().catch(() => {});
+    const currentVideoIdx = typeof activeVideoIdx !== 'undefined' ? activeVideoIdx : (window.activeBgIndex || 0);
+    for (let i = 0; i < 4; i++) {
+        const defVid = document.getElementById(`bgVideo${i}`);
+        if (defVid) {
+            if (i === currentVideoIdx) {
+                defVid.style.setProperty('display', 'block', 'important');
+                defVid.style.setProperty('opacity', '1', 'important');
+                defVid.style.setProperty('z-index', '2', 'important');
+                defVid.classList.add('active');
+                if (defVid.paused) defVid.play().catch(() => {});
+            } else {
+                defVid.style.setProperty('display', 'none', 'important');
+                defVid.style.setProperty('opacity', '0', 'important');
+                defVid.classList.remove('active');
+            }
+        }
     }
 }
 
