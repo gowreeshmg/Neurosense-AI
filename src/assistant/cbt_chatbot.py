@@ -139,70 +139,43 @@ class CBTEmpathyAssistant:
     def chat_reply(self, user_message, current_stress_category="Academic Stress", history=None):
         """
         Handles interactive conversational replies on the dashboard chat tab.
-        Uses live Google Gemini as MAIN assistant, automatically switching to Llama 3.3 (Groq) if Gemini takes >12s or hits quota.
-        ZERO pre-built answers are used. Enforces strict topic filtering.
+        Speed-optimised: Groq (Llama 3.3) first as primary for <3s responses,
+        Gemini as fast fallback. max_tokens reduced for instant generation.
         """
-        # 1. Fast local topic verification check before calling any AI API
+        # 1. Fast local topic check before any API call
         if is_unrelated_to_mental_health(user_message):
             return UNRELATED_PROJECT_REPLY
 
+        # Short, punchy system prompt — less context = faster token processing
         system_prompt = (
-            "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, burnout, heartbreak, and daily pressure. "
-            "CRITICAL GUARDRAIL: You are STRICTLY RESTRICTED to answering questions related to our mental health project, such as stress, anxiety, depression, burnout, emotional well-being, love/relationship issues, heartbreak, academic/work pressure, and coping strategies. "
-            f"If the user asks ANY question or topic that is NOT related to mental health, stress, relationship issues, love failure, or emotional well-being (for example: coding/programming questions, general knowledge, math homework, recipes, sports, entertainment, politics, financial advice, etc.), you MUST decline to answer and reply EXACTLY with: '{UNRELATED_PROJECT_REPLY}' "
-            f"The user's recent check-in detected: {current_stress_category}. "
-            "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
-            "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic or pre-built advice; provide customized CBT guidance tailored directly to whatever specific stressor or topic the user asks about."
+            "You are 'NeuroSense Assistant', a compassionate CBT AI counselor. "
+            "STRICT RULE: Only answer topics related to mental health, stress, anxiety, depression, burnout, relationships, or emotional well-being. "
+            f"For ANY unrelated topic reply EXACTLY: '{UNRELATED_PROJECT_REPLY}' "
+            f"User's detected stress context: {current_stress_category}. "
+            "Give an empathetic, warm, actionable CBT response. Be concise — under 80 words. No generic advice."
         )
 
-        # Build full conversation history messages array
+        # Build conversation history — only last 4 turns to keep context short
         messages = [{"role": "system", "content": system_prompt}]
         if history and isinstance(history, list):
-            for turn in history[-10:]: # Keep last 10 turns for context without overflow
+            for turn in history[-4:]:
                 role = turn.get("role", "user")
                 content = turn.get("content", "").strip()
                 if role in ["user", "assistant"] and content:
                     messages.append({"role": role, "content": content})
-        
+
         if not messages or messages[-1].get("content") != user_message:
             messages.append({"role": "user", "content": user_message})
 
-        # STEP 1: Try Main Assistant — Google Gemini (Timeout 2.2 seconds for ultra-low latency)
-        if self.gemini_client and not self.gemini_quota_exceeded:
-            for model_id in self.gemini_models:
-                try:
-                    response = self.gemini_client.chat.completions.create(
-                        model=model_id,
-                        messages=messages,
-                        temperature=0.7,
-                        max_tokens=650,
-                        timeout=2.2
-                    )
-                    reply = response.choices[0].message.content.strip()
-                    reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    if reply.startswith('<thought>'):
-                        reply = re.sub(r'<thought>.*', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    if reply:
-                        return reply
-                except Exception as e:
-                    print(f"[CBT Assistant] Gemini ({model_id}) timed out (>2.2s) or hit quota limit: {e}")
-                    if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower() or "404" in str(e):
-                        self.gemini_quota_exceeded = True
-                        print("[CBT Assistant] Gemini free tier quota exceeded. Switching permanently to Llama 3.3 (Groq) for instant 0-delay replies!")
-                    break
-            if not self.gemini_quota_exceeded:
-                print("[CBT Assistant] Gemini main assistant slow (>2.2s). Switching instantly to Llama 3.3 (Groq)...")
-
-        # STEP 2: Automatic Failover — Llama 3.3 70B via Groq Free API (Timeout 3.5 seconds)
+        # STEP 1: Primary — Groq Llama 3.3 70B (fastest free API, consistent <2s)
         if self.groq_client:
             try:
                 response = self.groq_client.chat.completions.create(
                     model=self.groq_model,
                     messages=messages,
-                    temperature=0.7,
-                    max_tokens=650,
-                    timeout=3.5
+                    temperature=0.65,
+                    max_tokens=200,   # 200 tokens ≈ 80-100 words, generates in <1s on Groq
+                    timeout=5.0
                 )
                 reply = response.choices[0].message.content.strip()
                 reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
@@ -210,17 +183,37 @@ class CBTEmpathyAssistant:
                 if reply:
                     return reply
             except Exception as e:
-                print(f"[CBT Assistant] Llama 3.3 (Groq) failover attempted and failed: {e}")
+                print(f"[CBT Assistant] Groq primary attempt failed: {e}")
 
-        # STEP 3: Backup Assistant — OpenAI GPT-4o-mini (if configured, Timeout 4.0 seconds)
+        # STEP 2: Fallback — Google Gemini Flash (try fastest model only)
+        if self.gemini_client and not self.gemini_quota_exceeded:
+            try:
+                response = self.gemini_client.chat.completions.create(
+                    model="gemini-2.0-flash",
+                    messages=messages,
+                    temperature=0.65,
+                    max_tokens=200,
+                    timeout=6.0
+                )
+                reply = response.choices[0].message.content.strip()
+                reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                if reply:
+                    return reply
+            except Exception as e:
+                print(f"[CBT Assistant] Gemini fallback failed: {e}")
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
+                    self.gemini_quota_exceeded = True
+
+        # STEP 3: OpenAI GPT-4o-mini backup (if configured)
         if self.openai_client:
             try:
                 response = self.openai_client.chat.completions.create(
                     model=self.openai_model,
                     messages=messages,
-                    temperature=0.7,
-                    max_tokens=650,
-                    timeout=4.0
+                    temperature=0.65,
+                    max_tokens=200,
+                    timeout=6.0
                 )
                 reply = response.choices[0].message.content.strip()
                 if reply:
@@ -228,12 +221,11 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] OpenAI backup failed: {e}")
 
-        # STEP 4: Instant Empathetic CBT Fallback if all external cloud APIs timed out
+        # STEP 4: Instant local CBT fallback (0ms, always works)
         return (
-            f"I hear what you are saying about what you're experiencing right now (`{current_stress_category}` context). "
-            "When things feel overwhelming or heavy, it can help to step back and examine our automatic thoughts without judgment. "
-            "Let's try a quick grounding exercise together right now: Take a slow, deep breath in for 4 seconds, hold it gently for 4 seconds, and release for 4 seconds. "
-            "What is one small, manageable step you can focus on right now to give yourself some mental breathing room?"
+            f"I hear you. In your current {current_stress_category} context, it helps to pause and breathe. "
+            "Try box breathing: inhale for 4 seconds, hold 4, exhale 4, hold 4. "
+            "What one small step can you take right now to give yourself some mental space?"
         )
 
 if __name__ == "__main__":
