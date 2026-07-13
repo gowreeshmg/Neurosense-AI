@@ -1017,6 +1017,39 @@ function displayAnalysisResults(res, modality = 'both') {
         if (cText) cText.innerText = cbt.coping_strategy || "Take one small actionable step at a time.";
     }
     
+    // 6. Update Gemini Clinical Evaluation UI Cards (Voice / Text)
+    if (res.gemini_evaluation) {
+        const gem = res.gemini_evaluation;
+        const prefix = (modality === 'audio') ? 'voiceGemini' : 'textGemini';
+        const prov = document.getElementById(`${prefix}ProviderText`);
+        const tier = document.getElementById(`${prefix}StressTierBadge`);
+        const idx = document.getElementById(`${prefix}StressIndexText`);
+        const symBox = document.getElementById(`${prefix}SymptomsBox`);
+        const sum = document.getElementById(`${prefix}SummaryText`);
+        const interv = document.getElementById(`${prefix}InterventionText`);
+
+        if (prov) prov.innerText = `${gem.ai_provider || "Google Gemini (Free Tier)"} Engine`;
+        if (tier) {
+            tier.innerText = gem.clinical_risk_tier || "Baseline Calm";
+            if ((gem.stress_level_index || 0) >= 70) {
+                tier.style.borderColor = "#F43F5E";
+                tier.style.background = "rgba(244, 63, 94, 0.25)";
+            } else if ((gem.stress_level_index || 0) >= 45) {
+                tier.style.borderColor = "#F59E0B";
+                tier.style.background = "rgba(245, 158, 11, 0.25)";
+            } else {
+                tier.style.borderColor = "#34D399";
+                tier.style.background = "rgba(16, 185, 129, 0.25)";
+            }
+        }
+        if (idx) idx.innerText = `Index: ${gem.stress_level_index || 22}/100`;
+        if (symBox && gem.detected_symptoms && Array.isArray(gem.detected_symptoms)) {
+            symBox.innerHTML = gem.detected_symptoms.map(s => `<span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">${s}</span>`).join('');
+        }
+        if (sum) sum.innerText = gem.empathetic_clinical_summary || "Healthy emotional regulation observed.";
+        if (interv) interv.innerText = gem.recommended_intervention || "Perform Box Breathing and pace your workload.";
+    }
+
     // Scroll smoothly down to results after browser calculates new layout height
     setTimeout(() => {
         if (window.innerWidth < 1024) {
@@ -1254,6 +1287,14 @@ function generateFallbackResult(text, audioVector) {
             recommended_exercise: "The Pomodoro Chunking Routine",
             exercise_details: "Break your current tasks into manageable 25-minute study blocks followed by mandatory 5-minute stretching breaks.",
             coping_strategy: "Reframe catastrophic thoughts into one actionable step for the next hour."
+        },
+        gemini_evaluation: {
+            ai_provider: "Google Gemini (Local Fallback)",
+            stress_level_index: Math.round(score),
+            clinical_risk_tier: tier,
+            detected_symptoms: ["Cognitive Overload", "Emotional Exhaustion", "High Task Pressure"],
+            empathetic_clinical_summary: `Clinical screening notes symptoms aligned with ${cat.toLowerCase()}. Emotional indicators show moderate pressure that warrants gentle pacing and self-compassion.`,
+            recommended_intervention: "Practice 4-4-4-4 Box Breathing and structure immediate tasks into 15-minute achievable intervals."
         }
     };
 }

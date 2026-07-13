@@ -25,7 +25,8 @@ from backend.schemas import (
     TextAnalyzeRequest, TextAnalyzeResponse,
     MultimodalAnalyzeRequest, MultimodalAnalyzeResponse,
     CBTChatRequest, CBTChatResponse, MetricsResponse,
-    TextXAIOutput, AudioXAIOutput, CBTInterventionOutput
+    TextXAIOutput, AudioXAIOutput, CBTInterventionOutput,
+    GeminiClinicalReport
 )
 
 app = FastAPI(
@@ -51,9 +52,10 @@ text_explainer = None
 audio_explainer = None
 transcriber = None
 cbt_assistant = None
+gemini_evaluator = None
 
 def ensure_pipelines_loaded():
-    global text_clf, audio_clf, fusion_engine, text_explainer, audio_explainer, transcriber, cbt_assistant
+    global text_clf, audio_clf, fusion_engine, text_explainer, audio_explainer, transcriber, cbt_assistant, gemini_evaluator
     if text_clf is not None and audio_clf is not None:
         return
     print("[API Startup] Lazily importing and initializing NeuroSense AI Dual-Modality pipelines...")
@@ -65,6 +67,7 @@ def ensure_pipelines_loaded():
         from src.xai.audio_explainer import AudioExplainerSHAP
         from src.speech.transcriber import SpeechTranscriber
         from src.assistant.cbt_chatbot import CBTEmpathyAssistant
+        from src.assistant.gemini_evaluator import GeminiClinicalEvaluator
 
         if text_clf is None:
             text_clf = LinguisticStressClassifier()
@@ -89,6 +92,8 @@ def ensure_pipelines_loaded():
         transcriber = SpeechTranscriber()
     if cbt_assistant is None:
         cbt_assistant = CBTEmpathyAssistant()
+    if gemini_evaluator is None:
+        gemini_evaluator = GeminiClinicalEvaluator()
     print("[API Startup] All pipelines initialized successfully!")
 
 # Serve static frontend files
@@ -164,6 +169,14 @@ def analyze_text(req: TextAnalyzeRequest):
         cbt_raw = cbt_assistant.generate_intervention(fusion_sim)
         cbt_out = CBTInterventionOutput(**cbt_raw)
         
+    gem_out = None
+    if gemini_evaluator:
+        try:
+            gem_raw = gemini_evaluator.evaluate_clinical_stress(req.text, "Text Narrative")
+            gem_out = GeminiClinicalReport(**gem_raw)
+        except Exception as e:
+            print(f"[API] Gemini text evaluation error: {e}")
+
     return TextAnalyzeResponse(
         predicted_category=res["predicted_category"],
         probabilities=res["probabilities"],
@@ -171,7 +184,8 @@ def analyze_text(req: TextAnalyzeRequest):
         confidence=res["confidence"],
         metadata=res["metadata"],
         xai_explanation=xai_out,
-        cbt_intervention=cbt_out
+        cbt_intervention=cbt_out,
+        gemini_evaluation=gem_out
     )
 
 @app.post("/api/analyze/multimodal", response_model=MultimodalAnalyzeResponse)
@@ -210,6 +224,14 @@ def analyze_multimodal(req: MultimodalAnalyzeRequest):
         cbt_raw = cbt_assistant.generate_intervention(fusion_res)
         cbt_out = CBTInterventionOutput(**cbt_raw)
         
+    gem_out = None
+    if gemini_evaluator and req.text:
+        try:
+            gem_raw = gemini_evaluator.evaluate_clinical_stress(req.text, "Multimodal Fusion Narrative")
+            gem_out = GeminiClinicalReport(**gem_raw)
+        except Exception as e:
+            print(f"[API] Gemini multimodal evaluation error: {e}")
+
     return MultimodalAnalyzeResponse(
         modality_status=fusion_res["modality_status"],
         combined_stress_score=fusion_res["combined_stress_score"],
@@ -222,7 +244,8 @@ def analyze_multimodal(req: MultimodalAnalyzeRequest):
         audio_analysis=fusion_res["audio_analysis"],
         text_xai=text_xai,
         audio_xai=audio_xai,
-        cbt_intervention=cbt_out
+        cbt_intervention=cbt_out,
+        gemini_evaluation=gem_out
     )
 
 @app.post("/api/analyze/audio_file")
@@ -298,6 +321,14 @@ async def analyze_audio_file(
             cbt_raw = cbt_assistant.generate_intervention(fusion_res)
             cbt_out = CBTInterventionOutput(**cbt_raw)
             
+        gem_out = None
+        if gemini_evaluator and transcribed_text:
+            try:
+                gem_raw = gemini_evaluator.evaluate_clinical_stress(transcribed_text, "Voice / Microphone Recording")
+                gem_out = GeminiClinicalReport(**gem_raw)
+            except Exception as e:
+                print(f"[API] Gemini voice evaluation error: {e}")
+
         return {
             "transcription": {
                 "text": transcribed_text,
@@ -315,7 +346,8 @@ async def analyze_audio_file(
                 audio_analysis=fusion_res["audio_analysis"],
                 text_xai=text_xai,
                 audio_xai=audio_xai,
-                cbt_intervention=cbt_out
+                cbt_intervention=cbt_out,
+                gemini_evaluation=gem_out
             )
         }
     finally:

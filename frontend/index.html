@@ -978,6 +978,43 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- NEW FEATURE: Gemini Voice & Speech Clinical Diagnostic Report -->
+                                    <div id="voiceGeminiReportWrapper" class="glass-card" style="padding: 22px; border-radius: 22px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(16, 185, 129, 0.38); display: flex; flex-direction: column; gap: 14px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 10px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <span style="font-size: 1.5rem;">✨</span>
+                                                <div>
+                                                    <h4 style="font-size: 1.15rem; font-weight: 800; color: #34D399; margin: 0;">Google Gemini Voice Clinical Assessment</h4>
+                                                    <div id="voiceGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Google Gemini (Free Tier) Engine</div>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <span id="voiceGeminiStressTierBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.25); border: 1px solid #34D399; color: #fff; font-size: 0.85rem; font-weight: 800;">Baseline Calm</span>
+                                                <span id="voiceGeminiStressIndexText" style="font-size: 1.15rem; font-weight: 800; color: #34D399;">Index: 22/100</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Symptoms row -->
+                                        <div>
+                                            <div style="font-size: 0.82rem; font-weight: 700; color: #CBD5E1; text-transform: uppercase; margin-bottom: 8px;">Detected Psychological & Acoustic Symptoms:</div>
+                                            <div id="voiceGeminiSymptomsBox" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                                <span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">Cognitive Load</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Summary & CBT Action -->
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
+                                            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Empathetic Clinical Diagnosis</div>
+                                                <p id="voiceGeminiSummaryText" style="font-size: 0.9rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Voice reflection indicates baseline emotional calmness with minimal acoustic tension.</p>
+                                            </div>
+                                            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Recommended Grounding Intervention</div>
+                                                <p id="voiceGeminiInterventionText" style="font-size: 0.9rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Maintain regular sleep schedules and continue daily positive self-affirmations.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1117,6 +1154,43 @@
                                             <div style="text-align: center; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
                                                 <div id="velocityScoreText" style="font-size: 1.25rem; font-weight: 800; color: #F59E0B;">Moderate ↑</div>
                                                 <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Escalation Velocity</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- NEW FEATURE: Gemini Narrative Text Clinical Diagnostic Report -->
+                                    <div id="textGeminiReportWrapper" class="glass-card" style="padding: 22px; border-radius: 22px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.08)); border: 1px solid rgba(168, 85, 247, 0.38); display: flex; flex-direction: column; gap: 14px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 10px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <span style="font-size: 1.5rem;">✨</span>
+                                                <div>
+                                                    <h4 style="font-size: 1.15rem; font-weight: 800; color: #C084FC; margin: 0;">Google Gemini Narrative Assessment</h4>
+                                                    <div id="textGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Google Gemini (Free Tier) Engine</div>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <span id="textGeminiStressTierBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(168, 85, 247, 0.25); border: 1px solid #C084FC; color: #fff; font-size: 0.85rem; font-weight: 800;">Baseline Calm</span>
+                                                <span id="textGeminiStressIndexText" style="font-size: 1.15rem; font-weight: 800; color: #C084FC;">Index: 22/100</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Symptoms row -->
+                                        <div>
+                                            <div style="font-size: 0.82rem; font-weight: 700; color: #CBD5E1; text-transform: uppercase; margin-bottom: 8px;">Detected Psychological Symptoms:</div>
+                                            <div id="textGeminiSymptomsBox" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                                <span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">Cognitive Load</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Summary & CBT Action -->
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
+                                            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Empathetic Clinical Diagnosis</div>
+                                                <p id="textGeminiSummaryText" style="font-size: 0.9rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Narrative evaluation shows healthy emotional regulation and cognitive clarity.</p>
+                                            </div>
+                                            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+                                                <div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Recommended Grounding Intervention</div>
+                                                <p id="textGeminiInterventionText" style="font-size: 0.9rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Perform 4-4-4-4 Box Breathing immediately and break tasks into 15-minute intervals.</p>
                                             </div>
                                         </div>
                                     </div>

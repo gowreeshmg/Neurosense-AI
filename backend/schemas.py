@@ -23,6 +23,14 @@ class CBTInterventionOutput(BaseModel):
     exercise_details: str
     coping_strategy: str
 
+class GeminiClinicalReport(BaseModel):
+    ai_provider: str
+    stress_level_index: int
+    clinical_risk_tier: str
+    detected_symptoms: List[str]
+    empathetic_clinical_summary: str
+    recommended_intervention: str
+
 class TextAnalyzeResponse(BaseModel):
     predicted_category: str
     probabilities: Dict[str, float]
@@ -31,6 +39,7 @@ class TextAnalyzeResponse(BaseModel):
     metadata: Dict[str, Any]
     xai_explanation: Optional[TextXAIOutput] = None
     cbt_intervention: Optional[CBTInterventionOutput] = None
+    gemini_evaluation: Optional[GeminiClinicalReport] = None
 
 class MultimodalAnalyzeRequest(BaseModel):
     text: Optional[str] = None
@@ -64,6 +73,7 @@ class MultimodalAnalyzeResponse(BaseModel):
     text_xai: Optional[TextXAIOutput] = None
     audio_xai: Optional[AudioXAIOutput] = None
     cbt_intervention: Optional[CBTInterventionOutput] = None
+    gemini_evaluation: Optional[GeminiClinicalReport] = None
 
 class CBTChatRequest(BaseModel):
     message: str

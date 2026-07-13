@@ -1,5 +1,6 @@
 import os
 import random
+from src.assistant.guardrails import is_unrelated_to_mental_health, UNRELATED_PROJECT_REPLY
 
 try:
     from openai import OpenAI
@@ -132,8 +133,13 @@ class CBTEmpathyAssistant:
     def chat_reply(self, user_message, current_stress_category="Academic Stress"):
         """
         Handles interactive conversational replies on the dashboard chat tab.
-        Uses live OpenAI ChatGPT (GPT-4o-mini) if API key is present, otherwise falls back to local rule-based CBT logic.
+        Uses live OpenAI ChatGPT (GPT-4o-mini) / Gemini / Groq if API key is present, otherwise falls back to local rule-based CBT logic.
+        Enforces strict topic filtering so the assistant only answers questions related to mental health, stress, anxiety, depression, and relationships.
         """
+        # 1. Fast local topic verification check before calling any AI API
+        if is_unrelated_to_mental_health(user_message):
+            return UNRELATED_PROJECT_REPLY
+
         if self.client and self.model_name:
             models_to_try = [self.model_name]
             if "gemini" in self.model_name.lower():
@@ -142,7 +148,9 @@ class CBTEmpathyAssistant:
             for model_id in models_to_try:
                 try:
                     system_prompt = (
-                        "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, and daily pressure. "
+                        "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, burnout, and daily pressure. "
+                        "CRITICAL GUARDRAIL: You are STRICTLY RESTRICTED to answering questions related to our mental health project, such as stress, anxiety, depression, burnout, emotional well-being, relationship issues, academic/work pressure, and coping strategies. "
+                        f"If the user asks ANY question or topic that is NOT related to mental health, stress, relationship issues, or emotional well-being (for example: coding/programming questions, general knowledge, math homework, recipes, sports, entertainment, politics, financial advice, etc.), you MUST decline to answer and reply EXACTLY with: '{UNRELATED_PROJECT_REPLY}' "
                         f"The user's recent multimodal check-in detected: {current_stress_category}. "
                         "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
                         "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; provide actionable CBT guidance tailored to any walk of life."
@@ -156,7 +164,11 @@ class CBTEmpathyAssistant:
                         temperature=0.7,
                         max_tokens=250
                     )
-                    return response.choices[0].message.content.strip()
+                    reply = response.choices[0].message.content.strip()
+                    # Verify model output compliance post-generation
+                    if is_unrelated_to_mental_health(reply):
+                        return UNRELATED_PROJECT_REPLY
+                    return reply
                 except Exception as e:
                     # Try next free model in fallback list
                     continue
@@ -196,6 +208,9 @@ class CBTEmpathyAssistant:
             return "You are very welcome! I am so glad that helped. Remember, I am always here whenever you need a quick mental check-in or a grounding pause."
             
         else:
+            # If no specific mental health pattern matched and it contains no general mental health keywords, decline
+            if is_unrelated_to_mental_health(user_message):
+                return UNRELATED_PROJECT_REPLY
             return (
                 f"I hear you. Whether you are dealing with academic pressure or personal challenges, taking a mindful pause is the best first step.\n\n"
                 f"Based on your recent check-ins ({current_stress_category}), would you like me to guide you through a 2-minute relaxation exercise or help you prioritize your tasks today?"
