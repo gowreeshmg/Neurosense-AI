@@ -221,7 +221,7 @@ class CBTEmpathyAssistant:
         # STEP 4: ZERO PRE-BUILT ANSWERS ALLOWED!
         # If all live AI APIs failed or quota hit and no Groq key is added yet:
         return (
-            "⚠️ **AI Engine Notice:** Google Gemini reached its momentary rate limit (15 requests/min) or timed out (>12s), "
+            "[AI Engine Notice] Google Gemini reached its momentary rate limit (15 requests/min) or timed out (>12s), "
             "and no Llama fallback (`GROQ_API_KEY`) was connected to handle the failover instantly. "
             "Please wait 10 seconds and send your message again, or add a free Groq API key in your `.env` file (`GROQ_API_KEY=gsk_...`) "
             "from https://console.groq.com/keys to enable seamless Llama 3.3 failover without delays!"
