@@ -117,7 +117,8 @@
 }
 
 /* Cinematic subtle blur & dim when in Dashboard interface */
-body.on-dashboard #globalAmbientBgContainer .bg-video.active {
+body.on-dashboard #globalAmbientBgContainer .bg-video.active,
+body.on-dashboard #globalAmbientBgContainer .bg-custom-media.active {
     filter: blur(var(--dashboard-bg-blur, 14px)) brightness(0.82) !important;
     transform: scale(var(--dashboard-bg-scale, 1.06)) !important;
 }
@@ -1431,12 +1432,19 @@ textarea:focus {
     line-height: 1.7;
 }
 
-/* CBT Interactive Chat */
-.cbt-chat-container {
-    background: rgba(11, 15, 25, 0.85);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 18px;
+/* CBT Interactive Chat & Assistant Islands */
+.cbt-chat-container,
+#cbtCompanionIsland {
+    background: rgba(15, 23, 42, 0.42) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 .cbt-chat-container h4 {
@@ -2054,10 +2062,8 @@ textarea:focus {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
         gap: 28px !important;
-        align-items: stretch !important;
+        align-items: start !important;
         width: 100% !important;
-        max-height: calc(100vh - 180px) !important;
-        min-height: 580px !important;
     }
     .split-col-left,
     .split-col-right {
@@ -2065,21 +2071,11 @@ textarea:focus {
         flex-direction: column !important;
         gap: 20px !important;
         height: auto !important;
-        min-height: 100% !important;
         overflow: visible !important;
     }
     .split-col-left .input-card {
         flex: 0 0 auto !important;
         height: auto !important;
-        margin-bottom: 0 !important;
-    }
-    .split-col-left .secondary-info-island {
-        flex: 1 1 auto !important;
-        min-height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-around !important;
-        gap: 14px !important;
         margin-bottom: 0 !important;
     }
     .split-col-right .results-section,
@@ -2090,8 +2086,8 @@ textarea:focus {
         justify-content: flex-start !important;
         gap: 16px !important;
         height: auto !important;
-        min-height: 100% !important;
-        overflow: visible !important;
+        min-height: 520px !important;
+        overflow-y: visible !important;
     }
     .modality-split-grid .input-card .audio-actions {
         margin-top: 16px !important;
@@ -2140,36 +2136,47 @@ textarea:focus {
     .desktop-only {
         display: none !important;
     }
+
+    /* On mobile: hide the secondary assessment island by default (voice clinical + narrative clinical) 
+       They become visible via JS after analysis runs */
+    #voiceAssessmentIsland {
+        display: none !important;
+    }
+    #textAssessmentIsland {
+        display: none !important;
+    }
+
+    /* CBT Island on mobile: fills viewport minus the bottom dock (≈90px) */
+    #cbtCompanionIsland {
+        height: calc(100dvh - 160px) !important;
+        min-height: 340px !important;
+        max-height: none !important;
+    }
+
+    /* Bottom small methodology islands: completely hidden on mobile (shown on desktop not applicable, hidden everywhere on mobile) */
+    .mobile-only-islands {
+        display: none !important;
+    }
 }
 
 /* Liquid Glass Dock Pill & Apple Music style Bottom Island Navigation */
 .liquid-glass,
 #bottomGlassDock {
-    background: rgba(15, 23, 42, 0.48) !important;
-    backdrop-filter: blur(28px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
-    border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.3) !important;
-    box-sizing: border-box !important;
-    height: 58px !important;
-    max-height: 58px !important;
-    min-height: 58px !important;
-    padding: 4px 6px !important;
-    margin: 0 auto !important;
-    overflow: hidden !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-around !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 25, 42, 0.92) !important;
+    backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), inset 0 0 18px rgba(255, 255, 255, 0.08), 0 20px 45px -10px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.35) !important;
 }
 
 body[data-theme="light"] #bottomGlassDock {
-    background: rgba(255, 255, 255, 0.65) !important;
-    backdrop-filter: blur(28px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.22) 100%), rgba(244, 248, 255, 0.94) !important;
+    backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
     border-top: 1.5px solid rgba(255, 255, 255, 0.96) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.95) !important;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), inset 0 0 18px rgba(255, 255, 255, 0.45), 0 16px 36px -8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
 }
 
 #dockLiquidSlider {
@@ -2448,20 +2455,16 @@ header.navbar-top-controls .top-center-title {
         transform: translateX(-50%) !important;
         width: calc(100vw - 28px) !important;
         max-width: 410px !important;
-        padding: 4px 6px !important;
+        padding: 6px 6px !important;
         gap: 4px !important;
         justify-content: space-around !important;
         border-radius: 999px !important;
-        box-sizing: border-box !important;
-        height: 56px !important;
-        max-height: 56px !important;
-        min-height: 56px !important;
-        background: rgba(15, 23, 42, 0.48) !important;
-        backdrop-filter: blur(28px) saturate(200%) !important;
-        -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.22) !important;
-        border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.3) !important;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 25, 42, 0.92) !important;
+        backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
+        -webkit-backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.38) !important;
+        border-top: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), inset 0 0 18px rgba(255, 255, 255, 0.08), 0 20px 45px -10px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.35) !important;
     }
     #bottomGlassDock .dock-btn {
         flex: 1 1 0% !important;
@@ -2539,67 +2542,5 @@ body:not(.on-dashboard) #btnThemeToggle {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* ==========================================================================
-   Cinematic Hero Phone Mode vs Desktop Mode Isolation & Animations
-   ========================================================================== */
-@keyframes fade-rise {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-rise {
-    animation: fade-rise 0.8s ease-out forwards;
-}
-.animate-fade-rise-delay {
-    animation: fade-rise 0.8s ease-out 0.2s forwards;
-    opacity: 0;
-}
-.animate-fade-rise-delay-2 {
-    animation: fade-rise 0.8s ease-out 0.4s forwards;
-    opacity: 0;
-}
-
-/* Desktop vs Phone Home Screen Breakpoint Isolation */
-@media (min-width: 768px) {
-    #mobileHeroHomeScreen,
-    #mobileBgVideo {
-        display: none !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-    }
-}
-
-@media (max-width: 767px) {
-    /* When not on dashboard, hide desktop home screen and show phone cinematic home screen */
-    body:not(.on-dashboard) #lumoraHomeScreen {
-        display: none !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-    }
-    body:not(.on-dashboard) #mobileHeroHomeScreen {
-        display: flex !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-    }
-    /* When on dashboard in phone mode, use the looping prompt video as background */
-    body.on-dashboard #bgVideo0,
-    body.on-dashboard #bgVideo1,
-    body.on-dashboard #bgVideo2,
-    body.on-dashboard #bgVideo3 {
-        display: none !important;
-        opacity: 0 !important;
-    }
-    body.on-dashboard #mobileBgVideo {
-        display: block !important;
-        opacity: 0.85 !important;
-    }
-}
-
-body.on-dashboard #mobileHeroHomeScreen,
-body.on-dashboard #lumoraHomeScreen {
-    display: none !important;
-    visibility: hidden !important;
     pointer-events: none !important;
 }

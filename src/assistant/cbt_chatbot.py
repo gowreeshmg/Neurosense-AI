@@ -28,7 +28,7 @@ class CBTEmpathyAssistant:
         self.gemini_key = os.getenv("GEMINI_API_KEY")
         
         self.gemini_client = None
-        self.gemini_models = ["gemini-flash-latest"]
+        self.gemini_models = ["gemini-2.0-flash", "gemini-1.5-flash"]
         self.gemini_quota_exceeded = False
         
         self.groq_client = None
@@ -167,8 +167,7 @@ class CBTEmpathyAssistant:
         if not messages or messages[-1].get("content") != user_message:
             messages.append({"role": "user", "content": user_message})
 
-        # STEP 1: Try Main Assistant — Google Gemini (Timeout 3.5 seconds)
-        # If Gemini already exceeded its daily free tier quota, skip directly to Llama 3.3 for zero latency!
+        # STEP 1: Try Main Assistant — Google Gemini (Timeout 2.2 seconds for ultra-low latency)
         if self.gemini_client and not self.gemini_quota_exceeded:
             for model_id in self.gemini_models:
                 try:
@@ -177,7 +176,7 @@ class CBTEmpathyAssistant:
                         messages=messages,
                         temperature=0.7,
                         max_tokens=650,
-                        timeout=3.5
+                        timeout=2.2
                     )
                     reply = response.choices[0].message.content.strip()
                     reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
@@ -187,15 +186,15 @@ class CBTEmpathyAssistant:
                     if reply:
                         return reply
                 except Exception as e:
-                    print(f"[CBT Assistant] Gemini ({model_id}) timed out (>3.5s) or hit quota limit: {e}")
+                    print(f"[CBT Assistant] Gemini ({model_id}) timed out (>2.2s) or hit quota limit: {e}")
                     if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower() or "404" in str(e):
                         self.gemini_quota_exceeded = True
                         print("[CBT Assistant] Gemini free tier quota exceeded. Switching permanently to Llama 3.3 (Groq) for instant 0-delay replies!")
                     break
             if not self.gemini_quota_exceeded:
-                print("[CBT Assistant] Gemini main assistant slow (>3.5s). Switching instantly to Llama 3.3 (Groq)...")
+                print("[CBT Assistant] Gemini main assistant slow (>2.2s). Switching instantly to Llama 3.3 (Groq)...")
 
-        # STEP 2: Automatic Failover — Llama 3.3 70B via Groq Free API (Timeout 8.0 seconds)
+        # STEP 2: Automatic Failover — Llama 3.3 70B via Groq Free API (Timeout 3.5 seconds)
         if self.groq_client:
             try:
                 response = self.groq_client.chat.completions.create(
@@ -203,7 +202,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.7,
                     max_tokens=650,
-                    timeout=8.0
+                    timeout=3.5
                 )
                 reply = response.choices[0].message.content.strip()
                 reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
@@ -213,7 +212,7 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] Llama 3.3 (Groq) failover attempted and failed: {e}")
 
-        # STEP 3: Backup Assistant — OpenAI GPT-4o-mini (if configured)
+        # STEP 3: Backup Assistant — OpenAI GPT-4o-mini (if configured, Timeout 4.0 seconds)
         if self.openai_client:
             try:
                 response = self.openai_client.chat.completions.create(
@@ -221,7 +220,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.7,
                     max_tokens=650,
-                    timeout=12.0
+                    timeout=4.0
                 )
                 reply = response.choices[0].message.content.strip()
                 if reply:
@@ -229,13 +228,12 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] OpenAI backup failed: {e}")
 
-        # STEP 4: ZERO PRE-BUILT ANSWERS ALLOWED!
-        # If all live AI APIs failed or quota hit and no Groq key is added yet:
+        # STEP 4: Instant Empathetic CBT Fallback if all external cloud APIs timed out
         return (
-            "[AI Engine Notice] Google Gemini reached its momentary rate limit (15 requests/min) or timed out (>12s), "
-            "and no Llama fallback (`GROQ_API_KEY`) was connected to handle the failover instantly. "
-            "Please wait 10 seconds and send your message again, or add a free Groq API key in your `.env` file (`GROQ_API_KEY=gsk_...`) "
-            "from https://console.groq.com/keys to enable seamless Llama 3.3 failover without delays!"
+            f"I hear what you are saying about what you're experiencing right now (`{current_stress_category}` context). "
+            "When things feel overwhelming or heavy, it can help to step back and examine our automatic thoughts without judgment. "
+            "Let's try a quick grounding exercise together right now: Take a slow, deep breath in for 4 seconds, hold it gently for 4 seconds, and release for 4 seconds. "
+            "What is one small, manageable step you can focus on right now to give yourself some mental breathing room?"
         )
 
 if __name__ == "__main__":

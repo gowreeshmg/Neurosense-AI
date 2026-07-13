@@ -86,10 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
             console.warn("[NeuroSense UI] Running in offline / standalone simulation mode or backend starting up.");
         });
-        
-    if (typeof handleScreenModeResize === 'function') {
-        handleScreenModeResize();
-    }
 });
 
 /**
@@ -114,133 +110,11 @@ function toggleTheme() {
     }
 }
 
-let mobileHeroRAF = null;
 /**
- * Initializes and manages the custom 0.5s fade-in/fade-out loop for the mobile hero background video
- */
-function initMobileHeroVideoLoop() {
-    const video = document.getElementById('mobileHeroVideo');
-    if (!video) return;
-    
-    if (mobileHeroRAF) {
-        cancelAnimationFrame(mobileHeroRAF);
-        mobileHeroRAF = null;
-    }
-    
-    video.currentTime = 0;
-    video.style.opacity = '0';
-    video.play().catch(() => {});
-    
-    let isFadingIn = true;
-    let isFadingOut = false;
-    let startTime = performance.now();
-    
-    function checkVideoFrame(now) {
-        if (!video || video.paused) {
-            mobileHeroRAF = requestAnimationFrame(checkVideoFrame);
-            return;
-        }
-        
-        const duration = video.duration || 0;
-        const current = video.currentTime || 0;
-        
-        if (isFadingIn) {
-            const elapsed = (now - startTime) / 1000;
-            if (elapsed < 0.5) {
-                video.style.opacity = String(Math.min(1, elapsed / 0.5));
-            } else {
-                video.style.opacity = '1';
-                isFadingIn = false;
-            }
-        }
-        
-        if (duration > 1 && !isFadingOut && (duration - current) <= 0.5 && (duration - current) > 0) {
-            isFadingOut = true;
-        }
-        
-        if (isFadingOut && duration > 1) {
-            const remaining = Math.max(0, duration - current);
-            video.style.opacity = String(Math.max(0, Math.min(1, remaining / 0.5)));
-        }
-        
-        mobileHeroRAF = requestAnimationFrame(checkVideoFrame);
-    }
-    
-    mobileHeroRAF = requestAnimationFrame(checkVideoFrame);
-    
-    video.onended = () => {
-        video.style.opacity = '0';
-        isFadingOut = false;
-        setTimeout(() => {
-            video.currentTime = 0;
-            startTime = performance.now();
-            isFadingIn = true;
-            video.play().catch(() => {});
-        }, 100);
-    };
-}
-
-/**
- * Handles live responsive switching between Desktop Home Screen and Phone Home Screen on viewport resize
- */
-function handleScreenModeResize() {
-    const isPhone = window.innerWidth < 768;
-    const isDashboard = document.body.classList.contains('on-dashboard');
-    const homeScreen = document.getElementById('lumoraHomeScreen');
-    const mobileHero = document.getElementById('mobileHeroHomeScreen');
-    const mobileBg = document.getElementById('mobileBgVideo');
-    
-    if (!isDashboard) {
-        if (isPhone) {
-            if (homeScreen) {
-                homeScreen.classList.add('hidden-screen');
-                homeScreen.style.setProperty('display', 'none', 'important');
-            }
-            if (mobileHero) {
-                mobileHero.classList.remove('hidden-screen');
-                mobileHero.style.setProperty('display', 'flex', 'important');
-                initMobileHeroVideoLoop();
-            }
-        } else {
-            if (homeScreen) {
-                homeScreen.classList.remove('hidden-screen');
-                homeScreen.style.setProperty('display', 'flex', 'important');
-            }
-            if (mobileHero) {
-                mobileHero.classList.add('hidden-screen');
-                mobileHero.style.setProperty('display', 'none', 'important');
-            }
-        }
-    } else {
-        if (isPhone && mobileBg) {
-            mobileBg.style.setProperty('display', 'block', 'important');
-            mobileBg.style.setProperty('opacity', '0.85', 'important');
-            for (let i = 0; i < 4; i++) {
-                const v = document.getElementById('bgVideo' + i);
-                if (v) v.style.setProperty('display', 'none', 'important');
-            }
-            mobileBg.play().catch(() => {});
-        } else {
-            if (mobileBg) mobileBg.style.setProperty('display', 'none', 'important');
-            for (let i = 0; i < 4; i++) {
-                const v = document.getElementById('bgVideo' + i);
-                if (v && v.classList.contains('active')) {
-                    v.style.setProperty('display', 'block', 'important');
-                    v.style.setProperty('opacity', '1', 'important');
-                }
-            }
-        }
-    }
-}
-window.addEventListener('resize', handleScreenModeResize);
-
-/**
- * Switches between Home Screen (Desktop/Phone) and Main Project Dashboard
+ * Switches between RIVR-style Home Screen and Main Project Dashboard
  */
 function switchScreen(screenName) {
-    const isPhone = window.innerWidth < 768;
     const homeScreen = document.getElementById('lumoraHomeScreen');
-    const mobileHero = document.getElementById('mobileHeroHomeScreen');
     const dashboardScreen = document.getElementById('appDashboardScreen');
     const appBg = document.querySelector('.app-background');
     const dashboardVideoBg = document.getElementById('dashboardBgVideoContainer');
@@ -248,28 +122,11 @@ function switchScreen(screenName) {
     const returnHomeBtn = document.getElementById('btnReturnHomeFixed');
     const topControls = document.querySelector('header.navbar-top-controls');
     const bottomDock = document.getElementById('bottomGlassDock');
-    const mobileBg = document.getElementById('mobileBgVideo');
     
     if (screenName === 'home') {
-        if (isPhone) {
-            if (homeScreen) {
-                homeScreen.classList.add('hidden-screen');
-                homeScreen.style.setProperty('display', 'none', 'important');
-            }
-            if (mobileHero) {
-                mobileHero.classList.remove('hidden-screen');
-                mobileHero.style.setProperty('display', 'flex', 'important');
-                initMobileHeroVideoLoop();
-            }
-        } else {
-            if (homeScreen) {
-                homeScreen.classList.remove('hidden-screen');
-                homeScreen.style.setProperty('display', 'flex', 'important');
-            }
-            if (mobileHero) {
-                mobileHero.classList.add('hidden-screen');
-                mobileHero.style.setProperty('display', 'none', 'important');
-            }
+        if (homeScreen) {
+            homeScreen.classList.remove('hidden-screen');
+            homeScreen.style.setProperty('display', 'flex', 'important');
         }
         if (dashboardScreen) {
             dashboardScreen.classList.add('hidden-screen');
@@ -289,10 +146,6 @@ function switchScreen(screenName) {
         if (homeScreen) {
             homeScreen.classList.add('hidden-screen');
             homeScreen.style.setProperty('display', 'none', 'important');
-        }
-        if (mobileHero) {
-            mobileHero.classList.add('hidden-screen');
-            mobileHero.style.setProperty('display', 'none', 'important');
         }
         if (dashboardScreen) {
             dashboardScreen.classList.remove('hidden-screen');
@@ -322,25 +175,6 @@ function switchScreen(screenName) {
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.classList.add('on-dashboard');
         window.scrollTo(0, 0);
-        
-        if (isPhone && mobileBg) {
-            mobileBg.style.setProperty('display', 'block', 'important');
-            mobileBg.style.setProperty('opacity', '0.85', 'important');
-            for (let i = 0; i < 4; i++) {
-                const v = document.getElementById('bgVideo' + i);
-                if (v) v.style.setProperty('display', 'none', 'important');
-            }
-            mobileBg.play().catch(() => {});
-        } else {
-            if (mobileBg) mobileBg.style.setProperty('display', 'none', 'important');
-            for (let i = 0; i < 4; i++) {
-                const v = document.getElementById('bgVideo' + i);
-                if (v && v.classList.contains('active')) {
-                    v.style.setProperty('display', 'block', 'important');
-                    v.style.setProperty('opacity', '1', 'important');
-                }
-            }
-        }
         
         const resSec = document.getElementById('analysisResultsSection');
         if (resSec && typeof currentAnalysisResult !== 'undefined' && !currentAnalysisResult) {
@@ -773,6 +607,91 @@ function applyBlurPreset(val) {
     setDashboardBlur(val);
 }
 
+function handleCustomBackgroundUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const imgEl = document.getElementById('bgCustomImage');
+    const vidEl = document.getElementById('bgCustomVideo');
+    const statusEl = document.getElementById('customBgStatusText');
+
+    const fileUrl = URL.createObjectURL(file);
+
+    // Hide default videos and remove active classes
+    for (let i = 0; i < 4; i++) {
+        const defVid = document.getElementById(`bgVideo${i}`);
+        if (defVid) {
+            defVid.style.opacity = '0';
+            defVid.classList.remove('active');
+        }
+    }
+
+    const isVideo = file.type.startsWith('video/') || file.name.endsWith('.mp4') || file.name.endsWith('.mov');
+
+    if (isVideo) {
+        if (imgEl) {
+            imgEl.style.display = 'none';
+            imgEl.classList.remove('active');
+        }
+        if (vidEl) {
+            vidEl.src = fileUrl;
+            vidEl.style.display = 'block';
+            vidEl.style.opacity = '1';
+            vidEl.classList.add('active');
+            vidEl.play().catch(() => {});
+        }
+    } else {
+        if (vidEl) {
+            vidEl.pause();
+            vidEl.style.display = 'none';
+            vidEl.classList.remove('active');
+        }
+        if (imgEl) {
+            imgEl.src = fileUrl;
+            imgEl.style.display = 'block';
+            imgEl.style.opacity = '1';
+            imgEl.classList.add('active');
+        }
+    }
+
+    if (statusEl) {
+        statusEl.innerText = `✓ Active: ${file.name.slice(0, 24)}`;
+        statusEl.style.display = 'block';
+    }
+}
+
+function resetCustomBackground() {
+    const imgEl = document.getElementById('bgCustomImage');
+    const vidEl = document.getElementById('bgCustomVideo');
+    const statusEl = document.getElementById('customBgStatusText');
+    const fileInput = document.getElementById('customBgFileInput');
+
+    if (fileInput) fileInput.value = '';
+    if (imgEl) {
+        imgEl.style.display = 'none';
+        imgEl.classList.remove('active');
+        imgEl.src = '';
+    }
+    if (vidEl) {
+        vidEl.pause();
+        vidEl.style.display = 'none';
+        vidEl.classList.remove('active');
+        vidEl.src = '';
+    }
+    if (statusEl) {
+        statusEl.style.display = 'none';
+    }
+
+    // Restore default active video
+    const currentVideoIdx = window.activeBgIndex || 0;
+    const defVid = document.getElementById(`bgVideo${currentVideoIdx}`);
+    if (defVid) {
+        defVid.style.opacity = '1';
+        defVid.classList.add('active');
+        defVid.play().catch(() => {});
+    }
+}
+
 /**
  * Updates word counter on the narrative journal card
  */
@@ -990,6 +909,16 @@ function displayAnalysisResults(res, modality = 'both') {
         if (textRes) {
             textRes.style.setProperty('display', 'none', 'important');
         }
+        // Mobile: reveal secondary voice clinical assessment island after results
+        const voiceAssess = document.getElementById('voiceAssessmentIsland');
+        if (voiceAssess && window.innerWidth < 1024) {
+            voiceAssess.style.removeProperty('display');
+            voiceAssess.style.display = 'flex';
+        }
+        // Auto-scroll to results on mobile
+        if (window.innerWidth < 1024 && audioRes) {
+            setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        }
         const aNum = document.getElementById('audioStressScoreNumber');
         const aTier = document.getElementById('audioRiskTierText');
         const aCat = document.getElementById('audioStressCategoryText');
@@ -1007,6 +936,16 @@ function displayAnalysisResults(res, modality = 'both') {
         }
         if (audioRes) {
             audioRes.style.setProperty('display', 'none', 'important');
+        }
+        // Mobile: reveal secondary narrative clinical assessment island after results
+        const textAssess = document.getElementById('textAssessmentIsland');
+        if (textAssess && window.innerWidth < 1024) {
+            textAssess.style.removeProperty('display');
+            textAssess.style.display = 'flex';
+        }
+        // Auto-scroll to results on mobile
+        if (window.innerWidth < 1024 && textRes) {
+            setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
         }
         const tNum = document.getElementById('textStressScoreNumber');
         const tTier = document.getElementById('textRiskTierText');
@@ -1330,24 +1269,17 @@ async function sendCBTChat() {
     input.value = '';
     box.scrollTop = box.scrollHeight;
     
-    if (!window.cbtChatHistory) {
-        try {
-            const saved = localStorage.getItem('neurosense_cbt_chat_history');
-            window.cbtChatHistory = saved ? JSON.parse(saved) : [];
-        } catch (e) {
-            window.cbtChatHistory = [];
-        }
-    }
+    window.cbtChatHistory = window.cbtChatHistory || [];
     
-    // Show animated loading indicator bubble while waiting for Gemini / Llama 3.3
+    // Show animated loading indicator bubble while waiting for Gemini / GPT
     const typingId = 'cbtTyping_' + Date.now();
-    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>🤖 NeuroSense Assistant:</strong> Analyzing input & preparing CBT guidance... ⌛</div>`;
+    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>🤖 NeuroSense GPT:</strong> Analyzing input & preparing CBT guidance... ⌛</div>`;
     box.scrollTop = box.scrollHeight;
     
     let success = false;
     let replyText = "";
     
-    for (let attempt = 1; attempt <= 3; attempt++) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
         try {
             const res = await fetch('/api/chat/cbt', {
                 method: 'POST',
@@ -1364,16 +1296,16 @@ async function sendCBTChat() {
                 replyText = data.reply;
                 success = true;
                 break;
-            } else if (attempt < 3) {
+            } else if (attempt < 2) {
                 const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense Assistant:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/3)... ⌛`;
-                await new Promise(r => setTimeout(r, 1200));
+                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/2)... ⌛`;
+                await new Promise(r => setTimeout(r, 400));
             }
         } catch (err) {
-            if (attempt < 3) {
+            if (attempt < 2) {
                 const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense Assistant:</strong> Re-establishing connection with clinical AI engine... ⌛`;
-                await new Promise(r => setTimeout(r, 1200));
+                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> Re-establishing connection with clinical AI engine... ⌛`;
+                await new Promise(r => setTimeout(r, 400));
             }
         }
     }
@@ -1382,15 +1314,12 @@ async function sendCBTChat() {
     if (typingBubble) typingBubble.remove();
     
     if (success && replyText) {
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense Assistant:</strong> ${replyText}</div>`;
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${replyText}</div>`;
         window.cbtChatHistory.push({ role: "user", content: msg });
         window.cbtChatHistory.push({ role: "assistant", content: replyText });
-        try {
-            localStorage.setItem('neurosense_cbt_chat_history', JSON.stringify(window.cbtChatHistory.slice(-20)));
-        } catch (e) {}
     } else {
-        const errorMsg = replyText || "⚠️ **AI Network Notice:** The main Google Gemini engine timed out or hit its rate limit (15 requests/min), and Llama fallback (`GROQ_API_KEY`) was busy or unavailable. Please wait a few seconds and try again.";
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense Assistant:</strong> ${errorMsg}</div>`;
+        const errorMsg = replyText || "⚠️ **AI Network Notice:** The main Google Gemini engine timed out (>12s) or hit its rate limit (15 requests/min), and no backup Llama key (`GROQ_API_KEY`) was found. Please wait 10 seconds and try again, or add a free Groq Llama key in your `.env` file (`GROQ_API_KEY=gsk_...`) for instant failover!";
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${errorMsg}</div>`;
     }
     
     box.scrollTop = box.scrollHeight;
@@ -1400,6 +1329,21 @@ function handleChatKeyPress(event) {
     if (event.key === 'Enter') {
         sendCBTChat();
     }
+}
+
+function resetCBTChat() {
+    window.cbtChatHistory = [];
+    const box = document.getElementById('cbtChatMessages');
+    if (box) {
+        box.innerHTML = `
+            <div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
+            <div class="chat-msg bot-msg" style="max-width: 82%; font-size: 0.96rem; padding: 14px 18px; border-radius: 16px; line-height: 1.6;">
+                <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
+            </div>
+        `;
+    }
+    const input = document.getElementById('cbtChatInput');
+    if (input) input.value = '';
 }
 
 /**
