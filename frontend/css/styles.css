@@ -2255,7 +2255,9 @@ header.navbar-top-controls .top-center-title {
         float: none !important;
     }
     header.navbar-top-controls {
-        margin: 56px auto 12px auto !important;
+        margin: 44px auto 14px auto !important;
+        position: relative !important;
+        z-index: 10 !important;
     }
     header.navbar-top-controls .top-center-title {
         font-size: 1.62rem !important;
@@ -2274,37 +2276,51 @@ header.navbar-top-controls .top-center-title {
     #appDashboardScreen {
         padding: 4px 10px !important;
     }
-    /* Move main dashboard content island to sit centered in viewport cleanly above bottom dock */
+    /* Move main dashboard content island to sit cleanly below header without overlapping and above bottom dock */
     .dashboard-container {
-        margin-top: 0 !important;
-        padding: 0 10px 96px 10px !important;
+        margin-top: 10px !important;
+        padding: 0 10px 84px 10px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
+        position: relative !important;
+        z-index: 2 !important;
     }
-    /* On mobile, first check-in card sits with exactly a small distance (6px) above bottom dock */
+    /* On mobile, check-in card fits screen right between top header and bottom dock compact and small without scroll */
     #viewVoice .split-col-left .input-card,
     #viewText .split-col-left .input-card {
-        height: calc(100vh - 188px) !important;
-        max-height: none !important;
-        min-height: 380px !important;
+        height: auto !important;
+        max-height: calc(100vh - 210px) !important;
+        min-height: 320px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
-        margin-bottom: 80px !important;
-        padding: 16px 18px !important;
+        margin-bottom: 24px !important;
+        padding: 14px 16px !important;
+        position: relative !important;
+        z-index: 2 !important;
+    }
+    #viewVoice .audio-visualizer-container {
+        height: 64px !important;
+        min-height: 64px !important;
+        margin: 8px 0 !important;
+        padding: 6px !important;
+    }
+    #viewVoice #waveformCanvas {
+        height: 52px !important;
     }
     #viewText #journalTextarea {
         flex: 1 1 auto !important;
-        min-height: 90px !important;
-        max-height: 160px !important;
-        margin-bottom: 12px !important;
+        min-height: 70px !important;
+        max-height: 130px !important;
+        margin-bottom: 10px !important;
     }
     #viewVoice .audio-actions,
     #viewText .text-actions {
         flex-shrink: 0 !important;
         margin-top: auto !important;
+        gap: 8px !important;
     }
     /* Move bottom dock island slightly up and centered */
     #bottomGlassDock {
