@@ -12,18 +12,47 @@ class CBTEmpathyAssistant:
     Cognitive Behavioral Therapy (CBT) Empathy & Intervention Assistant.
     Provides targeted cognitive reframing, grounding exercises, and actionable coping mechanisms
     tailored specifically to the stress category detected by the multimodal fusion engine.
+    Supports 100% FREE live AI via Groq (Llama 3.3 70B Free) or Google Gemini Free Tier, as well as OpenAI.
     """
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.openai_key = os.getenv("OPENAI_API_KEY")
+        self.groq_key = os.getenv("GROQ_API_KEY")
+        self.gemini_key = os.getenv("GEMINI_API_KEY")
+        
         self.client = None
-        if OPENAI_AVAILABLE and self.api_key and len(self.api_key.strip()) > 5:
+        self.provider = None
+        self.model_name = None
+
+        if OPENAI_AVAILABLE and self.groq_key and len(self.groq_key.strip()) > 5:
             try:
-                self.client = OpenAI(api_key=self.api_key.strip())
-                print("[CBT Assistant] Successfully connected to OpenAI ChatGPT API.")
+                # Groq is 100% FREE and uses the exact same OpenAI SDK format
+                self.client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1")
+                self.provider = "Groq (Free Llama 3.3 70B)"
+                self.model_name = "llama-3.3-70b-versatile"
+                print(f"[CBT Assistant] Successfully connected to 100% FREE AI: {self.provider}.")
+            except Exception as e:
+                print(f"[CBT Assistant] Could not initialize Groq client: {e}")
+
+        elif OPENAI_AVAILABLE and self.gemini_key and len(self.gemini_key.strip()) > 5:
+            try:
+                # Google Gemini Free API (OpenAI compatible endpoint)
+                self.client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+                self.provider = "Google Gemini (Free Tier)"
+                self.model_name = "gemini-1.5-flash"
+                print(f"[CBT Assistant] Successfully connected to 100% FREE AI: {self.provider}.")
+            except Exception as e:
+                print(f"[CBT Assistant] Could not initialize Gemini client: {e}")
+
+        elif OPENAI_AVAILABLE and self.openai_key and len(self.openai_key.strip()) > 5 and not self.openai_key.startswith("sk-proj-Z3AZwp"):
+            try:
+                self.client = OpenAI(api_key=self.openai_key.strip())
+                self.provider = "OpenAI (GPT-4o-mini)"
+                self.model_name = "gpt-4o-mini"
+                print(f"[CBT Assistant] Successfully connected to OpenAI ChatGPT API.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize OpenAI client: {e}")
         else:
-            print("[CBT Assistant] No OPENAI_API_KEY detected. Operating in offline rule-based CBT mode.")
+            print("[CBT Assistant] No active live AI API key detected (or quota limited). Operating in offline rule-based CBT mode.")
 
         self.grounding_exercises = {
             "5-4-3-2-1 Grounding": (
@@ -105,7 +134,7 @@ class CBTEmpathyAssistant:
         Handles interactive conversational replies on the dashboard chat tab.
         Uses live OpenAI ChatGPT (GPT-4o-mini) if API key is present, otherwise falls back to local rule-based CBT logic.
         """
-        if self.client:
+        if self.client and self.model_name:
             try:
                 system_prompt = (
                     "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor specifically designed for university students. "
@@ -114,7 +143,7 @@ class CBTEmpathyAssistant:
                     "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; give actionable CBT guidance."
                 )
                 response = self.client.chat.completions.create(
-                    model="gpt-4o-mini",
+                    model=self.model_name,
                     messages=[
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_message}
@@ -124,7 +153,7 @@ class CBTEmpathyAssistant:
                 )
                 return response.choices[0].message.content.strip()
             except Exception as e:
-                print(f"[CBT Assistant] OpenAI API error during chat_reply ({e}). Using offline fallback.")
+                print(f"[CBT Assistant] {self.provider} API error during chat_reply ({e}). Using offline fallback.")
 
         # Offline Fallback (Rule-based CBT logic)
         msg_lower = user_message.lower()
