@@ -1,4 +1,11 @@
+import os
 import random
+
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
 
 class CBTEmpathyAssistant:
     """
@@ -7,6 +14,17 @@ class CBTEmpathyAssistant:
     tailored specifically to the stress category detected by the multimodal fusion engine.
     """
     def __init__(self):
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.client = None
+        if OPENAI_AVAILABLE and self.api_key and len(self.api_key.strip()) > 5:
+            try:
+                self.client = OpenAI(api_key=self.api_key.strip())
+                print("[CBT Assistant] Successfully connected to OpenAI ChatGPT API.")
+            except Exception as e:
+                print(f"[CBT Assistant] Could not initialize OpenAI client: {e}")
+        else:
+            print("[CBT Assistant] No OPENAI_API_KEY detected. Operating in offline rule-based CBT mode.")
+
         self.grounding_exercises = {
             "5-4-3-2-1 Grounding": (
                 "Let's ground your nervous system right now using the 5-4-3-2-1 sensory technique:\n"
@@ -85,7 +103,30 @@ class CBTEmpathyAssistant:
     def chat_reply(self, user_message, current_stress_category="Academic Stress"):
         """
         Handles interactive conversational replies on the dashboard chat tab.
+        Uses live OpenAI ChatGPT (GPT-4o-mini) if API key is present, otherwise falls back to local rule-based CBT logic.
         """
+        if self.client:
+            try:
+                system_prompt = (
+                    "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor specifically designed for university students. "
+                    f"The student's multimodal check-in detected: {current_stress_category}. "
+                    "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
+                    "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; give actionable CBT guidance."
+                )
+                response = self.client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_message}
+                    ],
+                    temperature=0.7,
+                    max_tokens=250
+                )
+                return response.choices[0].message.content.strip()
+            except Exception as e:
+                print(f"[CBT Assistant] OpenAI API error during chat_reply ({e}). Using offline fallback.")
+
+        # Offline Fallback (Rule-based CBT logic)
         msg_lower = user_message.lower()
         
         if any(w in msg_lower for w in ["hello", "hi", "hey", "start"]):

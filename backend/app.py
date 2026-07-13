@@ -14,6 +14,12 @@ from fastapi.responses import FileResponse, JSONResponse
 # Add project root to sys path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except ImportError:
+    pass
+
 from src.config import MODELS_DIR, TOTAL_AUDIO_FEATURES
 from backend.schemas import (
     TextAnalyzeRequest, TextAnalyzeResponse,
