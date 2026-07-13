@@ -96,34 +96,34 @@ class CBTEmpathyAssistant:
                 "coping_strategy": "Continue keeping up your healthy daily routine and supportive social connections."
             }
             
-        elif cat == "Academic Stress":
+        elif cat == "Academic Stress" or cat == "Work Performance Stress":
             return {
-                "greeting": "I hear how much pressure you are under right now regarding your studies.",
-                "empathetic_validation": f"Feeling overwhelmed by upcoming exams, deadlines, and GPA expectations ({score}% stress intensity) is a very common challenge among university students. Remember that one exam or deadline does not define your entire self-worth or future career.",
-                "recommended_exercise": "The Pomodoro Chunking Technique",
+                "greeting": "I hear how much pressure you are under right now regarding your tasks and responsibilities.",
+                "empathetic_validation": f"Feeling overwhelmed by upcoming deadlines, work/study expectations, or performance anxiety ({score}% stress intensity) is a very common human experience. Remember that one project, exam, or tough day does not define your overall capability or self-worth.",
+                "recommended_exercise": "The Pomodoro Task Chunking Technique",
                 "exercise_details": (
-                    "When academic tasks feel paralyzing, break them into micro-steps:\n"
-                    "1. Pick just ONE assignment or chapter right now.\n"
-                    "2. Set a timer for just 25 minutes of focused reading/writing.\n"
+                    "When tasks or projects feel paralyzing, break them into micro-steps:\n"
+                    "1. Pick just ONE specific task or assignment right now.\n"
+                    "2. Set a timer for just 25 minutes of focused work.\n"
                     "3. When the timer goes off, take a mandatory 5-minute break to stretch and drink water.\n"
-                    "Do not worry about finishing the entire syllabus today—just focus on completing one 25-minute block."
+                    "Do not worry about finishing everything today—just focus on completing one 25-minute block."
                 ),
-                "coping_strategy": "Cognitive Reframing: Instead of saying 'I have to finish everything today or I will fail,' reframe it to: 'I will take this coursework one hour at a time and do my best.'"
+                "coping_strategy": "Cognitive Reframing: Instead of saying 'I have to finish everything right now or I will fail,' reframe it to: 'I will take my workload one hour at a time and do my personal best.'"
             }
             
-        elif cat == "Non-Academic Stress":
+        elif cat == "Non-Academic Stress" or cat == "Personal & Relationship Stress":
             return {
                 "greeting": "I am right here with you, and I am listening.",
-                "empathetic_validation": f"Dealing with personal relationship struggles, family issues, or loneliness ({score}% stress intensity) takes a heavy emotional toll. It is completely okay to feel sad or overwhelmed right now—your feelings are valid.",
+                "empathetic_validation": f"Dealing with personal life challenges, relationship struggles, family issues, or loneliness ({score}% stress intensity) takes a heavy emotional toll. It is completely okay to feel anxious, sad, or overwhelmed right now—your feelings are valid.",
                 "recommended_exercise": "5-4-3-2-1 Sensory Grounding",
                 "exercise_details": self.grounding_exercises["5-4-3-2-1 Grounding"],
-                "coping_strategy": "Interpersonal Connection: Reach out to one trusted friend, family member, or university student counselor today. You do not have to carry this emotional weight entirely by yourself."
+                "coping_strategy": "Interpersonal Connection: Reach out to a trusted friend, family member, or mental health professional today. You do not have to carry this emotional weight entirely by yourself."
             }
             
         else: # Mixed Stress or Severe Risk
             return {
                 "greeting": "Take a slow, deep breath with me. You are not alone in this.",
-                "empathetic_validation": f"You are carrying a lot on your shoulders right now—balancing academic workload while simultaneously navigating personal and financial stress ({score}% stress intensity) is deeply exhausting.",
+                "empathetic_validation": f"You are carrying a lot on your shoulders right now—balancing daily work and responsibilities while simultaneously navigating personal, financial, or emotional stress ({score}% stress intensity) is deeply exhausting.",
                 "recommended_exercise": "Box Breathing + Progressive Muscle Relaxation",
                 "exercise_details": self.grounding_exercises["Box Breathing (4-4-4-4)"] + "\n\n" + self.grounding_exercises["Progressive Muscle Relaxation (PMR)"],
                 "coping_strategy": "Socratic De-escalation: When everything hits at once, pause and ask yourself: 'What is the single most urgent step I can take right now in the next 10 minutes?' Let go of the rest until tomorrow."
@@ -137,10 +137,10 @@ class CBTEmpathyAssistant:
         if self.client and self.model_name:
             try:
                 system_prompt = (
-                    "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor specifically designed for university students. "
-                    f"The student's multimodal check-in detected: {current_stress_category}. "
-                    "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
-                    "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; give actionable CBT guidance."
+                    "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, and daily pressure. "
+                    f"The user's recent multimodal check-in detected: {current_stress_category}. "
+                    "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
+                    "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; provide actionable CBT guidance tailored to any walk of life."
                 )
                 response = self.client.chat.completions.create(
                     model=self.model_name,
