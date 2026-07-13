@@ -78,6 +78,7 @@ class MultimodalAnalyzeResponse(BaseModel):
 class CBTChatRequest(BaseModel):
     message: str
     current_stress_category: str = "Academic Stress"
+    history: Optional[List[Dict[str, str]]] = None
 
 class CBTChatResponse(BaseModel):
     reply: str

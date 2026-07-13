@@ -1164,24 +1164,57 @@ async function sendCBTChat() {
     input.value = '';
     box.scrollTop = box.scrollHeight;
     
-    try {
-        const res = await fetch('/api/chat/cbt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: msg,
-                current_stress_category: currentAnalysisResult ? currentAnalysisResult.final_stress_category : "Academic Stress"
-            })
-        });
-        
-        if (res.ok) {
-            const data = await res.json();
-            box.innerHTML += `<div class="chat-msg bot-msg"><strong>NeuroSense Assistant:</strong> ${data.reply}</div>`;
-        } else {
-            box.innerHTML += `<div class="chat-msg bot-msg"><strong>NeuroSense Assistant:</strong> Thank you for sharing. Remember to practice slow 4-second box breathing whenever academic pressure feels overwhelming.</div>`;
+    window.cbtChatHistory = window.cbtChatHistory || [];
+    
+    // Show animated loading indicator bubble while waiting for Gemini / GPT
+    const typingId = 'cbtTyping_' + Date.now();
+    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>🤖 NeuroSense GPT:</strong> Analyzing input & preparing CBT guidance... ⌛</div>`;
+    box.scrollTop = box.scrollHeight;
+    
+    let success = false;
+    let replyText = "";
+    
+    for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+            const res = await fetch('/api/chat/cbt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: msg,
+                    current_stress_category: currentAnalysisResult ? currentAnalysisResult.final_stress_category : "Academic Stress",
+                    history: window.cbtChatHistory
+                })
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                replyText = data.reply;
+                success = true;
+                break;
+            } else if (attempt < 3) {
+                const typingEl = document.getElementById(typingId);
+                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/3)... ⌛`;
+                await new Promise(r => setTimeout(r, 1200));
+            }
+        } catch (err) {
+            if (attempt < 3) {
+                const typingEl = document.getElementById(typingId);
+                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> Re-establishing connection with clinical AI engine... ⌛`;
+                await new Promise(r => setTimeout(r, 1200));
+            }
         }
-    } catch (err) {
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>NeuroSense Assistant:</strong> Thank you for sharing. Remember to practice slow 4-second box breathing whenever academic pressure feels overwhelming.</div>`;
+    }
+    
+    const typingBubble = document.getElementById(typingId);
+    if (typingBubble) typingBubble.remove();
+    
+    if (success && replyText) {
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${replyText}</div>`;
+        window.cbtChatHistory.push({ role: "user", content: msg });
+        window.cbtChatHistory.push({ role: "assistant", content: replyText });
+    } else {
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> I am right here with you. The live AI connection experienced a temporary network delay, but please know I am listening. Could you tell me a little more about what is weighing on your mind right now?</div>`;
+        window.cbtChatHistory.push({ role: "user", content: msg });
     }
     
     box.scrollTop = box.scrollHeight;

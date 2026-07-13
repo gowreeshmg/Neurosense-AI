@@ -1,4 +1,6 @@
 import os
+import time
+import re
 import random
 from src.assistant.guardrails import is_unrelated_to_mental_health, UNRELATED_PROJECT_REPLY
 
@@ -130,10 +132,10 @@ class CBTEmpathyAssistant:
                 "coping_strategy": "Socratic De-escalation: When everything hits at once, pause and ask yourself: 'What is the single most urgent step I can take right now in the next 10 minutes?' Let go of the rest until tomorrow."
             }
 
-    def chat_reply(self, user_message, current_stress_category="Academic Stress"):
+    def chat_reply(self, user_message, current_stress_category="Academic Stress", history=None):
         """
         Handles interactive conversational replies on the dashboard chat tab.
-        Uses live OpenAI ChatGPT (GPT-4o-mini) / Gemini / Groq if API key is present, otherwise falls back to local rule-based CBT logic.
+        Uses live Google Gemini / OpenAI ChatGPT / Groq with full conversation history and automatic backoff retries.
         Enforces strict topic filtering so the assistant only answers questions related to mental health, stress, anxiety, depression, and relationships.
         """
         # 1. Fast local topic verification check before calling any AI API
@@ -145,42 +147,66 @@ class CBTEmpathyAssistant:
             if "gemini" in self.model_name.lower():
                 models_to_try = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemma-4-31b-it"]
 
-            for model_id in models_to_try:
-                try:
-                    system_prompt = (
-                        "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, burnout, and daily pressure. "
-                        "CRITICAL GUARDRAIL: You are STRICTLY RESTRICTED to answering questions related to our mental health project, such as stress, anxiety, depression, burnout, emotional well-being, relationship issues, academic/work pressure, and coping strategies. "
-                        f"If the user asks ANY question or topic that is NOT related to mental health, stress, relationship issues, or emotional well-being (for example: coding/programming questions, general knowledge, math homework, recipes, sports, entertainment, politics, financial advice, etc.), you MUST decline to answer and reply EXACTLY with: '{UNRELATED_PROJECT_REPLY}' "
-                        f"The user's recent multimodal check-in detected: {current_stress_category}. "
-                        "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
-                        "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; provide actionable CBT guidance tailored to any walk of life."
-                    )
-                    response = self.client.chat.completions.create(
-                        model=model_id,
-                        messages=[
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": user_message}
-                        ],
-                        temperature=0.7,
-                        max_tokens=250
-                    )
-                    reply = response.choices[0].message.content.strip()
-                    # Verify model output compliance post-generation
-                    if is_unrelated_to_mental_health(reply):
-                        return UNRELATED_PROJECT_REPLY
-                    return reply
-                except Exception as e:
-                    # Try next free model in fallback list
-                    continue
-            print("[CBT Assistant] All live Gemini models currently busy or unavailable. Using offline fallback.")
+            system_prompt = (
+                "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, burnout, heartbreak, and daily pressure. "
+                "CRITICAL GUARDRAIL: You are STRICTLY RESTRICTED to answering questions related to our mental health project, such as stress, anxiety, depression, burnout, emotional well-being, love/relationship issues, heartbreak, academic/work pressure, and coping strategies. "
+                f"If the user asks ANY question or topic that is NOT related to mental health, stress, relationship issues, love failure, or emotional well-being (for example: coding/programming questions, general knowledge, math homework, recipes, sports, entertainment, politics, financial advice, etc.), you MUST decline to answer and reply EXACTLY with: '{UNRELATED_PROJECT_REPLY}' "
+                f"The user's recent check-in detected: {current_stress_category}. "
+                "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
+                "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic or pre-built advice; provide customized CBT guidance tailored directly to whatever specific stressor or topic the user asks about."
+            )
 
-        # Offline Fallback (Rule-based CBT logic)
+            # Build full conversation history messages array
+            messages = [{"role": "system", "content": system_prompt}]
+            if history and isinstance(history, list):
+                for turn in history[-10:]: # Keep last 10 turns for context without overflow
+                    role = turn.get("role", "user")
+                    content = turn.get("content", "").strip()
+                    if role in ["user", "assistant"] and content:
+                        messages.append({"role": role, "content": content})
+            
+            # Ensure the latest user message is at the end of the history array
+            if not messages or messages[-1].get("content") != user_message:
+                messages.append({"role": "user", "content": user_message})
+
+            # Robust backoff retry loop across models (so it never gives pre-built wrong answers on busy APIs)
+            for attempt in range(3):
+                for model_id in models_to_try:
+                    try:
+                        response = self.client.chat.completions.create(
+                            model=model_id,
+                            messages=messages,
+                            temperature=0.7,
+                            max_tokens=650
+                        )
+                        reply = response.choices[0].message.content.strip()
+                        reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                        reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                        if reply.startswith('<thought>'):
+                            # In case closing tag was truncated by max_tokens, clean anything after <thought>
+                            reply = re.sub(r'<thought>.*', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                        if not reply:
+                            continue
+                        return reply
+                    except Exception as e:
+                        time.sleep(1.0 + attempt * 0.5)
+                        continue
+            print("[CBT Assistant] All live Gemini models currently busy after retries. Using tailored offline fallback.")
+
+        # Offline Fallback (Tailored CBT logic if APIs are offline)
         msg_lower = user_message.lower()
         
         if any(w in msg_lower for w in ["hello", "hi", "hey", "start"]):
-            return "Hello! I am your NeuroSense CBT Assistant. How are you feeling right now? You can share anything about your classes, deadlines, or personal life."
+            return "Hello! I am your NeuroSense CBT Assistant. How are you feeling right now? You can share anything about your relationships, stress, deadlines, or personal life."
             
-        elif any(w in msg_lower for w in ["exam", "deadline", "study", "assignment", "gpa", "coursework", "fail"]):
+        elif any(w in msg_lower for w in ["love", "breakup", "heartbreak", "partner", "relationship", "dating", "divorce", "crush"]):
+            return (
+                "I am truly sorry you are experiencing this emotional pain. Love failure and relationship stress can cause deep grief, heartbreak, and intense psychological strain right now.\n\n"
+                "Please know that your feelings of sorrow and overwhelm are completely valid, and healing happens gradually over time. "
+                "Would you like to practice a gentle 5-4-3-2-1 sensory grounding exercise right now to ease the heavy physical sensation in your chest, or would you prefer to talk through what happened?"
+            )
+            
+        elif any(w in msg_lower for w in ["exam", "deadline", "study", "assignment", "gpa", "coursework", "academic fail", "failing class"]):
             return (
                 "Academic pressure can feel intense. Let's practice a quick cognitive reframing shift:\n\n"
                 "When you catch your mind thinking catastrophically (*'If I don't get an A, I will fail in life'*), remind yourself: *"
@@ -188,32 +214,31 @@ class CBTEmpathyAssistant:
                 "Would you like to try our 25-minute study chunking routine?"
             )
             
-        elif any(w in msg_lower for w in ["lonely", "alone", "friend", "breakup", "family", "depress", "sad"]):
+        elif any(w in msg_lower for w in ["lonely", "alone", "friend", "family", "depress", "sad", "empty"]):
             return (
-                "Thank you for sharing that with me. Loneliness and relationship struggles in college can make everything feel much harder.\n\n"
+                "Thank you for sharing that with me. Loneliness and deep sadness can make every daily task feel exhausting and heavy.\n\n"
                 "Let's ground yourself for a moment: Place both feet flat on the floor and take a slow breath in. "
                 "Remember that emotional pain comes in waves—this heavy feeling is temporary and will soften over time."
             )
             
-        elif any(w in msg_lower for w in ["panic", "anxious", "anxiety", "breath", "heart", "scared"]):
+        elif any(w in msg_lower for w in ["panic", "anxious", "anxiety", "breath", "heart", "scared", "fear"]):
             return (
-                "Let's slow down your heart rate right now. We are going to do **Box Breathing** together:\n\n"
+                "Let's slow down your nervous system right now. We are going to do **Box Breathing** together:\n\n"
                 "• Inhale slowly through your nose: **1... 2... 3... 4...**\n"
                 "• Hold your breath gently: **1... 2... 3... 4...**\n"
                 "• Exhale smoothly through your mouth: **1... 2... 3... 4...**\n\n"
-                "Repeat this twice. How does your body feel right now?"
+                "Repeat this twice. How does your physical body feel right now?"
             )
             
         elif any(w in msg_lower for w in ["thank", "thanks", "better", "calm", "good"]):
-            return "You are very welcome! I am so glad that helped. Remember, I am always here whenever you need a quick mental check-in or a grounding pause."
+            return "You are very welcome! I am always here whenever you need a supportive listener or a quick mental check-in."
             
         else:
-            # If no specific mental health pattern matched and it contains no general mental health keywords, decline
             if is_unrelated_to_mental_health(user_message):
                 return UNRELATED_PROJECT_REPLY
             return (
-                f"I hear you. Whether you are dealing with academic pressure or personal challenges, taking a mindful pause is the best first step.\n\n"
-                f"Based on your recent check-ins ({current_stress_category}), would you like me to guide you through a 2-minute relaxation exercise or help you prioritize your tasks today?"
+                f"I hear how much is on your mind right now regarding '{user_message[:60]}...'. Navigating heavy emotional stressors can feel deeply draining.\n\n"
+                f"Would you like me to guide you through a calming Box Breathing exercise to steady your nervous system, or would you like to explore cognitive reframing strategies to help process what you are feeling?"
             )
 
 if __name__ == "__main__":

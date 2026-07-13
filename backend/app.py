@@ -363,7 +363,7 @@ def chat_cbt(req: CBTChatRequest):
         ensure_pipelines_loaded()
     if not cbt_assistant:
         raise HTTPException(status_code=500, detail="CBT assistant not initialized.")
-    reply = cbt_assistant.chat_reply(req.message, current_stress_category=req.current_stress_category)
+    reply = cbt_assistant.chat_reply(req.message, current_stress_category=req.current_stress_category, history=req.history)
     return CBTChatResponse(
         reply=reply,
         timestamp=time.strftime("%H:%M:%S")
