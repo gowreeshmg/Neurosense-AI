@@ -2198,22 +2198,31 @@ body[data-theme="light"] #dockLiquidSlider {
 }
 
 /* Universal Top Header Centering: start cleanly above on desktop and center perfectly */
-header.navbar-top-controls {
-    margin: 24px auto 12px auto !important;
+header.navbar-top-controls,
+header.navbar-top-controls .top-center-wrapper,
+header.navbar-top-controls .top-center-brand,
+header.navbar-top-controls .brand-text {
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
     text-align: center !important;
     width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+}
+header.navbar-top-controls {
+    margin: 28px auto 12px auto !important;
     position: relative !important;
     z-index: 5 !important;
 }
 header.navbar-top-controls .top-center-title {
-    font-size: 2.22rem !important;
+    font-size: 2.38rem !important;
     letter-spacing: -0.5px !important;
     margin: 0 auto !important;
     text-align: center !important;
+    width: 100% !important;
 }
 
 /* On Desktop, lift check-in cards slightly up so they never get hidden behind bottom dock */
@@ -2230,20 +2239,29 @@ header.navbar-top-controls .top-center-title {
 
 /* Ensure mobile sliding dock is completely visible and fits any phone screen cleanly */
 @media (max-width: 900px) {
-    /* Top controls mobile layout: move name below fixed corner buttons centered right between them without touching either */
-    header.navbar-top-controls {
-        margin: 54px auto 8px auto !important;
+    /* Top controls mobile layout: force 100% top center alignment right below corner buttons */
+    header.navbar-top-controls,
+    header.navbar-top-controls .top-center-wrapper,
+    header.navbar-top-controls .top-center-brand,
+    header.navbar-top-controls .brand-text {
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
         text-align: center !important;
         width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        float: none !important;
+    }
+    header.navbar-top-controls {
+        margin: 56px auto 12px auto !important;
     }
     header.navbar-top-controls .top-center-title {
         font-size: 1.62rem !important;
         text-align: center !important;
         margin: 0 auto !important;
+        width: 100% !important;
     }
     header.navbar-top-controls .badge-ai {
         font-size: 0.72rem !important;

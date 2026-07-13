@@ -811,15 +811,15 @@
     </div>
 
     <section id="appDashboardScreen" class="view-screen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
-        <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center without icon, moving title below corner buttons and centered across screen) -->
-        <header class="navbar-top-controls" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; margin: 68px auto 16px auto !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important; position: relative; z-index: 5;">
-            <!-- Center: Brand Name & Title on TOP CENTER exact to home screen, centered nicely without icon -->
-            <div style="display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">
-                <div class="nav-brand top-center-brand" style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important; width: 100%; text-align: center;">
-                    <div class="brand-text" style="width: 100%; text-align: center;">
-                        <h1 class="font-serif-italic top-center-title" style="font-size: 1.88rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important; text-align: center;">NeuroSense AI</h1>
+        <!-- Top Navigation Controls (Brand Name strictly centered on top center across screen without icon) -->
+        <header class="navbar-top-controls" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 6px !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important; position: relative !important; z-index: 5 !important;">
+            <!-- Center: Brand Name & Title on TOP CENTER exact across any screen width -->
+            <div class="top-center-wrapper" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; width: 100% !important; margin: 0 auto !important;">
+                <div class="nav-brand top-center-brand" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 4px !important; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important; width: 100% !important; text-align: center !important; margin: 0 auto !important;">
+                    <div class="brand-text" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; text-align: center !important; margin: 0 auto !important;">
+                        <h1 class="font-serif-italic top-center-title" style="letter-spacing: -0.5px; margin: 0 auto !important; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important; text-align: center !important; width: 100% !important;">NeuroSense AI</h1>
                     </div>
-                    <span class="badge badge-ai" style="margin: 0 auto; text-align: center;">Multimodal Check-in Dashboard</span>
+                    <span class="badge badge-ai" style="margin: 0 auto !important; text-align: center !important; display: inline-block !important;">Multimodal Check-in Dashboard</span>
                 </div>
             </div>
         </header>
