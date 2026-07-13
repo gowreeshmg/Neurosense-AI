@@ -201,7 +201,7 @@ function switchDashboardView(viewName) {
     
     if (viewName === 'voice') {
         if (vVoice) vVoice.style.setProperty('display', 'block', 'important');
-        if (btnVoice) { btnVoice.classList.add('active'); btnVoice.style.color = '#ffffff'; }
+        if (btnVoice) { btnVoice.classList.add('active'); btnVoice.style.color = '#FA233B'; }
         const audioRes = document.getElementById('audioAnalysisResults');
         const shapBox = document.getElementById('shapBoxWrapper');
         if (window.innerWidth >= 1024) {
@@ -235,7 +235,7 @@ function switchDashboardView(viewName) {
         }
     } else if (viewName === 'text') {
         if (vText) vText.style.setProperty('display', 'block', 'important');
-        if (btnText) { btnText.classList.add('active'); btnText.style.color = '#ffffff'; }
+        if (btnText) { btnText.classList.add('active'); btnText.style.color = '#FA233B'; }
         const textRes = document.getElementById('textAnalysisResults');
         const limeBox = document.getElementById('limeBoxWrapper');
         if (window.innerWidth >= 1024) {
@@ -256,23 +256,24 @@ function switchDashboardView(viewName) {
                 textRes.style.setProperty('display', 'none', 'important');
             }
         }
-        if (typeof renderTextValenceChart === 'function') renderTextValenceChart(currentAnalysisResult ? currentAnalysisResult.text_analysis : null);
     } else if (viewName === 'cbt') {
         if (vCBT) vCBT.style.setProperty('display', 'block', 'important');
-        if (btnCBT) { btnCBT.classList.add('active'); btnCBT.style.color = '#ffffff'; }
+        if (btnCBT) { btnCBT.classList.add('active'); btnCBT.style.color = '#FA233B'; }
+        const cbtBox = document.getElementById('cbtChatMessages');
+        if (cbtBox) setTimeout(() => { cbtBox.scrollTop = cbtBox.scrollHeight; }, 50);
         if (typeof renderCBTArousalChart === 'function') renderCBTArousalChart();
     } else if (viewName === 'lifestyle') {
         if (vLifestyle) vLifestyle.style.setProperty('display', 'block', 'important');
-        if (btnLifestyle) { btnLifestyle.classList.add('active'); btnLifestyle.style.color = '#ffffff'; }
+        if (btnLifestyle) { btnLifestyle.classList.add('active'); btnLifestyle.style.color = '#FA233B'; }
         if (typeof updateLifestyleSimulation === 'function') updateLifestyleSimulation(false);
     } else if (viewName === 'pressure') {
         if (vPressure) vPressure.style.setProperty('display', 'block', 'important');
-        if (btnPressure) { btnPressure.classList.add('active'); btnPressure.style.color = '#ffffff'; }
+        if (btnPressure) { btnPressure.classList.add('active'); btnPressure.style.color = '#FA233B'; }
         if (typeof refreshUnifiedPressure === 'function') refreshUnifiedPressure();
         if (typeof switchQuestionnaire === 'function') switchQuestionnaire(window.activeSurveyType || 'phq9');
     } else if (viewName === 'whatif') {
         if (vWhatIf) vWhatIf.style.setProperty('display', 'block', 'important');
-        if (btnWhatIf) { btnWhatIf.classList.add('active'); btnWhatIf.style.color = '#ffffff'; }
+        if (btnWhatIf) { btnWhatIf.classList.add('active'); btnWhatIf.style.color = '#FA233B'; }
         if (typeof runWhatIfSimulation === 'function') runWhatIfSimulation();
         if (typeof initLongitudinalChart === 'function') initLongitudinalChart();
     }

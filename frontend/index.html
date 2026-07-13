@@ -759,14 +759,14 @@
     </div>
 
     <!-- Top Left Round Glassmorphism Return Home Island Button (hidden on home screen by default, shown on dashboard) -->
-    <button id="btnReturnHomeFixed" class="round-glass-btn" onclick="switchScreen('home')" title="Return to Home Screen" style="display: none !important; position: fixed; top: 16px; left: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: var(--bg-card, rgba(255, 255, 255, 0.15)); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.45)); align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; box-shadow: var(--shadow-glass); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
+    <button id="btnReturnHomeFixed" class="round-glass-btn liquid-glass" onclick="switchScreen('home')" title="Return to Home Screen" style="display: none !important; position: fixed; top: 16px; left: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 25, 42, 0.92) !important; backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important; -webkit-backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important; border: 1px solid rgba(255, 255, 255, 0.38) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.65) !important; box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), inset 0 0 18px rgba(255, 255, 255, 0.08), 0 12px 28px -6px rgba(0, 0, 0, 0.55) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
         <span style="display: inline-flex; align-items: center; justify-content: center; filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.35)); color: var(--text-primary, #FFFFFF);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </span>
     </button>
 
     <!-- Top Right Round Glassmorphism Theme Toggle Island Button (hidden on home screen by default) -->
-    <button id="btnThemeToggle" class="round-glass-btn" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" title="Click: Switch Theme | Double-Click: Blur & Atmosphere Controls" style="display: none !important; position: fixed; top: 16px; right: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: var(--bg-card, rgba(255, 255, 255, 0.15)); backdrop-filter: blur(28px) saturate(210%); -webkit-backdrop-filter: blur(28px) saturate(210%); border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.45)); align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; box-shadow: var(--shadow-glass); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
+    <button id="btnThemeToggle" class="round-glass-btn liquid-glass" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" title="Click: Switch Theme | Double-Click: Blur & Atmosphere Controls" style="display: none !important; position: fixed; top: 16px; right: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 25, 42, 0.92) !important; backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important; -webkit-backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important; border: 1px solid rgba(255, 255, 255, 0.38) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.65) !important; box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), inset 0 0 18px rgba(255, 255, 255, 0.08), 0 12px 28px -6px rgba(0, 0, 0, 0.55) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;">
         <span id="themeIcon" style="display: inline-flex; align-items: center; justify-content: center;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.45)); color: #00F2FE;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </span>
@@ -811,23 +811,16 @@
     </div>
 
     <section id="appDashboardScreen" class="view-screen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
-        <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center without icon, moving title slightly down and islands slightly up) -->
-        <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 24px auto 14px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
-            <!-- Left: Spacer slot (Back button is fixed top-left symmetrically) -->
-            <div class="back-home-slot" style="flex: 1; min-width: 180px;"></div>
-
+        <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center without icon, moving title below corner buttons and centered across screen) -->
+        <header class="navbar-top-controls" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 16px; margin: 74px auto 18px auto !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important;">
             <!-- Center: Brand Name & Title on TOP CENTER exact to home screen, centered nicely without icon -->
-            <div style="flex: 2; min-width: 320px; display: flex; justify-content: center; align-items: center; text-align: center;">
+            <div style="display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">
                 <div class="nav-brand top-center-brand" style="display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important;">
                     <div class="brand-text">
                         <h1 class="font-serif-italic top-center-title" style="font-size: 1.85rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important;">NeuroSense AI</h1>
                     </div>
                     <span class="badge badge-ai" style="margin-left: 4px;">Multimodal Check-in Dashboard</span>
                 </div>
-            </div>
-            
-            <!-- Right Controls: Empty / Spacer -->
-            <div style="flex: 1; min-width: 220px; display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
             </div>
         </header>
 
@@ -1133,31 +1126,35 @@
                     </div>
                 </div>
 
-                <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE -->
-                <div id="viewCBT" class="modality-view" style="display: none !important; padding: 4px 14px 10px 14px; max-width: 980px; margin: 0 auto; box-sizing: border-box;">
-                    <div id="cbtCompanionIsland" class="cbt-card glass-card-accent" style="padding: 20px 24px !important; display: flex; flex-direction: column; height: calc(100vh - 180px); max-height: 640px; min-height: 400px; box-sizing: border-box; justify-content: space-between;">
-                        <div class="cbt-header" style="margin-bottom: 12px; padding-bottom: 12px; flex-shrink: 0;">
-                            <div class="cbt-title">
-                                <span class="cbt-icon" style="padding: 10px; font-size: 1.8rem;">🤖</span>
+                <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Pure ChatGPT Unified Layout without Nested Islands) -->
+                <div id="viewCBT" class="modality-view" style="display: none !important; padding: 4px 14px 10px 14px; max-width: 900px; margin: 0 auto; box-sizing: border-box;">
+                    <!-- ONE Single Unified Big Glass Island -->
+                    <div id="cbtCompanionIsland" class="cbt-card glass-card-accent" style="padding: 22px 28px !important; display: flex; flex-direction: column; height: calc(100vh - 180px); max-height: 660px; min-height: 400px; box-sizing: border-box; justify-content: space-between; border-radius: 28px;">
+                        
+                        <!-- Sleek Minimal Header -->
+                        <div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.12); flex-shrink: 0;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-size: 1.6rem;">🤖</span>
                                 <div>
-                                    <h3 id="cbtGreetingText" style="margin-bottom: 2px; font-size: 1.3rem;">NeuroSense GPT & CBT Assistant</h3>
-                                    <p id="cbtValidationText" style="font-size: 0.85rem; margin: 0;">Real-time psychological support and interactive cognitive answers.</p>
+                                    <h3 id="cbtGreetingText" style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #fff;">NeuroSense GPT & CBT Assistant</h3>
+                                    <p id="cbtValidationText" style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 2px 0 0 0;">Interactive Cognitive Behavioral Therapy & AI companion.</p>
                                 </div>
                             </div>
-                            <span class="cbt-tag desktop-only">Cognitive Behavioral Therapy & GPT Engine</span>
+                            <span class="badge badge-ai desktop-only" style="margin: 0;">GPT-4 Cognitive Engine</span>
                         </div>
 
-                        <!-- Pure ChatGPT-Style Interactive Chatbot Workspace (Fixed height flexbox container without window scroll) -->
-                        <div id="cbtChatContainer" class="cbt-chat-container" style="margin-top: 0; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; box-sizing: border-box; padding: 14px; overflow: hidden;">
-                            <div id="cbtChatMessages" class="chat-messages-box" style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; border-radius: 16px; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.1); box-sizing: border-box;">
-                                <div class="chat-msg bot-msg">
-                                    <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. How are you feeling today, or what's on your mind?
-                                </div>
+                        <!-- Direct Chat Messages Area (NO nested boxes or borders around it!) -->
+                        <div id="cbtChatMessages" class="chat-messages-box" style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 8px 4px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; background: transparent !important; border: none !important; box-shadow: none !important; box-sizing: border-box;">
+                            <div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
+                            <div class="chat-msg bot-msg">
+                                <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. How are you feeling today, or what's on your mind?
                             </div>
-                            <div class="chat-input-bar" style="display: flex; gap: 8px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0;">
-                                <input type="text" id="cbtChatInput" placeholder="Type a message or ask a question..." onkeypress="handleChatKeyPress(event)" style="flex: 1 1 auto; min-width: 0; padding: 13px 18px; border-radius: 999px; background: rgba(0,0,0,0.38); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 0.94rem; box-sizing: border-box;">
-                                <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 999px; padding: 13px 22px; font-weight: 700; font-size: 0.94rem; white-space: nowrap; box-sizing: border-box;">Send 🚀</button>
-                            </div>
+                        </div>
+
+                        <!-- Sleek Pill Input Bar at bottom of the same unified island -->
+                        <div class="chat-input-bar" style="display: flex; gap: 10px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0;">
+                            <input type="text" id="cbtChatInput" placeholder="Message NeuroSense GPT..." onkeypress="handleChatKeyPress(event)" style="flex: 1 1 auto; min-width: 0; padding: 14px 20px; border-radius: 999px; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.28); color: #fff; font-size: 0.95rem; box-sizing: border-box; outline: none; transition: border-color 0.2s ease;">
+                            <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 999px; padding: 14px 24px; font-weight: 700; font-size: 0.95rem; white-space: nowrap; box-sizing: border-box; box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);">Send 🚀</button>
                         </div>
                     </div>
                 </div>

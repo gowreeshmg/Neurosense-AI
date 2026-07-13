@@ -1469,14 +1469,17 @@ textarea:focus {
     align-self: flex-start;
     border-bottom-left-radius: 4px;
     border: 1px solid rgba(129, 140, 248, 0.25);
+    border: 1px solid rgba(129, 140, 248, 0.28);
+    color: #fff;
 }
 
 .user-msg {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
     color: #0b0f19;
-    font-weight: 500;
+    font-weight: 600;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
 }
 
 .chat-input-bar {
@@ -2153,55 +2156,70 @@ body[data-theme="light"] #bottomGlassDock {
 }
 
 #dockLiquidSlider {
-    background: linear-gradient(135deg, rgba(255, 45, 85, 0.48) 0%, rgba(250, 35, 59, 0.24) 100%) !important;
-    border: 1px solid rgba(255, 45, 85, 0.82) !important;
-    border-top: 1px solid rgba(255, 140, 160, 0.96) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
-    box-shadow: 0 4px 20px rgba(255, 45, 85, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.75), inset 0 0 16px rgba(255, 45, 85, 0.35) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.32) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.6), inset 0 0 14px rgba(255, 255, 255, 0.12) !important;
 }
 
 body[data-theme="light"] #dockLiquidSlider {
-    background: linear-gradient(135deg, rgba(255, 45, 85, 0.65) 0%, rgba(250, 35, 59, 0.32) 100%) !important;
-    border: 1px solid rgba(255, 45, 85, 0.95) !important;
-    box-shadow: 0 4px 18px rgba(255, 45, 85, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.05) 100%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.18) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), inset 0 1px 2px rgba(255, 255, 255, 0.85) !important;
 }
 
-/* Apple Music style pure white icons in bottom navigation dock */
-#bottomGlassDock .dock-btn span:first-child,
-#bottomGlassDock .dock-btn span:first-child svg,
-#bottomGlassDock .dock-btn svg {
+/* Apple Music style Active Tab Icon & Text Color (#FA233B) over transparent frosted glass indicator pill */
+#bottomGlassDock .dock-btn.active,
+#bottomGlassDock .dock-btn.active span,
+#bottomGlassDock .dock-btn.active svg,
+#bottomGlassDock .dock-btn.active path,
+#bottomGlassDock .dock-btn.active circle,
+#bottomGlassDock .dock-btn.active polyline,
+#bottomGlassDock .dock-btn.active line {
+    color: #FA233B !important;
+    stroke: #FA233B !important;
+    fill: none;
+    filter: drop-shadow(0 1px 6px rgba(250, 35, 59, 0.45)) !important;
+}
+
+#bottomGlassDock .dock-btn:not(.active),
+#bottomGlassDock .dock-btn:not(.active) span,
+#bottomGlassDock .dock-btn:not(.active) svg,
+#bottomGlassDock .dock-btn:not(.active) path,
+#bottomGlassDock .dock-btn:not(.active) circle,
+#bottomGlassDock .dock-btn:not(.active) polyline,
+#bottomGlassDock .dock-btn:not(.active) line {
     color: #ffffff !important;
     stroke: #ffffff !important;
-    fill: none !important;
-    filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45)) !important;
+    fill: none;
+    filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.35)) !important;
 }
 
-#bottomGlassDock .dock-btn.active {
-    color: #ffffff !important;
-}
-
-#bottomGlassDock .dock-btn:not(.active) {
-    color: rgba(255, 255, 255, 0.78) !important;
-}
-
-/* Ensure mobile sliding dock is completely visible and fits any phone screen like Apple Music */
+/* Ensure mobile sliding dock is completely visible and fits any phone screen cleanly */
 @media (max-width: 900px) {
-    /* Top controls mobile layout: move name down below fixed corner buttons */
+    /* Top controls mobile layout: move name below fixed corner buttons and center right across screen */
     header.navbar-top-controls {
-        margin: 38px auto 14px auto !important;
+        margin: 74px auto 18px auto !important;
         justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
     }
     header.navbar-top-controls .back-home-slot {
         display: none !important;
     }
     #appDashboardScreen {
-        padding: 8px 14px !important;
+        padding: 6px 10px !important;
     }
-    /* Move main dashboard content island up slightly */
+    /* Move main dashboard content island to sit centered in viewport cleanly above bottom dock */
     .dashboard-container {
-        margin-top: -6px !important;
-        padding: 0 10px 88px 10px !important;
+        margin-top: 0 !important;
+        padding: 0 10px 96px 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
     }
     /* Move bottom dock island slightly up and centered */
     #bottomGlassDock {
