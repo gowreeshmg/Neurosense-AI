@@ -2,6 +2,7 @@ import os
 import time
 import re
 import random
+import httpx
 from src.assistant.guardrails import is_unrelated_to_mental_health, UNRELATED_PROJECT_REPLY
 
 try:
@@ -37,26 +38,26 @@ class CBTEmpathyAssistant:
         self.openai_client = None
         self.openai_model = "gpt-4o-mini"
 
-        # Initialize Main Assistant: Google Gemini
+        # Initialize Main Assistant: Google Gemini with zero retries for instant failover
         if OPENAI_AVAILABLE and self.gemini_key and len(self.gemini_key.strip()) > 5:
             try:
-                self.gemini_client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+                self.gemini_client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0, timeout=httpx.Timeout(1.8, connect=1.0))
                 print(f"[CBT Assistant] Main Engine: Google Gemini initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize Gemini client: {e}")
 
-        # Initialize Failover Assistant: Llama 3.3 70B (via Groq Free API)
+        # Initialize Failover Assistant: Llama 3.3 70B (via Groq Free API) with zero retries
         if OPENAI_AVAILABLE and self.groq_key and len(self.groq_key.strip()) > 5:
             try:
-                self.groq_client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1")
+                self.groq_client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1", max_retries=0, timeout=httpx.Timeout(1.8, connect=1.0))
                 print(f"[CBT Assistant] Failover Engine: Llama 3.3 (Groq) initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize Groq Llama client: {e}")
 
-        # Initialize Backup Assistant: OpenAI GPT-4o-mini
+        # Initialize Backup Assistant: OpenAI GPT-4o-mini with zero retries
         if OPENAI_AVAILABLE and self.openai_key and len(self.openai_key.strip()) > 5 and not self.openai_key.startswith("sk-proj-Z3AZwp"):
             try:
-                self.openai_client = OpenAI(api_key=self.openai_key.strip())
+                self.openai_client = OpenAI(api_key=self.openai_key.strip(), max_retries=0, timeout=httpx.Timeout(1.8, connect=1.0))
                 print(f"[CBT Assistant] Backup Engine: OpenAI initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize OpenAI client: {e}")
@@ -180,64 +181,61 @@ class CBTEmpathyAssistant:
         if OPENAI_AVAILABLE and not self.gemini_client:
             gk = os.getenv("GEMINI_API_KEY", "").strip()
             if len(gk) > 5:
-                try: self.gemini_client = OpenAI(api_key=gk, base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+                try: self.gemini_client = OpenAI(api_key=gk, base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0, timeout=httpx.Timeout(1.5, connect=0.8))
                 except Exception: pass
         if OPENAI_AVAILABLE and not self.groq_client:
             rk = os.getenv("GROQ_API_KEY", "").strip()
             if len(rk) > 5:
-                try: self.groq_client = OpenAI(api_key=rk, base_url="https://api.groq.com/openai/v1")
+                try: self.groq_client = OpenAI(api_key=rk, base_url="https://api.groq.com/openai/v1", max_retries=0, timeout=httpx.Timeout(1.5, connect=0.8))
                 except Exception: pass
 
-        # STEP 1: Primary — Google Gemini (Fast 4.5s timeout; auto-switch if quota runs out or takes too long)
-        if self.gemini_client and not self.gemini_quota_exceeded:
-            for g_model in ["gemini-2.0-flash", "gemini-1.5-flash"]:
-                try:
-                    response = self.gemini_client.chat.completions.create(
-                        model=g_model,
-                        messages=messages,
-                        temperature=0.65,
-                        max_tokens=200,
-                        timeout=4.5
-                    )
-                    reply = response.choices[0].message.content.strip()
-                    reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    if reply:
-                        return reply
-                except Exception as e:
-                    print(f"[CBT Assistant] Gemini ({g_model}) failed or timed out ({e}), auto-switching to Llama...")
-                    if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
-                        self.gemini_quota_exceeded = True
-                        break
-
-        # STEP 2: Auto-Switch — Llama via Groq (Llama 3.3 70B & Llama 3.1 8B Instant for <1.5s response)
+        # STEP 1: Primary — Groq Llama Instant (Try only 1 model with strict 1.5s timeout so failover is instant)
         if self.groq_client:
-            for l_model in [self.groq_model, "llama-3.1-8b-instant", "gemma2-9b-it"]:
-                try:
-                    response = self.groq_client.chat.completions.create(
-                        model=l_model,
-                        messages=messages,
-                        temperature=0.65,
-                        max_tokens=200,
-                        timeout=4.0
-                    )
-                    reply = response.choices[0].message.content.strip()
-                    reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                    if reply:
-                        return reply
-                except Exception as e:
-                    print(f"[CBT Assistant] Llama ({l_model}) attempt failed: {e}")
+            try:
+                response = self.groq_client.chat.completions.create(
+                    model="llama-3.1-8b-instant",
+                    messages=messages,
+                    temperature=0.65,
+                    max_tokens=180,
+                    timeout=httpx.Timeout(1.5, connect=0.8)
+                )
+                reply = response.choices[0].message.content.strip()
+                reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                if reply:
+                    return reply
+            except Exception as e:
+                print(f"[CBT Assistant] Groq attempt failed or timed out ({e}), switching to Gemini...")
 
-        # STEP 3: Backup — OpenAI GPT-4o-mini (if configured)
+        # STEP 2: Fast Failover — Google Gemini 2.0 Flash (Try only 1 model with strict 1.5s timeout)
+        if self.gemini_client and not self.gemini_quota_exceeded:
+            try:
+                response = self.gemini_client.chat.completions.create(
+                    model="gemini-2.0-flash",
+                    messages=messages,
+                    temperature=0.65,
+                    max_tokens=180,
+                    timeout=httpx.Timeout(1.5, connect=0.8)
+                )
+                reply = response.choices[0].message.content.strip()
+                reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                if reply:
+                    return reply
+            except Exception as e:
+                print(f"[CBT Assistant] Gemini attempt failed or timed out ({e})")
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
+                    self.gemini_quota_exceeded = True
+
+        # STEP 3: Backup — OpenAI GPT-4o-mini (Try only 1 model with strict 1.5s timeout)
         if self.openai_client:
             try:
                 response = self.openai_client.chat.completions.create(
                     model=self.openai_model,
                     messages=messages,
                     temperature=0.65,
-                    max_tokens=200,
-                    timeout=4.0
+                    max_tokens=180,
+                    timeout=httpx.Timeout(1.5, connect=0.8)
                 )
                 reply = response.choices[0].message.content.strip()
                 if reply:
