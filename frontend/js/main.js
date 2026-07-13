@@ -86,6 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
             console.warn("[NeuroSense UI] Running in offline / standalone simulation mode or backend starting up.");
         });
+        
+    if (typeof handleScreenModeResize === 'function') {
+        handleScreenModeResize();
+    }
 });
 
 /**
@@ -110,11 +114,133 @@ function toggleTheme() {
     }
 }
 
+let mobileHeroRAF = null;
 /**
- * Switches between RIVR-style Home Screen and Main Project Dashboard
+ * Initializes and manages the custom 0.5s fade-in/fade-out loop for the mobile hero background video
+ */
+function initMobileHeroVideoLoop() {
+    const video = document.getElementById('mobileHeroVideo');
+    if (!video) return;
+    
+    if (mobileHeroRAF) {
+        cancelAnimationFrame(mobileHeroRAF);
+        mobileHeroRAF = null;
+    }
+    
+    video.currentTime = 0;
+    video.style.opacity = '0';
+    video.play().catch(() => {});
+    
+    let isFadingIn = true;
+    let isFadingOut = false;
+    let startTime = performance.now();
+    
+    function checkVideoFrame(now) {
+        if (!video || video.paused) {
+            mobileHeroRAF = requestAnimationFrame(checkVideoFrame);
+            return;
+        }
+        
+        const duration = video.duration || 0;
+        const current = video.currentTime || 0;
+        
+        if (isFadingIn) {
+            const elapsed = (now - startTime) / 1000;
+            if (elapsed < 0.5) {
+                video.style.opacity = String(Math.min(1, elapsed / 0.5));
+            } else {
+                video.style.opacity = '1';
+                isFadingIn = false;
+            }
+        }
+        
+        if (duration > 1 && !isFadingOut && (duration - current) <= 0.5 && (duration - current) > 0) {
+            isFadingOut = true;
+        }
+        
+        if (isFadingOut && duration > 1) {
+            const remaining = Math.max(0, duration - current);
+            video.style.opacity = String(Math.max(0, Math.min(1, remaining / 0.5)));
+        }
+        
+        mobileHeroRAF = requestAnimationFrame(checkVideoFrame);
+    }
+    
+    mobileHeroRAF = requestAnimationFrame(checkVideoFrame);
+    
+    video.onended = () => {
+        video.style.opacity = '0';
+        isFadingOut = false;
+        setTimeout(() => {
+            video.currentTime = 0;
+            startTime = performance.now();
+            isFadingIn = true;
+            video.play().catch(() => {});
+        }, 100);
+    };
+}
+
+/**
+ * Handles live responsive switching between Desktop Home Screen and Phone Home Screen on viewport resize
+ */
+function handleScreenModeResize() {
+    const isPhone = window.innerWidth < 768;
+    const isDashboard = document.body.classList.contains('on-dashboard');
+    const homeScreen = document.getElementById('lumoraHomeScreen');
+    const mobileHero = document.getElementById('mobileHeroHomeScreen');
+    const mobileBg = document.getElementById('mobileBgVideo');
+    
+    if (!isDashboard) {
+        if (isPhone) {
+            if (homeScreen) {
+                homeScreen.classList.add('hidden-screen');
+                homeScreen.style.setProperty('display', 'none', 'important');
+            }
+            if (mobileHero) {
+                mobileHero.classList.remove('hidden-screen');
+                mobileHero.style.setProperty('display', 'flex', 'important');
+                initMobileHeroVideoLoop();
+            }
+        } else {
+            if (homeScreen) {
+                homeScreen.classList.remove('hidden-screen');
+                homeScreen.style.setProperty('display', 'flex', 'important');
+            }
+            if (mobileHero) {
+                mobileHero.classList.add('hidden-screen');
+                mobileHero.style.setProperty('display', 'none', 'important');
+            }
+        }
+    } else {
+        if (isPhone && mobileBg) {
+            mobileBg.style.setProperty('display', 'block', 'important');
+            mobileBg.style.setProperty('opacity', '0.85', 'important');
+            for (let i = 0; i < 4; i++) {
+                const v = document.getElementById('bgVideo' + i);
+                if (v) v.style.setProperty('display', 'none', 'important');
+            }
+            mobileBg.play().catch(() => {});
+        } else {
+            if (mobileBg) mobileBg.style.setProperty('display', 'none', 'important');
+            for (let i = 0; i < 4; i++) {
+                const v = document.getElementById('bgVideo' + i);
+                if (v && v.classList.contains('active')) {
+                    v.style.setProperty('display', 'block', 'important');
+                    v.style.setProperty('opacity', '1', 'important');
+                }
+            }
+        }
+    }
+}
+window.addEventListener('resize', handleScreenModeResize);
+
+/**
+ * Switches between Home Screen (Desktop/Phone) and Main Project Dashboard
  */
 function switchScreen(screenName) {
+    const isPhone = window.innerWidth < 768;
     const homeScreen = document.getElementById('lumoraHomeScreen');
+    const mobileHero = document.getElementById('mobileHeroHomeScreen');
     const dashboardScreen = document.getElementById('appDashboardScreen');
     const appBg = document.querySelector('.app-background');
     const dashboardVideoBg = document.getElementById('dashboardBgVideoContainer');
@@ -122,11 +248,28 @@ function switchScreen(screenName) {
     const returnHomeBtn = document.getElementById('btnReturnHomeFixed');
     const topControls = document.querySelector('header.navbar-top-controls');
     const bottomDock = document.getElementById('bottomGlassDock');
+    const mobileBg = document.getElementById('mobileBgVideo');
     
     if (screenName === 'home') {
-        if (homeScreen) {
-            homeScreen.classList.remove('hidden-screen');
-            homeScreen.style.setProperty('display', 'flex', 'important');
+        if (isPhone) {
+            if (homeScreen) {
+                homeScreen.classList.add('hidden-screen');
+                homeScreen.style.setProperty('display', 'none', 'important');
+            }
+            if (mobileHero) {
+                mobileHero.classList.remove('hidden-screen');
+                mobileHero.style.setProperty('display', 'flex', 'important');
+                initMobileHeroVideoLoop();
+            }
+        } else {
+            if (homeScreen) {
+                homeScreen.classList.remove('hidden-screen');
+                homeScreen.style.setProperty('display', 'flex', 'important');
+            }
+            if (mobileHero) {
+                mobileHero.classList.add('hidden-screen');
+                mobileHero.style.setProperty('display', 'none', 'important');
+            }
         }
         if (dashboardScreen) {
             dashboardScreen.classList.add('hidden-screen');
@@ -146,6 +289,10 @@ function switchScreen(screenName) {
         if (homeScreen) {
             homeScreen.classList.add('hidden-screen');
             homeScreen.style.setProperty('display', 'none', 'important');
+        }
+        if (mobileHero) {
+            mobileHero.classList.add('hidden-screen');
+            mobileHero.style.setProperty('display', 'none', 'important');
         }
         if (dashboardScreen) {
             dashboardScreen.classList.remove('hidden-screen');
@@ -175,6 +322,25 @@ function switchScreen(screenName) {
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.classList.add('on-dashboard');
         window.scrollTo(0, 0);
+        
+        if (isPhone && mobileBg) {
+            mobileBg.style.setProperty('display', 'block', 'important');
+            mobileBg.style.setProperty('opacity', '0.85', 'important');
+            for (let i = 0; i < 4; i++) {
+                const v = document.getElementById('bgVideo' + i);
+                if (v) v.style.setProperty('display', 'none', 'important');
+            }
+            mobileBg.play().catch(() => {});
+        } else {
+            if (mobileBg) mobileBg.style.setProperty('display', 'none', 'important');
+            for (let i = 0; i < 4; i++) {
+                const v = document.getElementById('bgVideo' + i);
+                if (v && v.classList.contains('active')) {
+                    v.style.setProperty('display', 'block', 'important');
+                    v.style.setProperty('opacity', '1', 'important');
+                }
+            }
+        }
         
         const resSec = document.getElementById('analysisResultsSection');
         if (resSec && typeof currentAnalysisResult !== 'undefined' && !currentAnalysisResult) {
@@ -1164,11 +1330,18 @@ async function sendCBTChat() {
     input.value = '';
     box.scrollTop = box.scrollHeight;
     
-    window.cbtChatHistory = window.cbtChatHistory || [];
+    if (!window.cbtChatHistory) {
+        try {
+            const saved = localStorage.getItem('neurosense_cbt_chat_history');
+            window.cbtChatHistory = saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            window.cbtChatHistory = [];
+        }
+    }
     
-    // Show animated loading indicator bubble while waiting for Gemini / GPT
+    // Show animated loading indicator bubble while waiting for Gemini / Llama 3.3
     const typingId = 'cbtTyping_' + Date.now();
-    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>🤖 NeuroSense GPT:</strong> Analyzing input & preparing CBT guidance... ⌛</div>`;
+    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>🤖 NeuroSense Assistant:</strong> Analyzing input & preparing CBT guidance... ⌛</div>`;
     box.scrollTop = box.scrollHeight;
     
     let success = false;
@@ -1193,13 +1366,13 @@ async function sendCBTChat() {
                 break;
             } else if (attempt < 3) {
                 const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/3)... ⌛`;
+                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense Assistant:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/3)... ⌛`;
                 await new Promise(r => setTimeout(r, 1200));
             }
         } catch (err) {
             if (attempt < 3) {
                 const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> Re-establishing connection with clinical AI engine... ⌛`;
+                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense Assistant:</strong> Re-establishing connection with clinical AI engine... ⌛`;
                 await new Promise(r => setTimeout(r, 1200));
             }
         }
@@ -1209,12 +1382,15 @@ async function sendCBTChat() {
     if (typingBubble) typingBubble.remove();
     
     if (success && replyText) {
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${replyText}</div>`;
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense Assistant:</strong> ${replyText}</div>`;
         window.cbtChatHistory.push({ role: "user", content: msg });
         window.cbtChatHistory.push({ role: "assistant", content: replyText });
+        try {
+            localStorage.setItem('neurosense_cbt_chat_history', JSON.stringify(window.cbtChatHistory.slice(-20)));
+        } catch (e) {}
     } else {
-        const errorMsg = replyText || "⚠️ **AI Network Notice:** The main Google Gemini engine timed out (>12s) or hit its rate limit (15 requests/min), and no backup Llama key (`GROQ_API_KEY`) was found. Please wait 10 seconds and try again, or add a free Groq Llama key in your `.env` file (`GROQ_API_KEY=gsk_...`) for instant failover!";
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${errorMsg}</div>`;
+        const errorMsg = replyText || "⚠️ **AI Network Notice:** The main Google Gemini engine timed out or hit its rate limit (15 requests/min), and Llama fallback (`GROQ_API_KEY`) was busy or unavailable. Please wait a few seconds and try again.";
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense Assistant:</strong> ${errorMsg}</div>`;
     }
     
     box.scrollTop = box.scrollHeight;
