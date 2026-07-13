@@ -2197,9 +2197,9 @@ body[data-theme="light"] #dockLiquidSlider {
     filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.35)) !important;
 }
 
-/* Universal Top Header Centering: start completely below corner buttons (68px) and center perfectly */
+/* Universal Top Header Centering: start cleanly above on desktop and center perfectly */
 header.navbar-top-controls {
-    margin: 68px auto 14px auto !important;
+    margin: 24px auto 12px auto !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
@@ -2209,18 +2209,46 @@ header.navbar-top-controls {
     position: relative !important;
     z-index: 5 !important;
 }
+header.navbar-top-controls .top-center-title {
+    font-size: 2.22rem !important;
+    letter-spacing: -0.5px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+}
+
+/* On Desktop, lift check-in cards slightly up so they never get hidden behind bottom dock */
+@media (min-width: 901px) {
+    .dashboard-container {
+        margin-top: 0 !important;
+        padding: 0 24px 96px 24px !important;
+    }
+    .modality-split-grid {
+        max-height: calc(100vh - 165px) !important;
+        min-height: 540px !important;
+    }
+}
 
 /* Ensure mobile sliding dock is completely visible and fits any phone screen cleanly */
 @media (max-width: 900px) {
-    /* Top controls mobile layout: move name below fixed corner buttons on top center without being too below or overlapping */
+    /* Top controls mobile layout: move name below fixed corner buttons centered right between them without touching either */
     header.navbar-top-controls {
-        margin: 68px auto 12px auto !important;
+        margin: 54px auto 8px auto !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
         text-align: center !important;
         width: 100% !important;
+    }
+    header.navbar-top-controls .top-center-title {
+        font-size: 1.62rem !important;
+        text-align: center !important;
+        margin: 0 auto !important;
+    }
+    header.navbar-top-controls .badge-ai {
+        font-size: 0.72rem !important;
+        margin: 4px auto 0 auto !important;
+        display: inline-block !important;
     }
     header.navbar-top-controls .back-home-slot {
         display: none !important;
@@ -2237,22 +2265,22 @@ header.navbar-top-controls {
         align-items: center !important;
         justify-content: flex-start !important;
     }
-    /* On mobile, first check-in card fits screen right between top header and bottom dock without scroll */
+    /* On mobile, first check-in card sits with exactly a small distance (6px) above bottom dock */
     #viewVoice .split-col-left .input-card,
     #viewText .split-col-left .input-card {
-        height: calc(100vh - 215px) !important;
-        max-height: 540px !important;
-        min-height: 360px !important;
+        height: calc(100vh - 188px) !important;
+        max-height: none !important;
+        min-height: 380px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
-        margin-bottom: 24px !important;
+        margin-bottom: 80px !important;
         padding: 16px 18px !important;
     }
     #viewText #journalTextarea {
         flex: 1 1 auto !important;
-        min-height: 85px !important;
-        max-height: 150px !important;
+        min-height: 90px !important;
+        max-height: 160px !important;
         margin-bottom: 12px !important;
     }
     #viewVoice .audio-actions,
@@ -2262,7 +2290,7 @@ header.navbar-top-controls {
     }
     /* Move bottom dock island slightly up and centered */
     #bottomGlassDock {
-        bottom: 22px !important;
+        bottom: 14px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         width: calc(100vw - 28px) !important;
