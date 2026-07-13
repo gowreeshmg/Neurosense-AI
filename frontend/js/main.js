@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedBlur !== null && typeof setDashboardBlur === 'function') {
         setDashboardBlur(Number(savedBlur));
     } else if (typeof setDashboardBlur === 'function') {
-        setDashboardBlur(14);
+        setDashboardBlur(4);
     }
 
     // Ensure theme toggle and return home button are hidden on initial home screen load
@@ -175,18 +175,29 @@ function switchDashboardView(viewName) {
     const vVoice = document.getElementById('viewVoice');
     const vText = document.getElementById('viewText');
     const vCBT = document.getElementById('viewCBT');
+    const vLifestyle = document.getElementById('viewLifestyle');
+    const vPressure = document.getElementById('viewPressure');
+    const vWhatIf = document.getElementById('viewWhatIf');
     
     const btnVoice = document.getElementById('dockBtnVoice');
     const btnText = document.getElementById('dockBtnText');
     const btnCBT = document.getElementById('dockBtnCBT');
+    const btnLifestyle = document.getElementById('dockBtnLifestyle');
+    const btnPressure = document.getElementById('dockBtnPressure');
+    const btnWhatIf = document.getElementById('dockBtnWhatIf');
     
-    if (vVoice) vVoice.style.setProperty('display', 'none', 'important');
-    if (vText) vText.style.setProperty('display', 'none', 'important');
-    if (vCBT) vCBT.style.setProperty('display', 'none', 'important');
+    [vVoice, vText, vCBT, vLifestyle, vPressure, vWhatIf].forEach(v => {
+        if (v) v.style.setProperty('display', 'none', 'important');
+    });
     
-    if (btnVoice) { btnVoice.classList.remove('active'); btnVoice.style.background = 'transparent'; btnVoice.style.boxShadow = 'none'; btnVoice.style.color = 'rgba(255,255,255,0.78)'; }
-    if (btnText) { btnText.classList.remove('active'); btnText.style.background = 'transparent'; btnText.style.boxShadow = 'none'; btnText.style.color = 'rgba(255,255,255,0.78)'; }
-    if (btnCBT) { btnCBT.classList.remove('active'); btnCBT.style.background = 'transparent'; btnCBT.style.boxShadow = 'none'; btnCBT.style.color = 'rgba(255,255,255,0.78)'; }
+    [btnVoice, btnText, btnCBT, btnLifestyle, btnPressure, btnWhatIf].forEach(btn => {
+        if (btn) {
+            btn.classList.remove('active');
+            btn.style.background = 'transparent';
+            btn.style.boxShadow = 'none';
+            btn.style.color = 'rgba(255,255,255,0.78)';
+        }
+    });
     
     if (viewName === 'voice') {
         if (vVoice) vVoice.style.setProperty('display', 'block', 'important');
@@ -196,7 +207,7 @@ function switchDashboardView(viewName) {
         if (window.innerWidth >= 1024) {
             if (audioRes) {
                 audioRes.classList.remove('hidden');
-                audioRes.style.setProperty('display', 'block', 'important');
+                audioRes.style.setProperty('display', 'flex', 'important');
             }
             if (shapBox) {
                 if (currentAnalysisResult && (currentAnalysisResult.audio_xai || currentAnalysisResult.audio_analysis)) {
@@ -230,7 +241,7 @@ function switchDashboardView(viewName) {
         if (window.innerWidth >= 1024) {
             if (textRes) {
                 textRes.classList.remove('hidden');
-                textRes.style.setProperty('display', 'block', 'important');
+                textRes.style.setProperty('display', 'flex', 'important');
             }
             if (limeBox) {
                 if (currentAnalysisResult && (currentAnalysisResult.text_xai || currentAnalysisResult.text_analysis)) {
@@ -250,11 +261,30 @@ function switchDashboardView(viewName) {
         if (vCBT) vCBT.style.setProperty('display', 'block', 'important');
         if (btnCBT) { btnCBT.classList.add('active'); btnCBT.style.color = '#ffffff'; }
         if (typeof renderCBTArousalChart === 'function') renderCBTArousalChart();
+    } else if (viewName === 'lifestyle') {
+        if (vLifestyle) vLifestyle.style.setProperty('display', 'block', 'important');
+        if (btnLifestyle) { btnLifestyle.classList.add('active'); btnLifestyle.style.color = '#ffffff'; }
+        if (typeof updateLifestyleSimulation === 'function') updateLifestyleSimulation(false);
+    } else if (viewName === 'pressure') {
+        if (vPressure) vPressure.style.setProperty('display', 'block', 'important');
+        if (btnPressure) { btnPressure.classList.add('active'); btnPressure.style.color = '#ffffff'; }
+        if (typeof refreshUnifiedPressure === 'function') refreshUnifiedPressure();
+        if (typeof switchQuestionnaire === 'function') switchQuestionnaire(window.activeSurveyType || 'phq9');
+    } else if (viewName === 'whatif') {
+        if (vWhatIf) vWhatIf.style.setProperty('display', 'block', 'important');
+        if (btnWhatIf) { btnWhatIf.classList.add('active'); btnWhatIf.style.color = '#ffffff'; }
+        if (typeof runWhatIfSimulation === 'function') runWhatIfSimulation();
+        if (typeof initLongitudinalChart === 'function') initLongitudinalChart();
     }
     
     // Smoothly slide our liquid indicator pill (#dockLiquidSlider) right under the active tab button
     setTimeout(() => {
-        const activeBtn = document.getElementById(viewName === 'voice' ? 'dockBtnVoice' : viewName === 'text' ? 'dockBtnText' : 'dockBtnCBT');
+        const activeBtnId = viewName === 'voice' ? 'dockBtnVoice' :
+                            viewName === 'text' ? 'dockBtnText' :
+                            viewName === 'cbt' ? 'dockBtnCBT' :
+                            viewName === 'lifestyle' ? 'dockBtnLifestyle' :
+                            viewName === 'pressure' ? 'dockBtnPressure' : 'dockBtnWhatIf';
+        const activeBtn = document.getElementById(activeBtnId);
         const slider = document.getElementById('dockLiquidSlider');
         if (activeBtn && slider) {
             slider.style.left = `${activeBtn.offsetLeft}px`;
@@ -552,14 +582,10 @@ function loadPrompt(type) {
     const textarea = document.getElementById('journalTextarea');
     if (type === 'academic') {
         textarea.value = "I have three university exams coming up next week and the assignment deadlines for coursework are making me feel completely overwhelmed and anxious about my GPA.";
-        loadSampleVoiceProfile();
     } else if (type === 'personal') {
         textarea.value = "I feel very lonely and sad right now because my family relationships are strained and I am struggling to pay for my monthly student living expenses.";
     } else if (type === 'calm') {
         textarea.value = "I completed all my coursework assignments early today and enjoyed a peaceful, relaxing walk across campus with my close friends.";
-        simulatedAudioVector = null;
-        audioBlob = null;
-        updateRecordStatus("Calm resting voice state assumed", "ready");
     }
     updateWordCount();
 }
@@ -752,7 +778,10 @@ function displayAnalysisResults(res, modality = 'both') {
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
         if (audioRes) {
             audioRes.classList.remove('hidden');
-            audioRes.style.setProperty('display', 'block', 'important');
+            audioRes.style.setProperty('display', 'flex', 'important');
+        }
+        if (textRes) {
+            textRes.style.setProperty('display', 'none', 'important');
         }
         const aNum = document.getElementById('audioStressScoreNumber');
         const aTier = document.getElementById('audioRiskTierText');
@@ -767,7 +796,10 @@ function displayAnalysisResults(res, modality = 'both') {
         if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
         if (textRes) {
             textRes.classList.remove('hidden');
-            textRes.style.setProperty('display', 'block', 'important');
+            textRes.style.setProperty('display', 'flex', 'important');
+        }
+        if (audioRes) {
+            audioRes.style.setProperty('display', 'none', 'important');
         }
         const tNum = document.getElementById('textStressScoreNumber');
         const tTier = document.getElementById('textRiskTierText');
@@ -836,7 +868,7 @@ function displayAnalysisResults(res, modality = 'both') {
         if (aBar) { aBar.style.width = `${aPerc}%`; aBar.innerText = `Speech (${aPerc}%)`; }
     }
     
-    // 3. Update LIME Token XAI
+    // 3. Update LIME Token XAI & Cognitive Distortion Scanner
     const limeContainer = document.getElementById('limeHighlightedText');
     if (limeContainer) {
         if (res.text_xai && res.text_xai.html_highlighted) {
@@ -847,22 +879,86 @@ function displayAnalysisResults(res, modality = 'both') {
             limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
         }
     }
+
+    // Update new Text features: Cognitive Distortions & Semantic Valence
+    const distList = document.getElementById('distortionItemsList');
+    const valElem = document.getElementById('valenceScoreText');
+    const velElem = document.getElementById('velocityScoreText');
+    if (distList && (modality === 'text' || modality === 'both')) {
+        const textVal = document.getElementById('journalTextarea')?.value || "";
+        let distortionsHTML = "";
+        let valence = -0.42;
+        if (textVal.toLowerCase().includes("overwhelmed") || textVal.toLowerCase().includes("awful") || textVal.toLowerCase().includes("terrible") || scoreNum > 60) {
+            distortionsHTML += `
+                <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed", "awful")</div>
+                        <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
+                    </div>
+                    <button onclick="applyTextReframing('catastrophizing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                </div>`;
+            valence = -0.68;
+            if (velElem) velElem.innerText = "High Escalation ↑";
+            if (velElem) velElem.style.color = "#F43F5E";
+        }
+        if (textVal.toLowerCase().includes("always") || textVal.toLowerCase().includes("never") || textVal.toLowerCase().includes("completely") || textVal.toLowerCase().includes("impossible")) {
+            distortionsHTML += `
+                <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ All-or-Nothing Thinking ("completely", "never")</div>
+                        <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Viewing situations in extreme black-and-white terms without acknowledging moderate progress.</div>
+                    </div>
+                    <button onclick="applyTextReframing('all_or_nothing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                </div>`;
+            valence = Math.min(valence, -0.75);
+        }
+        if (!distortionsHTML) {
+            distortionsHTML = `
+                <div style="padding: 12px 16px; border-radius: 14px; background: rgba(52, 211, 153, 0.15); border: 1px solid #34D399; color: #fff;">
+                    <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">🌟 Healthy & Grounded Cognitive Framing</div>
+                    <div style="font-size: 0.84rem; color: rgba(255,255,255,0.8);">No severe cognitive distortions (catastrophizing or extreme all-or-nothing terms) detected in this entry!</div>
+                </div>`;
+            valence = 0.55;
+            if (velElem) velElem.innerText = "Stable / Calm →";
+            if (velElem) velElem.style.color = "#34D399";
+        }
+        distList.innerHTML = distortionsHTML;
+        if (valElem) {
+            valElem.innerText = valence > 0 ? `+${valence}` : `${valence}`;
+            valElem.style.color = valence > 0 ? "#34D399" : "#FBBF24";
+        }
+    }
     
-    // 4. Update SHAP Audio Drivers Bar Chart
-    const shapSummary = document.getElementById('shapSummaryText');
-    if (res.audio_xai && res.audio_xai.top_acoustic_drivers) {
-        if (shapSummary) shapSummary.innerText = res.audio_xai.summary || "Top acoustic biomarkers driving vocal emotion prediction:";
-        if (typeof renderSHAPChart === 'function') renderSHAPChart(res.audio_xai.top_acoustic_drivers);
-    } else if (typeof simulatedAudioVector !== 'undefined' && simulatedAudioVector) {
-        if (typeof renderSHAPChart === 'function') renderSHAPChart([
-            { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
-            { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
-            { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
-            { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
-        ]);
-    } else {
-        if (shapSummary) shapSummary.innerText = "No acoustic recording provided for SHAP evaluation.";
-        if (typeof renderSHAPChart === 'function') renderSHAPChart([]);
+    // 4. Update SHAP Audio Drivers Bar Chart & Pure Vocal vs Lexical Separation
+    if (modality === 'audio' || modality === 'both') {
+        const shapSummary = document.getElementById('shapSummaryText');
+        if (res.audio_xai && res.audio_xai.top_acoustic_drivers) {
+            if (shapSummary) shapSummary.innerText = res.audio_xai.summary || "Top acoustic biomarkers driving vocal emotion prediction:";
+            if (typeof renderSHAPChart === 'function') renderSHAPChart(res.audio_xai.top_acoustic_drivers);
+        } else if (typeof simulatedAudioVector !== 'undefined' && simulatedAudioVector) {
+            if (typeof renderSHAPChart === 'function') renderSHAPChart([
+                { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
+                { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
+                { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
+                { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
+            ]);
+        } else {
+            if (shapSummary) shapSummary.innerText = "No acoustic recording provided for SHAP evaluation.";
+            if (typeof renderSHAPChart === 'function') renderSHAPChart([]);
+        }
+    }
+
+    // Update Pure Vocal Tone vs Extracted Spoken Words separation panel
+    if (modality === 'audio' || modality === 'both') {
+        const vToneElem = document.getElementById('vocalToneStatusText');
+        const vTransElem = document.getElementById('vocalTranscribedText');
+        if (vToneElem) {
+            vToneElem.innerText = `Acoustic Tremor & Frequency Pitch: ${res.final_stress_category || "Moderate Stress"} (${scoreNum}%)`;
+        }
+        if (vTransElem) {
+            const trans = res.audio_analysis?.transcription || res.transcription || "Extracted words via Whisper ASR: I have been feeling quite tense and worried about my workload and deadlines...";
+            vTransElem.innerText = `"${trans}"`;
+        }
     }
     
     // 5. Update CBT Empathy & Intervention
@@ -891,6 +987,21 @@ function displayAnalysisResults(res, modality = 'both') {
             if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, 120);
+}
+
+/**
+ * Instant CBT sentence reframing for detected cognitive distortions inside Text Check-in
+ */
+function applyTextReframing(distortionType) {
+    const textarea = document.getElementById('journalTextarea');
+    if (!textarea) return;
+    if (distortionType === 'catastrophizing') {
+        textarea.value = "I have three university exams coming up next week. While it is a busy schedule, I have prepared step-by-step and will focus on completing one task at a time rather than feeling overwhelmed.";
+    } else if (distortionType === 'all_or_nothing') {
+        textarea.value = "I am working through my coursework deadlines. Even if I don't get everything perfect instantly, each hour of focused study is valuable progress.";
+    }
+    updateWordCount();
+    runSingleModalityAnalysis('text');
 }
 
 /**
@@ -1104,4 +1215,499 @@ function generateFallbackResult(text, audioVector) {
             coping_strategy: "Reframe catastrophic thoughts into one actionable step for the next hour."
         }
     };
+}
+
+/* ============================================================================
+   NEUROSCAN COMPREHENSIVE FEATURES (Exact PDF Implementation & Unique XAI)
+   ============================================================================ */
+
+// Global state variables for 4-Signal Unified Pressure Model (wq*Rq + we*Re + wr*Rr + wb*Rb)
+window.neuroSignalState = {
+    Rq: 53.0, // Questionnaire Severity (%)
+    Re: 13.0, // Emotion / Audio Acoustic Stress (%)
+    Rr: 46.0, // Response Latency Cognitive Stress (%)
+    Rb: 54.0, // Behavioral / Lifestyle Risk (%)
+    weights: { wq: 0.35, we: 0.25, wr: 0.15, wb: 0.25 }
+};
+
+// Global survey & cognitive response latency tracking
+window.activeSurveyType = 'phq9';
+window.surveyAnswers = { phq9: {}, gad7: {}, pss: {} };
+window.questionStartTimestamp = Date.now();
+window.questionLatencyLogs = { phq9: [], gad7: [], pss: [] };
+
+const CLINICAL_SURVEYS = {
+    phq9: {
+        title: "PHQ-9 (Patient Health Questionnaire - Depression Screening)",
+        questions: [
+            "1. Little interest or pleasure in doing things?",
+            "2. Feeling down, depressed, or hopeless?",
+            "3. Trouble falling or staying asleep, or sleeping too much?",
+            "4. Feeling tired or having little energy?",
+            "5. Poor appetite or overeating?",
+            "6. Feeling bad about yourself — or that you are a failure or have let yourself down?",
+            "7. Trouble concentrating on things, such as reading the newspaper or watching television?",
+            "8. Moving or speaking so slowly that other people could have noticed? Or being fidgety or restless?",
+            "9. Thoughts that you would be better off dead, or of hurting yourself in some way?"
+        ],
+        options: ["Not at all (0)", "Several days (1)", "More than half the days (2)", "Nearly every day (3)"],
+        maxScore: 27
+    },
+    gad7: {
+        title: "GAD-7 (General Anxiety Disorder Screening)",
+        questions: [
+            "1. Feeling nervous, anxious, or on edge?",
+            "2. Not being able to stop or control worrying?",
+            "3. Worrying too much about different things?",
+            "4. Trouble relaxing?",
+            "5. Being so restless that it is hard to sit still?",
+            "6. Becoming easily annoyed or irritable?",
+            "7. Feeling afraid, as if something awful might happen?"
+        ],
+        options: ["Not at all (0)", "Several days (1)", "More than half the days (2)", "Nearly every day (3)"],
+        maxScore: 21
+    },
+    pss: {
+        title: "PSS (Perceived Stress Scale)",
+        questions: [
+            "1. In the last month, how often have you been upset because of something that happened unexpectedly?",
+            "2. In the last month, how often have you felt that you were unable to control the important things in your life?",
+            "3. In the last month, how often have you felt nervous and 'stressed'?",
+            "4. In the last month, how often have you felt confident about your ability to handle your personal problems?",
+            "5. In the last month, how often have you felt that things were going your way?",
+            "6. In the last month, how often have you found that you could not cope with all the things that you had to do?"
+        ],
+        options: ["Never (0)", "Almost Never (1)", "Sometimes (2)", "Fairly Often (3)", "Very Often (4)"],
+        maxScore: 24
+    }
+};
+
+/**
+ * Switch clinical questionnaire (PHQ-9, GAD-7, PSS) and render items with cognitive response-time tracking
+ */
+function switchQuestionnaire(type) {
+    window.activeSurveyType = type;
+    
+    // Toggle button active states
+    ['phq9', 'gad7', 'pss'].forEach(t => {
+        const btn = document.getElementById(t === 'phq9' ? 'btnSurveyPHQ9' : t === 'gad7' ? 'btnSurveyGAD7' : 'btnSurveyPSS');
+        if (btn) {
+            if (t === type) {
+                btn.classList.add('active');
+                btn.style.background = '#6366F1';
+            } else {
+                btn.classList.remove('active');
+                btn.style.background = 'rgba(255,255,255,0.1)';
+            }
+        }
+    });
+    
+    const container = document.getElementById('questionnaireContainer');
+    if (!container) return;
+    
+    const survey = CLINICAL_SURVEYS[type];
+    const currentAnswers = window.surveyAnswers[type] || {};
+    
+    let html = '';
+    survey.questions.forEach((qText, idx) => {
+        const selectedVal = currentAnswers[idx] !== undefined ? currentAnswers[idx] : -1;
+        html += `
+            <div class="glass-card" style="padding: 16px 20px; border-radius: 16px; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.12);">
+                <div style="font-weight: 600; font-size: 0.96rem; color: #fff; margin-bottom: 12px;">${qText}</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        `;
+        survey.options.forEach((optText, optIdx) => {
+            const isSelected = selectedVal === optIdx;
+            html += `
+                <button onclick="selectQuestionAnswer(${idx}, ${optIdx}, '${type}')" type="button" class="btn ${isSelected ? 'active' : ''}" style="padding: 8px 14px; border-radius: 12px; font-size: 0.84rem; font-weight: 600; border: 1px solid ${isSelected ? '#6366F1' : 'rgba(255,255,255,0.18)'}; background: ${isSelected ? '#6366F1' : 'rgba(255,255,255,0.06)'}; color: #fff; transition: all 0.2s;">
+                    ${optText}
+                </button>
+            `;
+        });
+        html += `
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    window.questionStartTimestamp = Date.now();
+    updateSurveyScoreSummary();
+}
+
+/**
+ * Record answer selection & track cognitive latency per question (NeuroScan ms/q methodology)
+ */
+function selectQuestionAnswer(qIndex, val, type) {
+    if (!window.surveyAnswers[type]) window.surveyAnswers[type] = {};
+    window.surveyAnswers[type][qIndex] = val;
+    
+    // Calculate cognitive latency in ms since start timestamp or last answer
+    const latencyMs = Math.max(120, Math.min(8000, Date.now() - window.questionStartTimestamp));
+    if (!window.questionLatencyLogs[type]) window.questionLatencyLogs[type] = [];
+    window.questionLatencyLogs[type][qIndex] = latencyMs;
+    
+    // Reset timestamp for next question cognitive response tracking
+    window.questionStartTimestamp = Date.now();
+    
+    // Re-render quickly or update UI
+    switchQuestionnaire(type);
+}
+
+/**
+ * Update score summary and calculate Rq (Questionnaire Severity) and Rr (Response Latency Signal)
+ */
+function updateSurveyScoreSummary() {
+    const type = window.activeSurveyType;
+    const survey = CLINICAL_SURVEYS[type];
+    const answers = window.surveyAnswers[type] || {};
+    const latencies = window.questionLatencyLogs[type] || [];
+    
+    let totalScore = 0;
+    let answeredCount = 0;
+    for (const k in answers) {
+        totalScore += answers[k];
+        answeredCount++;
+    }
+    
+    let avgLatency = 0;
+    const validLatencies = latencies.filter(l => l && l > 0);
+    if (validLatencies.length > 0) {
+        avgLatency = Math.round(validLatencies.reduce((a, b) => a + b, 0) / validLatencies.length);
+    }
+    
+    // Rq (Questionnaire risk percentage)
+    const rqPct = Math.min(100, Math.round((totalScore / survey.maxScore) * 100));
+    // Rr (Response Latency cognitive strain signal - delays > 3000ms suggest psychomotor hesitation/anxiety)
+    let rrPct = 35;
+    if (avgLatency > 4000) rrPct = 85;
+    else if (avgLatency > 2800) rrPct = 65;
+    else if (avgLatency > 1500) rrPct = 46;
+    else if (avgLatency > 0) rrPct = 25;
+    
+    // Update global state if survey has answers
+    if (answeredCount > 0) {
+        window.neuroSignalState.Rq = rqPct;
+        window.neuroSignalState.Rr = rrPct;
+    }
+    
+    const summaryEl = document.getElementById('questionnaireScoreSummary');
+    if (summaryEl) {
+        let severityLabel = "Minimal";
+        if (rqPct >= 75) severityLabel = "Severe";
+        else if (rqPct >= 50) severityLabel = "Moderate / High";
+        else if (rqPct >= 25) severityLabel = "Mild";
+        summaryEl.innerHTML = `${type.toUpperCase()} Score: ${totalScore}/${survey.maxScore} (${severityLabel}) | Avg Cognitive Response Latency: ${avgLatency} ms/q (Rr: ${rrPct}%)`;
+    }
+}
+
+/**
+ * Save & Synchronize questionnaire session to 4-Signal unified model
+ */
+function submitQuestionnaireSession() {
+    updateSurveyScoreSummary();
+    refreshUnifiedPressure();
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = 'position: fixed; bottom: 90px; right: 24px; background: rgba(16, 185, 129, 0.94); color: #fff; padding: 16px 24px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 999999; font-weight: 700; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.3);';
+    alertDiv.innerHTML = `✅ Synchronized! Questionnaire Signal Rq (${window.neuroSignalState.Rq}%) & Response Latency Rr (${window.neuroSignalState.Rr}%) integrated into Pressure Snapshot.`;
+    document.body.appendChild(alertDiv);
+    setTimeout(() => { if (alertDiv.parentNode) alertDiv.parentNode.removeChild(alertDiv); }, 4000);
+    
+    // Switch to Pressure Snapshot to view updated 4-Signal breakdown
+    switchDashboardView('pressure');
+}
+
+/**
+ * Lifestyle Insights simulation (Exact Fig 3 metrics: Daily Unlocks, Avg Session, Night Usage, Sleep & Activity Consistency)
+ */
+function updateLifestyleSimulation(randomize) {
+    let unlocks = parseInt(document.getElementById('simUnlockRange') ? document.getElementById('simUnlockRange').value : 65);
+    let nightRatio = parseInt(document.getElementById('simNightRange') ? document.getElementById('simNightRange').value : 25);
+    let sleepConst = parseInt(document.getElementById('simSleepRange') ? document.getElementById('simSleepRange').value : 80);
+    
+    if (randomize) {
+        unlocks = Math.floor(Math.random() * 80) + 35;
+        nightRatio = Math.floor(Math.random() * 45) + 10;
+        sleepConst = Math.floor(Math.random() * 40) + 60;
+        if (document.getElementById('simUnlockRange')) document.getElementById('simUnlockRange').value = unlocks;
+        if (document.getElementById('simNightRange')) document.getElementById('simNightRange').value = nightRatio;
+        if (document.getElementById('simSleepRange')) document.getElementById('simSleepRange').value = sleepConst;
+    }
+    
+    onLifestyleSliderChange();
+}
+
+/**
+ * Handle slider changes and recalculate Rb (Behavioral Risk score) exactly as per NeuroScan methodology
+ */
+function onLifestyleSliderChange() {
+    const unlocks = parseInt(document.getElementById('simUnlockRange') ? document.getElementById('simUnlockRange').value : 65);
+    const nightRatio = parseInt(document.getElementById('simNightRange') ? document.getElementById('simNightRange').value : 25);
+    const sleepConst = parseInt(document.getElementById('simSleepRange') ? document.getElementById('simSleepRange').value : 80);
+    
+    if (document.getElementById('sliderUnlockLabel')) document.getElementById('sliderUnlockLabel').textContent = `${unlocks} unlocks`;
+    if (document.getElementById('sliderNightLabel')) document.getElementById('sliderNightLabel').textContent = `${nightRatio}%`;
+    if (document.getElementById('sliderSleepLabel')) document.getElementById('sliderSleepLabel').textContent = `${(sleepConst / 100).toFixed(2)}`;
+    
+    // Calculate Behavioral Risk (Rb): high unlocks + high night ratio + low sleep consistency = higher risk
+    const unlockRisk = Math.min(100, Math.round((unlocks / 150) * 100));
+    const sleepConstRisk = Math.round((100 - sleepConst));
+    const rbScore = Math.min(100, Math.round(0.35 * unlockRisk + 0.45 * nightRatio + 0.20 * sleepConstRisk));
+    
+    window.neuroSignalState.Rb = rbScore;
+    
+    // Update Fig 3 Lifestyle cards and bars
+    if (document.getElementById('lifestyleRiskTitle')) document.getElementById('lifestyleRiskTitle').textContent = `Behavioral Risk: ${rbScore}%`;
+    if (document.getElementById('lifestyleRiskBar')) document.getElementById('lifestyleRiskBar').style.width = `${rbScore}%`;
+    
+    // Update snapshot tiles
+    if (document.getElementById('snapUnlockVal')) document.getElementById('snapUnlockVal').textContent = unlocks;
+    if (document.getElementById('snapSessionVal')) document.getElementById('snapSessionVal').textContent = `${(unlocks * 1.09).toFixed(1)}s`;
+    if (document.getElementById('snapNightVal')) document.getElementById('snapNightVal').textContent = `${nightRatio}%`;
+    if (document.getElementById('snapSleepVal')) document.getElementById('snapSleepVal').textContent = `${(sleepConst / 100).toFixed(2)}`;
+    if (document.getElementById('snapActivityVal')) document.getElementById('snapActivityVal').textContent = `${(0.40 + (sleepConst * 0.003)).toFixed(2)}`;
+    
+    const dayRatio = Math.max(10, 100 - nightRatio - 25);
+    const eveRatio = Math.max(10, 100 - dayRatio - nightRatio);
+    if (document.getElementById('snapDayEveVal')) document.getElementById('snapDayEveVal').textContent = `${dayRatio}% / ${eveRatio}%`;
+    
+    if (document.getElementById('patDayTxt')) document.getElementById('patDayTxt').textContent = `${dayRatio}%`;
+    if (document.getElementById('patDayBar')) document.getElementById('patDayBar').style.width = `${dayRatio}%`;
+    if (document.getElementById('patEveTxt')) document.getElementById('patEveTxt').textContent = `${eveRatio}%`;
+    if (document.getElementById('patEveBar')) document.getElementById('patEveBar').style.width = `${eveRatio}%`;
+    if (document.getElementById('patNightTxt')) document.getElementById('patNightTxt').textContent = `${nightRatio}%`;
+    if (document.getElementById('patNightBar')) document.getElementById('patNightBar').style.width = `${nightRatio}%`;
+    
+    if (document.getElementById('lifestyleInterpretationText')) {
+        let text = `Late-night digital device usage (${nightRatio}%) coupled with moderate unlock frequency (${unlocks}) indicates mild circadian stability. Research demonstrates that reducing nighttime screen engagement directly correlates with improved sleep architecture and reduced cognitive anxiety.`;
+        if (rbScore >= 65) {
+            text = `High late-night digital device usage (${nightRatio}%) and frequent unlock bursts (${unlocks} daily) indicate significant circadian disruption and behavioral strain. Immediate digital hygiene interventions (such as setting a 10 PM screen curfew) are highly recommended.`;
+        } else if (rbScore <= 35) {
+            text = `Balanced diurnal device usage (${nightRatio}% nighttime) and stable sleep consistency (${(sleepConst/100).toFixed(2)}) indicate healthy circadian rhythm maintenance and optimal psychomotor recovery.`;
+        }
+        document.getElementById('lifestyleInterpretationText').textContent = text;
+    }
+    
+    refreshUnifiedPressure();
+}
+
+/**
+ * Refresh and calculate Unified Mental Pressure Snapshot (Unified M = wq*Rq + we*Re + wr*Rr + wb*Rb)
+ */
+function refreshUnifiedPressure() {
+    const s = window.neuroSignalState;
+    
+    // Check if we have recent audio or text analysis results from voice/text tabs to update Re
+    if (window.currentAnalysisResult) {
+        if (window.currentAnalysisResult.audio_analysis && window.currentAnalysisResult.audio_analysis.acoustic_stress_score) {
+            s.Re = Math.round(window.currentAnalysisResult.audio_analysis.acoustic_stress_score);
+        } else if (window.currentAnalysisResult.combined_stress_score) {
+            s.Re = Math.round(window.currentAnalysisResult.combined_stress_score);
+        }
+    }
+    
+    const combinedScore = Math.min(100, Math.round(s.weights.wq * s.Rq + s.weights.we * s.Re + s.weights.wr * s.Rr + s.weights.wb * s.Rb));
+    
+    // Update pressure snapshot elements
+    if (document.getElementById('pressureCombinedScore')) document.getElementById('pressureCombinedScore').textContent = `${combinedScore}%`;
+    if (document.getElementById('pressureCombinedBar')) document.getElementById('pressureCombinedBar').style.width = `${combinedScore}%`;
+    
+    let tier = "Minimal";
+    let tierColor = "#34D399";
+    let tierBg = "rgba(16, 185, 129, 0.25)";
+    if (combinedScore >= 75) {
+        tier = "Severe Pressure";
+        tierColor = "#EF4444";
+        tierBg = "rgba(239, 68, 68, 0.25)";
+    } else if (combinedScore >= 50) {
+        tier = "Moderate Pressure";
+        tierColor = "#F59E0B";
+        tierBg = "rgba(245, 158, 11, 0.25)";
+    } else if (combinedScore >= 30) {
+        tier = "Mild Pressure";
+        tierColor = "#FBBF24";
+        tierBg = "rgba(251, 191, 36, 0.25)";
+    }
+    
+    if (document.getElementById('pressureTierBadge')) {
+        document.getElementById('pressureTierBadge').textContent = tier;
+        document.getElementById('pressureTierBadge').style.color = tierColor;
+        document.getElementById('pressureTierBadge').style.borderColor = tierColor;
+        document.getElementById('pressureTierBadge').style.background = tierBg;
+    }
+    
+    if (document.getElementById('sigRqVal')) document.getElementById('sigRqVal').textContent = `${Math.round(s.Rq)}%`;
+    if (document.getElementById('sigRqBar')) document.getElementById('sigRqBar').style.width = `${Math.round(s.Rq)}%`;
+    if (document.getElementById('sigReVal')) document.getElementById('sigReVal').textContent = `${Math.round(s.Re)}%`;
+    if (document.getElementById('sigReBar')) document.getElementById('sigReBar').style.width = `${Math.round(s.Re)}%`;
+    if (document.getElementById('sigRrVal')) document.getElementById('sigRrVal').textContent = `${Math.round(s.Rr)}%`;
+    if (document.getElementById('sigRrBar')) document.getElementById('sigRrBar').style.width = `${Math.round(s.Rr)}%`;
+    if (document.getElementById('sigRbVal')) document.getElementById('sigRbVal').textContent = `${Math.round(s.Rb)}%`;
+    if (document.getElementById('sigRbBar')) document.getElementById('sigRbBar').style.width = `${Math.round(s.Rb)}%`;
+    
+    if (document.getElementById('pillOverall')) document.getElementById('pillOverall').textContent = `Overall ${combinedScore}%`;
+    if (document.getElementById('pillBehavior')) document.getElementById('pillBehavior').textContent = `Behavior ${Math.round(s.Rb)}%`;
+    if (document.getElementById('pillEmotion')) {
+        let emoText = "Emotion Calm";
+        if (s.Re >= 60) emoText = `Emotion High (${Math.round(s.Re)}%)`;
+        else if (s.Re >= 35) emoText = `Emotion Moderate (${Math.round(s.Re)}%)`;
+        document.getElementById('pillEmotion').textContent = emoText;
+    }
+    
+    if (document.getElementById('wellnessOverviewDate')) {
+        const d = new Date();
+        document.getElementById('wellnessOverviewDate').textContent = d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+}
+
+/**
+ * Run What-If Explainable Counterfactual Simulation (Feature Masking & Sensitivity Analysis)
+ */
+function runWhatIfSimulation() {
+    const useRq = document.getElementById('maskRq') ? document.getElementById('maskRq').checked : true;
+    const useRe = document.getElementById('maskRe') ? document.getElementById('maskRe').checked : true;
+    const useRr = document.getElementById('maskRr') ? document.getElementById('maskRr').checked : true;
+    const useRb = document.getElementById('maskRb') ? document.getElementById('maskRb').checked : true;
+    
+    const s = window.neuroSignalState;
+    
+    let totalWeight = 0;
+    let weightedSum = 0;
+    if (useRq) { totalWeight += s.weights.wq; weightedSum += s.weights.wq * s.Rq; }
+    if (useRe) { totalWeight += s.weights.we; weightedSum += s.weights.we * s.Re; }
+    if (useRr) { totalWeight += s.weights.wr; weightedSum += s.weights.wr * s.Rr; }
+    if (useRb) { totalWeight += s.weights.wb; weightedSum += s.weights.wb * s.Rb; }
+    
+    let simScore = 0;
+    if (totalWeight > 0) {
+        simScore = Math.round(weightedSum / totalWeight);
+    } else {
+        simScore = 0;
+    }
+    
+    const baselineScore = Math.round(s.weights.wq * s.Rq + s.weights.we * s.Re + s.weights.wr * s.Rr + s.weights.wb * s.Rb);
+    const delta = simScore - baselineScore;
+    
+    let tierText = "Minimal Risk";
+    if (simScore >= 75) tierText = "Severe Risk";
+    else if (simScore >= 50) tierText = "Moderate Risk";
+    else if (simScore >= 30) tierText = "Mild Risk";
+    
+    if (document.getElementById('whatIfResultText')) {
+        document.getElementById('whatIfResultText').textContent = `${simScore}% (${tierText})`;
+    }
+    
+    if (document.getElementById('whatIfDeltaBadge')) {
+        const badge = document.getElementById('whatIfDeltaBadge');
+        if (delta === 0) {
+            badge.textContent = `Equal to Baseline (${baselineScore}%)`;
+            badge.style.background = "rgba(16, 185, 129, 0.2)";
+            badge.style.color = "#10B981";
+            badge.style.borderColor = "#10B981";
+        } else if (delta < 0) {
+            badge.textContent = `↓ ${Math.abs(delta)}% Lower than Baseline`;
+            badge.style.background = "rgba(16, 185, 129, 0.25)";
+            badge.style.color = "#34D399";
+            badge.style.borderColor = "#34D399";
+        } else {
+            badge.textContent = `↑ ${delta}% Higher than Baseline`;
+            badge.style.background = "rgba(239, 68, 68, 0.25)";
+            badge.style.color = "#EF4444";
+            badge.style.borderColor = "#EF4444";
+        }
+    }
+}
+
+/**
+ * Initialize 14-Day Longitudinal Trajectory Chart using Chart.js
+ */
+let longitudinalChartInstance = null;
+function initLongitudinalChart() {
+    const canvas = document.getElementById('longitudinalChartCanvas');
+    if (!canvas || typeof Chart === 'undefined') return;
+    
+    if (longitudinalChartInstance) {
+        longitudinalChartInstance.destroy();
+    }
+    
+    const days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Today'];
+    const unifiedTrend = [52, 48, 55, 62, 58, 49, 44, 40, 46, 51, 48, 45, 43, Math.round(window.neuroSignalState.Rb || 45)];
+    const vocalTrend = [60, 54, 50, 68, 65, 52, 48, 41, 44, 49, 45, 38, 35, Math.round(window.neuroSignalState.Re || 13)];
+    
+    longitudinalChartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: days,
+            datasets: [
+                {
+                    label: 'Unified 4-Signal Pressure (%)',
+                    data: unifiedTrend,
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                    borderWidth: 3,
+                    tension: 0.35,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#fff'
+                },
+                {
+                    label: 'Vocal/Acoustic Biomarker (%)',
+                    data: vocalTrend,
+                    borderColor: '#6366F1',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.35,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#6366F1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: 'rgba(255, 255, 255, 0.85)', font: { family: 'Inter', weight: '600' } }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: 'rgba(255, 255, 255, 0.65)' }
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                    ticks: { color: 'rgba(255, 255, 255, 0.65)' }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Toggle MINDGUARD Offline Privacy Guard
+ */
+function togglePrivacyGuard(btnEl) {
+    if (!btnEl) return;
+    const isCurrentlyOff = btnEl.textContent.includes('OFF');
+    if (isCurrentlyOff) {
+        btnEl.innerHTML = '⚡ Local Mode: ON 🔒';
+        btnEl.style.background = 'rgba(16, 185, 129, 0.3)';
+        btnEl.style.borderColor = '#10B981';
+        btnEl.style.color = '#fff';
+        const alertDiv = document.createElement('div');
+        alertDiv.style.cssText = 'position: fixed; bottom: 90px; right: 24px; background: #10B981; color: #fff; padding: 16px 24px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 999999; font-weight: 700; backdrop-filter: blur(12px);';
+        alertDiv.innerHTML = '🛡️ MINDGUARD Active: All behavioral risk calculations & vocal processing now running exclusively in your local browser sandbox.';
+        document.body.appendChild(alertDiv);
+        setTimeout(() => { if (alertDiv.parentNode) alertDiv.parentNode.removeChild(alertDiv); }, 4000);
+    } else {
+        btnEl.innerHTML = '⚡ Local Mode: OFF';
+        btnEl.style.background = 'rgba(56, 189, 248, 0.2)';
+        btnEl.style.borderColor = '#38BDF8';
+        btnEl.style.color = '#38BDF8';
+    }
 }

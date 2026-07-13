@@ -811,17 +811,14 @@
     </div>
 
     <section id="appDashboardScreen" class="view-screen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
-        <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center exact to home screen, Role Selector right. Local Edge Privacy removed) -->
-        <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 10px auto 26px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
+        <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center without icon, moving title slightly down and islands slightly up) -->
+        <header class="navbar-top-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin: 24px auto 14px auto; width: 100%; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;">
             <!-- Left: Spacer slot (Back button is fixed top-left symmetrically) -->
             <div class="back-home-slot" style="flex: 1; min-width: 180px;"></div>
 
-            <!-- Center: Brand Name & Title on TOP CENTER exact to home screen -->
+            <!-- Center: Brand Name & Title on TOP CENTER exact to home screen, centered nicely without icon -->
             <div style="flex: 2; min-width: 320px; display: flex; justify-content: center; align-items: center; text-align: center;">
                 <div class="nav-brand top-center-brand" style="display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important;">
-                    <div class="brand-icon" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; margin-right: 2px;">
-                        <img src="/static/img/neurosense-logo.svg" alt="NeuroSense AI Logo" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0, 242, 254, 0.45)); transition: transform 0.3s ease;" />
-                    </div>
                     <div class="brand-text">
                         <h1 class="font-serif-italic top-center-title" style="font-size: 1.85rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important;">NeuroSense AI</h1>
                     </div>
@@ -829,7 +826,7 @@
                 </div>
             </div>
             
-            <!-- Right Controls: Empty / Spacer since counselor portal option is removed -->
+            <!-- Right Controls: Empty / Spacer -->
             <div style="flex: 1; min-width: 220px; display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
             </div>
         </header>
@@ -839,238 +836,655 @@
             <!-- STUDENT PORTAL VIEW -->
             <section id="studentPortal" class="role-view active">
                 <!-- Sliding Glassmorphism Dock Navigation separating Voice, Text, CBT/GPT into different faces -->
-                <nav id="bottomGlassDock" class="liquid-glass" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 1000; display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.08) !important; backdrop-filter: blur(44px) saturate(240%) brightness(1.15) !important; -webkit-backdrop-filter: blur(44px) saturate(240%) brightness(1.15) !important; box-shadow: 0 24px 50px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.4) !important; border: 1px solid rgba(255,255,255,0.26) !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; -webkit-user-select: none; cursor: grab;">
+                <nav id="bottomGlassDock" class="liquid-glass" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 1000; display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 999px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; -webkit-user-select: none; cursor: grab;">
                     <!-- Liquid Sliding Indicator Pill -->
-                    <div id="dockLiquidSlider" style="position: absolute; top: 7px; left: 10px; height: calc(100% - 14px); width: 148px; border-radius: 999px; background: rgba(255, 255, 255, 0.24) !important; border: 1px solid rgba(255, 255, 255, 0.48); backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.22), inset 0 1px 1px rgba(255,255,255,0.7); transition: all 0.42s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; z-index: 1;"></div>
+                    <div id="dockLiquidSlider" style="position: absolute; top: 7px; left: 10px; height: calc(100% - 14px); width: 148px; border-radius: 999px; transition: all 0.42s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; z-index: 1;"></div>
                     
                     <button id="dockBtnVoice" class="dock-btn active" onclick="switchDashboardView('voice')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: #ffffff; white-space: nowrap;">
-                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #00F2FE; filter: drop-shadow(0 2px 5px rgba(0, 242, 254, 0.4));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
                         <span class="dock-label-desktop desktop-only">Voice Check-in</span>
                         <span class="dock-label-mobile mobile-only" style="display: none;">Voice</span>
                     </button>
                     <button id="dockBtnText" class="dock-btn" onclick="switchDashboardView('text')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
-                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #38BDF8; filter: drop-shadow(0 2px 5px rgba(56, 189, 248, 0.4));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>
                         <span class="dock-label-desktop desktop-only">Text Narrative</span>
                         <span class="dock-label-mobile mobile-only" style="display: none;">Narrative</span>
                     </button>
-                    <button id="dockBtnCBT" class="dock-btn" onclick="switchDashboardView('cbt')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
-                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #D946EF; filter: drop-shadow(0 2px 5px rgba(217, 70, 239, 0.4));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="1.3" fill="currentColor"/><circle cx="8" cy="10" r="1.3" fill="currentColor"/><circle cx="16" cy="10" r="1.3" fill="currentColor"/></svg></span>
-                        <span class="dock-label-desktop desktop-only">CBT Assistant & GPT</span>
+                    <button id="dockBtnCBT" class="dock-btn" onclick="switchDashboardView('cbt')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="1.3" fill="currentColor"/><circle cx="8" cy="10" r="1.3" fill="currentColor"/><circle cx="16" cy="10" r="1.3" fill="currentColor"/></svg></span>
+                        <span class="dock-label-desktop desktop-only">CBT Assistant</span>
                         <span class="dock-label-mobile mobile-only" style="display: none;">Assistant</span>
+                    </button>
+                    <button id="dockBtnLifestyle" class="dock-btn" onclick="switchDashboardView('lifestyle')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg></span>
+                        <span class="dock-label-desktop desktop-only">Lifestyle Insights</span>
+                        <span class="dock-label-mobile mobile-only" style="display: none;">Lifestyle</span>
+                    </button>
+                    <button id="dockBtnPressure" class="dock-btn" onclick="switchDashboardView('pressure')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+                        <span class="dock-label-desktop desktop-only">Pressure & Survey</span>
+                        <span class="dock-label-mobile mobile-only" style="display: none;">Pressure</span>
+                    </button>
+                    <button id="dockBtnWhatIf" class="dock-btn" onclick="switchDashboardView('whatif')" style="position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 0.94rem; cursor: pointer; transition: color 0.3s ease; border: none; background: transparent; color: rgba(255,255,255,0.78); white-space: nowrap;">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.45));"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span>
+                        <span class="dock-label-desktop desktop-only">What-If & XAI</span>
+                        <span class="dock-label-mobile mobile-only" style="display: none;">What-If</span>
                     </button>
                 </nav>
 
-                <!-- VIEW 1: VOICE & AUDIO CHECK-IN FACE -->
-                <div id="viewVoice" class="modality-view" style="display: block !important; padding-top: 60px;">
+                <!-- VIEW 1: VOICE & SPEECH ACOUSTIC CHECK-IN FACE -->
+                <div id="viewVoice" class="modality-view active" style="padding: 4px 14px 10px 14px; box-sizing: border-box;">
                     <div class="modality-split-grid">
-                        <!-- Left: Voice & Audio Recording Card -->
-                        <div id="voiceInputIsland" class="input-card glass-card">
-                            <div class="card-header">
-                                <h3>🎙️ Voice & Speech Acoustic Check-in</h3>
-                                <span class="status-indicator ready" id="micStatusText">Ready to record</span>
-                            </div>
-                            <p class="card-desc">Record your voice directly or upload an audio file to test acoustic stress attribution.</p>
-                            
-                            <div class="glass-pill desktop-only" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
-                                <div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                    <span>💡</span> How to Check Your Vocal Biomarkers:
+                        <!-- Left Column: Voice Recording Card + Secondary Info Island -->
+                        <div class="split-col-left">
+                            <div id="voiceInputIsland" class="input-card glass-card">
+                                <div class="card-header">
+                                    <h3>🎙️ Voice & Speech Acoustic Check-in</h3>
+                                    <span class="status-indicator ready" id="micStatusText">Ready to record</span>
                                 </div>
-                                <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
-                                    Press <strong>Start Voice Recording</strong> and speak clearly for 5–10 seconds about your day or studies. Our AI analyzes pitch fluctuations, micro-tremors, and MFCC vocal tract stability to calculate real-time stress severity.
-                                </p>
+                                <p class="card-desc">Record your voice directly or upload an audio file to test acoustic stress attribution.</p>
+                                
+                                <div class="glass-pill desktop-only" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
+                                    <div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                        <span>💡</span> How to Check Your Vocal Biomarkers:
+                                    </div>
+                                    <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
+                                        Press <strong>Start Voice Recording</strong> and speak clearly for 5–10 seconds about your day or studies. Our AI analyzes pitch fluctuations, micro-tremors, and MFCC vocal tract stability to calculate real-time stress severity.
+                                    </p>
+                                </div>
+
+                                <div class="audio-visualizer-container">
+                                    <canvas id="waveformCanvas" width="400" height="100"></canvas>
+                                    <div class="timer-display" id="recordingTimer">Ready to analyze</div>
+                                </div>
+
+                                <div class="audio-actions">
+                                    <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioFileUpload(event)" style="display: none;">
+                                    <button id="btnRecord" class="btn btn-secondary" onclick="toggleRecording()">
+                                        <span id="recordBtnIcon">🔴</span> <span id="recordBtnText">Start Voice Recording</span>
+                                    </button>
+                                    <button id="btnUploadAudio" class="btn btn-secondary" onclick="document.getElementById('audioFileInput').click()">
+                                        <span>📁</span> Upload Audio File
+                                    </button>
+                                    <button id="btnRunAudioAnalysis" class="btn btn-gradient btn-large" style="margin-top: 6px; width: 100%; font-weight: 700;" onclick="runSingleModalityAnalysis('audio')">
+                                        <span>⚡</span> Run Voice Check-in Analysis
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="audio-visualizer-container">
-                                <canvas id="waveformCanvas" width="400" height="100"></canvas>
-                                <div class="timer-display" id="recordingTimer">Ready to analyze</div>
-                            </div>
-
-                            <div class="audio-actions">
-                                <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioFileUpload(event)" style="display: none;">
-                                <button id="btnRecord" class="btn btn-secondary" onclick="toggleRecording()">
-                                    <span id="recordBtnIcon">🔴</span> <span id="recordBtnText">Start Voice Recording</span>
-                                </button>
-                                <button id="btnUploadAudio" class="btn btn-secondary" onclick="document.getElementById('audioFileInput').click()">
-                                    <span>📁</span> Upload Audio File
-                                </button>
-                                <button id="btnRunAudioAnalysis" class="btn btn-gradient btn-large" style="margin-top: 6px; width: 100%; font-weight: 700;" onclick="runSingleModalityAnalysis('audio')">
-                                    <span>⚡</span> Run Voice Check-in Analysis
-                                </button>
+                            <!-- Secondary Glass Island below Voice Check-in (balances right column size!) -->
+                            <div id="voiceSecondaryIsland" class="secondary-info-island glass-card desktop-only" style="padding: 24px; border-radius: 24px;">
+                                <div style="display: flex; flex-direction: column; gap: 16px;">
+                                    <div style="padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);">
+                                        <h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 6px 0; font-size: 0.95rem;"><span class="icon">🎧</span> Acoustic Training Datasets</h4>
+                                        <p style="font-size: 0.84rem; line-height: 1.45; color: var(--text-secondary); margin: 0;">Extracts 195 vocal biomarkers via OpenSmile & Librosa, validated across RAVDESS & IEMOCAP clinical datasets to detect pitch shimmer & MFCC energy shifts.</p>
+                                    </div>
+                                    <div style="padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);">
+                                        <h4 style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin: 0 0 6px 0; font-size: 0.95rem;"><span class="icon">⚡</span> Late Fusion & SHAP Engine</h4>
+                                        <p style="font-size: 0.84rem; line-height: 1.45; color: var(--text-secondary); margin: 0;">Processes frequency features through a rank-based Random Forest & SVM ensemble to output real-time Shapley Additive Explanations (SHAP).</p>
+                                    </div>
+                                    <div style="padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);">
+                                        <h4 style="color: #34d399; display: flex; align-items: center; gap: 8px; margin: 0 0 6px 0; font-size: 0.95rem;"><span class="icon">🔒</span> Edge-AI Privacy Guarantee</h4>
+                                        <p style="font-size: 0.84rem; line-height: 1.45; color: var(--text-secondary); margin: 0;">Voice samples are processed strictly in-memory during edge extraction and never stored permanently on remote servers without consent.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Right / Bottom: Voice Analysis Results & SHAP Explainer -->
-                        <div id="audioAnalysisResults" class="results-section glass-card hidden">
-                            <div class="results-header">
-                                <h2>🎵 Speech Acoustic Biomarker Breakdown</h2>
-                                <span class="badge badge-dual" style="background: rgba(56,189,248,0.25); border-color: #38bdf8; color: #38bdf8;">Voice Modality Active</span>
-                            </div>
+                        <!-- Right Column: Voice Analysis Results & SHAP Explainer -->
+                        <div class="split-col-right">
+                            <div id="audioAnalysisResults" class="results-section glass-card hidden">
+                                <div class="results-header">
+                                    <h2>🎵 Speech Acoustic Biomarker Breakdown</h2>
+                                    <span class="badge badge-dual" style="background: rgba(56,189,248,0.25); border-color: #38bdf8; color: #38bdf8;">Voice Modality Active</span>
+                                </div>
 
-                            <div class="results-grid" style="grid-template-columns: 1fr; gap: 20px;">
-                                <!-- Voice Stress Score & Tier -->
-                                <div class="result-box gauge-box">
-                                    <h4>Acoustic Vocal Stress Severity Score</h4>
-                                    <div class="stress-gauge-wrapper">
-                                        <div class="gauge-circle">
-                                            <span class="gauge-number" id="audioStressScoreNumber">0%</span>
-                                            <span class="gauge-tier" id="audioRiskTierText">Minimal / Normal</span>
+                                <div class="results-grid" style="grid-template-columns: 1fr; gap: 20px;">
+                                    <!-- Voice Stress Score & Tier -->
+                                    <div class="result-box gauge-box">
+                                        <h4>Acoustic Vocal Stress Severity Score</h4>
+                                        <div class="stress-gauge-wrapper">
+                                            <div class="gauge-circle">
+                                                <span class="gauge-number" id="audioStressScoreNumber">0%</span>
+                                                <span class="gauge-tier" id="audioRiskTierText">Minimal / Normal</span>
+                                            </div>
+                                        </div>
+                                        <div class="primary-origin" style="margin-top: 12px;">
+                                            <span>Detected Acoustic State:</span>
+                                            <strong id="audioStressCategoryText">Calm / Baseline</strong>
                                         </div>
                                     </div>
-                                    <div class="primary-origin" style="margin-top: 12px;">
-                                        <span>Detected Acoustic State:</span>
-                                        <strong id="audioStressCategoryText">Calm / Baseline</strong>
-                                    </div>
-                                </div>
 
-                                <!-- SHAP Acoustic Feature Attribution Chart -->
-                                <div id="shapBoxWrapper" class="result-box xai-audio-box" style="display: none !important;">
-                                    <h4>🔊 Top Acoustic Features Driving vocal prediction (SHAP)</h4>
-                                    <p class="xai-subtext" id="shapSummaryText">Explainable AI feature importance (e.g. MFCC Vocal Tract Shape, Spectral Contrast, Micro-Tremor):</p>
-                                    <div class="chart-container-small" style="height: 220px;">
-                                        <canvas id="voiceShapChartCanvas"></canvas>
+                                    <!-- SHAP Acoustic Feature Attribution Chart -->
+                                    <div id="shapBoxWrapper" class="result-box xai-audio-box" style="display: none !important;">
+                                        <h4>🔊 Top Acoustic Features Driving vocal prediction (SHAP)</h4>
+                                        <p class="xai-subtext" id="shapSummaryText">Explainable AI feature importance (e.g. MFCC Vocal Tract Shape, Spectral Contrast, Micro-Tremor):</p>
+                                        <div class="chart-container-small" style="height: 220px;">
+                                            <canvas id="voiceShapChartCanvas"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <!-- NEW FEATURE: Pure Vocal Tone vs Extracted Spoken Words Breakdown -->
+                                    <div class="glass-card" style="padding: 20px; border-radius: 20px; background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; gap: 14px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 1.3rem;">🎙️</span>
+                                            <h4 style="font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin: 0;">Dual Vocal Biomarker vs Lexical Speech Separation</h4>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+                                            <!-- Box A: Tone of Voice alone -->
+                                            <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
+                                                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">1. Pure Vocal Tone & Acoustic Prosody (Re)</div>
+                                                <div id="vocalToneStatusText" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Acoustic Tremor & Pitch: Moderate Stress (64%)</div>
+                                                <p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.4;">Analyzed entirely from physical sound waves (MFCCs, spectral contrast, vocal tension) without depending on words.</p>
+                                            </div>
+                                            <!-- Box B: Extracted Spoken Words -->
+                                            <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
+                                                <div style="font-size: 0.8rem; font-weight: 700; color: #A855F7; text-transform: uppercase; margin-bottom: 6px;">2. Extracted Spoken Words (ASR Transcription)</div>
+                                                <div id="vocalTranscribedText" style="font-size: 0.95rem; font-weight: 600; color: #fff; font-style: italic; margin-bottom: 6px;">"I am feeling quite pressured about my upcoming final semester presentations..."</div>
+                                                <p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.4;">Whisper ASR extracted text analyzed via LIME lexical sentiment models to cross-verify vocal tone findings.</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Desktop-only Extra Informative Islands below Voice Check-in -->
-                    <div class="desktop-extra-grid desktop-only" style="margin-top: 28px;">
-                        <div class="glass-card extra-info-card">
-                            <h4 class="extra-card-title" style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span class="icon">🎧</span> Acoustic Training Datasets</h4>
-                            <p class="extra-card-desc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Our acoustic models extract 195 vocal biomarkers via OpenSmile & Librosa, validated across RAVDESS, CREMA-D, and IEMOCAP clinical speech datasets to detect vocal tract jitter, shimmer, and MFCC spectral energy shifts.</p>
-                        </div>
-                        <div class="glass-card extra-info-card">
-                            <h4 class="extra-card-title" style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span class="icon">⚡</span> Late Fusion & SHAP Engine</h4>
-                            <p class="extra-card-desc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Processes vocal frequency features through a rank-based ensemble combining Random Forest and Support Vector probability vectors to output real-time Shapley Additive Explanations (SHAP).</p>
-                        </div>
-                        <div class="glass-card extra-info-card">
-                            <h4 class="extra-card-title" style="color: #34d399; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span class="icon">🔒</span> Edge-AI Privacy Guarantee</h4>
-                            <p class="extra-card-desc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">All voice recordings and acoustic samples are processed strictly in-memory during feature extraction and are never stored permanently on remote servers without explicit consent.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- VIEW 2: TEXT & NARRATIVE JOURNAL FACE -->
-                <div id="viewText" class="modality-view" style="display: none !important; padding-top: 60px;">
+                <div id="viewText" class="modality-view" style="display: none !important; padding: 4px 14px 10px 14px; box-sizing: border-box;">
                     <div class="modality-split-grid">
-                        <!-- Left: Text & Narrative Journal Input Card -->
-                        <div id="textInputIsland" class="input-card glass-card">
-                            <div class="card-header">
-                                <h3>📝 Narrative Journal Entry</h3>
-                                <span class="word-counter" id="wordCountText">0 words</span>
-                            </div>
-                            <p class="card-desc">Type your thoughts or test linguistic cognitive stress patterns.</p>
-                            
-                            <div class="glass-pill desktop-only" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
-                                <div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-purple); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                    <span>🌟</span> Reflection Prompts for Check-in:
+                        <!-- Left Column: Narrative Journal Input Card + Secondary Info Island -->
+                        <div class="split-col-left">
+                            <div id="textInputIsland" class="input-card glass-card">
+                                <div class="card-header">
+                                    <h3>📝 Narrative Journal Entry</h3>
+                                    <span class="word-counter" id="wordCountText">0 words</span>
                                 </div>
-                                <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
-                                    Describe what tasks, exams, or personal events are weighing on you today. Our NLP engine uses LIME to highlight exact positive and negative stress-triggering words.
-                                </p>
+                                <p class="card-desc">Type your thoughts or test linguistic cognitive stress patterns.</p>
+                                
+                                <div class="glass-pill desktop-only" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
+                                    <div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-purple); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                        <span>🌟</span> Reflection Prompts for Check-in:
+                                    </div>
+                                    <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
+                                        Describe what tasks, exams, or personal events are weighing on you today. Our NLP engine uses LIME to highlight exact positive and negative stress-triggering words.
+                                    </p>
+                                </div>
+
+                                <textarea id="journalTextarea" placeholder="e.g., 'I have three university exams coming up next week and the assignment deadlines for coursework are making me feel overwhelmed completely...'" rows="6" oninput="updateWordCount()"></textarea>
+
+                                <div class="quick-prompts">
+                                    <span>Quick Load:</span>
+                                    <button class="prompt-chip" onclick="loadPrompt('academic')">📚 Academic Overload</button>
+                                    <button class="prompt-chip" onclick="loadPrompt('personal')">💔 Personal / Family Stress</button>
+                                    <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful & Calm</button>
+                                </div>
+
+                                <div class="analyze-footer">
+                                    <button id="btnRunTextAnalysis" class="btn btn-gradient btn-large" onclick="runSingleModalityAnalysis('text')">
+                                        <span>⚡</span> Run Narrative Text Check-in Analysis
+                                    </button>
+                                </div>
                             </div>
 
-                            <textarea id="journalTextarea" placeholder="e.g., 'I have three university exams coming up next week and the assignment deadlines for coursework are making me feel overwhelmed completely...'" rows="6" oninput="updateWordCount()"></textarea>
-
-                            <div class="quick-prompts">
-                                <span>Quick Load:</span>
-                                <button class="prompt-chip" onclick="loadPrompt('academic')">📚 Academic Overload</button>
-                                <button class="prompt-chip" onclick="loadPrompt('personal')">💔 Personal / Family Stress</button>
-                                <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful & Calm</button>
-                            </div>
-
-                            <div class="analyze-footer">
-                                <button id="btnRunTextAnalysis" class="btn btn-gradient btn-large" onclick="runSingleModalityAnalysis('text')">
-                                    <span>⚡</span> Run Narrative Text Check-in Analysis
-                                </button>
+                            <!-- Secondary Glass Island below Text Narrative (balances right column size!) -->
+                            <div id="textSecondaryIsland" class="secondary-info-island glass-card desktop-only" style="padding: 24px; border-radius: 24px;">
+                                <div style="display: flex; flex-direction: column; gap: 16px;">
+                                    <div style="padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);">
+                                        <h4 style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin: 0 0 6px 0; font-size: 0.95rem;"><span class="icon">📚</span> Linguistic Training Corpus</h4>
+                                        <p style="font-size: 0.84rem; line-height: 1.45; color: var(--text-secondary); margin: 0;">Fine-tuned on 150,000+ validated student reflections and C-SSRS transcripts to detect subtle cognitive overload and academic burnout.</p>
+                                    </div>
+                                    <div style="padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);">
+                                        <h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 6px 0; font-size: 0.95rem;"><span class="icon">🔍</span> Token Attribution (LIME)</h4>
+                                        <p style="font-size: 0.84rem; line-height: 1.45; color: var(--text-secondary); margin: 0;">Employs Local Interpretable Model-agnostic Explanations to perturb individual words and calculate exact stress contributions.</p>
+                                    </div>
+                                    <div style="padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.12);">
+                                        <h4 style="color: #facc15; display: flex; align-items: center; gap: 8px; margin: 0 0 6px 0; font-size: 0.95rem;"><span class="icon">🌱</span> Cognitive Behavioral Link</h4>
+                                        <p style="font-size: 0.84rem; line-height: 1.45; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing) and routes them directly to the CBT Assistant for immediate reframing.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Right / Bottom: Text Analysis Results & LIME Explainer -->
-                        <div id="textAnalysisResults" class="results-section glass-card hidden">
-                            <div class="results-header">
-                                <h2>🧠 Linguistic & Semantic Stress Breakdown</h2>
-                                <span class="badge badge-dual" style="background: rgba(192,132,252,0.25); border-color: #c084fc; color: #c084fc;">Text Modality Active</span>
-                            </div>
+                        <!-- Right Column: Text Analysis Results & LIME Explainer -->
+                        <div class="split-col-right">
+                            <div id="textAnalysisResults" class="results-section glass-card hidden">
+                                <div class="results-header">
+                                    <h2>🧠 Linguistic & Semantic Stress Breakdown</h2>
+                                    <span class="badge badge-dual" style="background: rgba(192,132,252,0.25); border-color: #c084fc; color: #c084fc;">Text Modality Active</span>
+                                </div>
 
-                            <div class="results-grid" style="grid-template-columns: 1fr; gap: 20px;">
-                                <!-- Text Stress Score & Tier -->
-                                <div class="result-box gauge-box">
-                                    <h4>Linguistic Cognitive Stress Score</h4>
-                                    <div class="stress-gauge-wrapper">
-                                        <div class="gauge-circle">
-                                            <span class="gauge-number" id="textStressScoreNumber">0%</span>
-                                            <span class="gauge-tier" id="textRiskTierText">Minimal / Normal</span>
+                                <div class="results-grid" style="grid-template-columns: 1fr; gap: 20px;">
+                                    <!-- Text Stress Score & Tier -->
+                                    <div class="result-box gauge-box">
+                                        <h4>Linguistic Cognitive Stress Score</h4>
+                                        <div class="stress-gauge-wrapper">
+                                            <div class="gauge-circle">
+                                                <span class="gauge-number" id="textStressScoreNumber">0%</span>
+                                                <span class="gauge-tier" id="textRiskTierText">Minimal / Normal</span>
+                                            </div>
+                                        </div>
+                                        <div class="primary-origin" style="margin-top: 12px;">
+                                            <span>Detected Semantic Category:</span>
+                                            <strong id="textStressCategoryText">Calm / Normal</strong>
                                         </div>
                                     </div>
-                                    <div class="primary-origin" style="margin-top: 12px;">
-                                        <span>Detected Semantic Category:</span>
-                                        <strong id="textStressCategoryText">Calm / Normal</strong>
-                                    </div>
-                                </div>
 
-                                <!-- LIME Word Attribution Explainer -->
-                                <div id="limeBoxWrapper" class="result-box xai-text-box" style="display: none !important;">
-                                    <div class="xai-header">
-                                        <h4>🔍 Word-Level Attribution Weights (LIME)</h4>
-                                        <span class="xai-legend">
-                                            <span class="legend-dot dot-red"></span> High Stress
-                                            <span class="legend-dot dot-yellow"></span> Mild Stress
-                                            <span class="legend-dot dot-green"></span> Calm
-                                        </span>
+                                    <!-- LIME Word Attribution Explainer -->
+                                    <div id="limeBoxWrapper" class="result-box xai-text-box" style="display: none !important;">
+                                        <div class="xai-header">
+                                            <h4>🔍 Word-Level Attribution Weights (LIME)</h4>
+                                            <span class="xai-legend">
+                                                <span class="legend-dot dot-red"></span> High Stress
+                                                <span class="legend-dot dot-yellow"></span> Mild Stress
+                                                <span class="legend-dot dot-green"></span> Calm
+                                            </span>
+                                        </div>
+                                        <p class="xai-subtext">See exact positive/negative contributions of individual words to the final risk classification:</p>
+                                        <div id="limeHighlightedText" class="lime-token-box" style="min-height: 120px; font-size: 1.05rem;">
+                                            No text analyzed yet. Run narrative analysis on the left to generate explainable word attributions.
+                                        </div>
                                     </div>
-                                    <p class="xai-subtext">See exact positive/negative contributions of individual words to the final risk classification:</p>
-                                    <div id="limeHighlightedText" class="lime-token-box" style="min-height: 120px; font-size: 1.05rem;">
-                                        No text analyzed yet. Run narrative analysis on the left to generate explainable word attributions.
+
+                                    <!-- NEW FEATURE: Cognitive Distortion Scanner & Interactive Reframing Engine -->
+                                    <div id="distortionScannerWrapper" class="glass-card" style="padding: 20px; border-radius: 20px; background: rgba(236, 72, 153, 0.08); border: 1px solid rgba(236, 72, 153, 0.3); display: flex; flex-direction: column; gap: 14px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 1.3rem;">🧠</span>
+                                                <h4 style="font-size: 1.1rem; font-weight: 800; color: #EC4899; margin: 0;">Cognitive Distortion Scanner & Instant Reframing</h4>
+                                            </div>
+                                            <span id="distortionCountBadge" style="padding: 4px 12px; border-radius: 999px; background: rgba(236, 72, 153, 0.2); border: 1px solid #EC4899; color: #fff; font-size: 0.82rem; font-weight: 700;">Scanning Active</span>
+                                        </div>
+                                        <p style="font-size: 0.88rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.5;">
+                                            Identifies psychological distortions (such as <strong>Catastrophizing</strong> or <strong>All-or-Nothing Thinking</strong>) and offers interactive CBT reframing prompts.
+                                        </p>
+                                        <div id="distortionItemsList" style="display: flex; flex-direction: column; gap: 10px;">
+                                            <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                                <div>
+                                                    <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed completely", "awful")</div>
+                                                    <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
+                                                </div>
+                                                <button onclick="applyTextReframing('catastrophizing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- NEW FEATURE: Semantic Sentiment Valence & Emotional Velocity Dial -->
+                                    <div id="semanticVelocityWrapper" class="glass-card" style="padding: 20px; border-radius: 20px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                                        <div>
+                                            <h4 style="font-size: 1.05rem; font-weight: 800; color: #818CF8; margin: 0 0 4px 0;">📊 Semantic Valence & Emotional Velocity</h4>
+                                            <p style="font-size: 0.86rem; color: rgba(255,255,255,0.75); margin: 0;">Measures psychological polarity and the rate of emotional escalation across journal entries.</p>
+                                        </div>
+                                        <div style="display: flex; gap: 14px;">
+                                            <div style="text-align: center; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+                                                <div id="valenceScoreText" style="font-size: 1.25rem; font-weight: 800; color: #34D399;">-0.42</div>
+                                                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Valence Polarity</div>
+                                            </div>
+                                            <div style="text-align: center; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+                                                <div id="velocityScoreText" style="font-size: 1.25rem; font-weight: 800; color: #F59E0B;">Moderate ↑</div>
+                                                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Escalation Velocity</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Desktop-only Extra Informative Islands below Text Narrative -->
-                    <div class="desktop-extra-grid desktop-only" style="margin-top: 28px;">
-                        <div class="glass-card extra-info-card">
-                            <h4 class="extra-card-title" style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span class="icon">📚</span> Linguistic Training Corpus</h4>
-                            <p class="extra-card-desc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Fine-tuned on 150,000+ validated student journal reflections, C-SSRS benchmark transcripts, and psychological narratives to detect subtle cognitive overload and academic burnout.</p>
-                        </div>
-                        <div class="glass-card extra-info-card">
-                            <h4 class="extra-card-title" style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span class="icon">🔍</span> Token Attribution (LIME)</h4>
-                            <p class="extra-card-desc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Employs Local Interpretable Model-agnostic Explanations (LIME) to perturb individual words and calculate exact positive and negative contributions toward the mental load score.</p>
-                        </div>
-                        <div class="glass-card extra-info-card">
-                            <h4 class="extra-card-title" style="color: #facc15; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span class="icon">🌱</span> Cognitive Behavioral Link</h4>
-                            <p class="extra-card-desc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing or all-or-nothing thinking) and routes them directly to the CBT Empathy Assistant for immediate reframing.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE -->
-                <div id="viewCBT" class="modality-view" style="display: none !important; padding-top: 60px;">
-                    <div id="cbtCompanionIsland" class="cbt-card glass-card-accent">
-                        <div class="cbt-header">
+                <div id="viewCBT" class="modality-view" style="display: none !important; padding: 4px 14px 10px 14px; max-width: 980px; margin: 0 auto; box-sizing: border-box;">
+                    <div id="cbtCompanionIsland" class="cbt-card glass-card-accent" style="padding: 20px 24px !important; display: flex; flex-direction: column; height: calc(100vh - 180px); max-height: 640px; min-height: 400px; box-sizing: border-box; justify-content: space-between;">
+                        <div class="cbt-header" style="margin-bottom: 12px; padding-bottom: 12px; flex-shrink: 0;">
                             <div class="cbt-title">
-                                <span class="cbt-icon">🤖</span>
+                                <span class="cbt-icon" style="padding: 10px; font-size: 1.8rem;">🤖</span>
                                 <div>
-                                    <h3 id="cbtGreetingText" style="margin-bottom: 4px;">NeuroSense GPT & CBT Assistant</h3>
-                                    <p id="cbtValidationText">Real-time psychological support and interactive cognitive answers.</p>
+                                    <h3 id="cbtGreetingText" style="margin-bottom: 2px; font-size: 1.3rem;">NeuroSense GPT & CBT Assistant</h3>
+                                    <p id="cbtValidationText" style="font-size: 0.85rem; margin: 0;">Real-time psychological support and interactive cognitive answers.</p>
                                 </div>
                             </div>
                             <span class="cbt-tag desktop-only">Cognitive Behavioral Therapy & GPT Engine</span>
                         </div>
 
-                        <!-- Pure ChatGPT-Style Interactive Chatbot Workspace -->
-                        <div id="cbtChatContainer" class="cbt-chat-container" style="margin-top: 16px;">
-                            <div id="cbtChatMessages" class="chat-messages-box" style="height: 480px; max-height: 60vh; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+                        <!-- Pure ChatGPT-Style Interactive Chatbot Workspace (Fixed height flexbox container without window scroll) -->
+                        <div id="cbtChatContainer" class="cbt-chat-container" style="margin-top: 0; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; box-sizing: border-box; padding: 14px; overflow: hidden;">
+                            <div id="cbtChatMessages" class="chat-messages-box" style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; border-radius: 16px; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.1); box-sizing: border-box;">
                                 <div class="chat-msg bot-msg">
                                     <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. How are you feeling today, or what's on your mind?
                                 </div>
                             </div>
-                            <div class="chat-input-bar" style="margin-top: 16px; display: flex; gap: 8px; width: 100%; box-sizing: border-box; align-items: center;">
-                                <input type="text" id="cbtChatInput" placeholder="Type a message or ask a question..." onkeypress="handleChatKeyPress(event)" style="flex: 1 1 auto; min-width: 0; padding: 14px 18px; border-radius: 999px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 0.95rem; box-sizing: border-box;">
-                                <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 999px; padding: 14px 22px; font-weight: 700; font-size: 0.95rem; white-space: nowrap; box-sizing: border-box;">Send 🚀</button>
+                            <div class="chat-input-bar" style="display: flex; gap: 8px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0;">
+                                <input type="text" id="cbtChatInput" placeholder="Type a message or ask a question..." onkeypress="handleChatKeyPress(event)" style="flex: 1 1 auto; min-width: 0; padding: 13px 18px; border-radius: 999px; background: rgba(0,0,0,0.38); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 0.94rem; box-sizing: border-box;">
+                                <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 999px; padding: 13px 22px; font-weight: 700; font-size: 0.94rem; white-space: nowrap; box-sizing: border-box;">Send 🚀</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 4: LIFESTYLE INSIGHTS (Exact Fig 3 Replica from NeuroScan PDF) -->
+                <div id="viewLifestyle" class="modality-view" style="display: none !important; padding-top: 60px;">
+                    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Header with Title & Refresh button -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+                            <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -0.02em;">Mental Lifestyle Insights</h2>
+                            <button onclick="updateLifestyleSimulation(true)" class="round-glass-btn" style="position: relative !important; top: 0 !important; right: 0 !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: rgba(255,255,255,0.1) !important; border: 1px solid rgba(255,255,255,0.3) !important; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: all 0.3s;" title="Refresh & Simulate Usage Telemetry">↻</button>
+                        </div>
+
+                        <!-- Card 1: Behavioral Risk Banner -->
+                        <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.4);">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                                <span style="font-size: 1.4rem;">🛡️</span>
+                                <h3 id="lifestyleRiskTitle" style="font-size: 1.35rem; font-weight: 800; color: #F59E0B;">Behavioral Risk: 54%</h3>
+                            </div>
+                            <div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden; margin-bottom: 14px; position: relative;">
+                                <div id="lifestyleRiskBar" style="width: 54%; height: 100%; background: linear-gradient(90deg, #F59E0B, #EA580C); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                            </div>
+                            <p style="font-size: 0.94rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin: 0;">This score reflects digital behavior patterns from recent usage history.</p>
+                        </div>
+
+                        <!-- Section 2: Behavior Snapshot -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="color: #6366F1; font-size: 1.2rem;">∷</span>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Behavior Snapshot</h3>
+                            </div>
+                            <!-- 6-Card Grid -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px;">
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div id="snapUnlockVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">65</div>
+                                    <div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Daily Unlock</div>
+                                </div>
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div id="snapSessionVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">71.0s</div>
+                                    <div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Avg Session</div>
+                                </div>
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div id="snapNightVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">25%</div>
+                                    <div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Night Usage</div>
+                                </div>
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div id="snapSleepVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">0.80</div>
+                                    <div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Sleep Consistency</div>
+                                </div>
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div id="snapActivityVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">0.51</div>
+                                    <div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Activity Consistency</div>
+                                </div>
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div id="snapDayEveVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">50% / 25%</div>
+                                    <div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Day / Evening</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Usage Pattern -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="color: #6366F1; font-size: 1.2rem;">⚡</span>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Usage Pattern</h3>
+                            </div>
+                            <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); display: flex; flex-direction: column; gap: 16px;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;">
+                                        <span style="color: #fff;">Daytime (06:00 - 18:00)</span>
+                                        <span id="patDayTxt" style="color: rgba(255,255,255,0.7);">50%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="patDayBar" style="width: 50%; height: 100%; background: #6366F1; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;">
+                                        <span style="color: #fff;">Evening (18:00 - 24:00)</span>
+                                        <span id="patEveTxt" style="color: rgba(255,255,255,0.7);">25%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="patEveBar" style="width: 25%; height: 100%; background: #6366F1; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;">
+                                        <span style="color: #fff;">Night (24:00 - 06:00)</span>
+                                        <span id="patNightTxt" style="color: rgba(255,255,255,0.7);">25%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="patNightBar" style="width: 25%; height: 100%; background: #6366F1; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Circadian & Digital Behavior Simulator Sliders -->
+                        <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25); display: flex; flex-direction: column; gap: 16px;">
+                            <h4 style="font-size: 1.1rem; font-weight: 700; color: #10B981; margin: 0;">🎛️ Calibrate & Simulate Behavioral Indicators (Rb)</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                                <div>
+                                    <label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
+                                        <span>Daily Unlocks Frequency</span>
+                                        <strong id="sliderUnlockLabel">65 unlocks</strong>
+                                    </label>
+                                    <input type="range" id="simUnlockRange" min="10" max="180" value="65" oninput="onLifestyleSliderChange()" style="width: 100%; accent-color: #F59E0B;">
+                                </div>
+                                <div>
+                                    <label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
+                                        <span>Late Night Usage Ratio</span>
+                                        <strong id="sliderNightLabel">25%</strong>
+                                    </label>
+                                    <input type="range" id="simNightRange" min="0" max="80" value="25" oninput="onLifestyleSliderChange()" style="width: 100%; accent-color: #F59E0B;">
+                                </div>
+                                <div>
+                                    <label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
+                                        <span>Circadian Sleep Consistency</span>
+                                        <strong id="sliderSleepLabel">0.80</strong>
+                                    </label>
+                                    <input type="range" id="simSleepRange" min="0" max="100" value="80" oninput="onLifestyleSliderChange()" style="width: 100%; accent-color: #10B981;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 5: Interpretation -->
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="color: #6366F1; font-size: 1.2rem;">💡</span>
+                                <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Interpretation</h3>
+                            </div>
+                            <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                <p id="lifestyleInterpretationText" style="font-size: 0.95rem; color: rgba(255,255,255,0.85); line-height: 1.6; margin: 0;">
+                                    Late-night digital device usage (25%) coupled with moderate unlock frequency indicates mild circadian disruption. Research demonstrates that reducing nighttime screen engagement by 15% directly correlates with improved sleep architecture and reduced daytime cognitive anxiety.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: PRESSURE SNAPSHOT & CLINICAL QUESTIONNAIRES (Exact Fig 4 Replica + Rr Latency) -->
+                <div id="viewPressure" class="modality-view" style="display: none !important; padding-top: 60px;">
+                    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Card 1: Mental Wellness Overview -->
+                        <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 16px 40px rgba(0,0,0,0.4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 1.5rem;">🧠</span>
+                                    <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Mental Wellness Overview</h3>
+                                </div>
+                                <span id="wellnessOverviewDate" style="font-size: 0.88rem; font-weight: 600; color: rgba(255,255,255,0.65);">Mon, 16 Mar</span>
+                            </div>
+                            <p id="wellnessOverviewDesc" style="font-size: 0.96rem; color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 18px;">
+                                Questionnaire severity suggests Moderately Severe Depression. Response-time signal is active and synchronized across all four assessment modalities.
+                            </p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                <span id="pillOverall" style="padding: 6px 14px; border-radius: 999px; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); font-weight: 700; font-size: 0.84rem; color: #F59E0B;">Overall 45%</span>
+                                <span id="pillBehavior" style="padding: 6px 14px; border-radius: 999px; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.5); font-weight: 700; font-size: 0.84rem; color: #818CF8;">Behavior 54%</span>
+                                <span id="pillEmotion" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); font-weight: 700; font-size: 0.84rem; color: #34D399;">Emotion Neutral</span>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Pressure Snapshot (Unified M = wq*Rq + we*Re + wr*Rr + wb*Rb) -->
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="color: #6366F1; font-size: 1.2rem;">📊</span>
+                                <div>
+                                    <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">Pressure Snapshot</h3>
+                                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.65);">Unified score from questionnaire, emotion, response and behavior</div>
+                                </div>
+                            </div>
+
+                            <!-- Big Mental Pressure Banner -->
+                            <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <span style="font-size: 1.4rem;">📈</span>
+                                        <span style="font-size: 1.25rem; font-weight: 800; color: #fff;">Mental Pressure</span>
+                                    </div>
+                                    <span id="pressureTierBadge" style="padding: 6px 16px; border-radius: 12px; background: rgba(245, 158, 11, 0.25); border: 1px solid #F59E0B; color: #F59E0B; font-weight: 800; font-size: 0.9rem;">Moderate</span>
+                                </div>
+                                <div>
+                                    <div id="pressureCombinedScore" style="font-size: 3.2rem; font-weight: 900; color: #fff; line-height: 1;">45%</div>
+                                    <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 4px;">Combined risk from all four signals</div>
+                                </div>
+                                <div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden;">
+                                    <div id="pressureCombinedBar" style="width: 45%; height: 100%; background: linear-gradient(90deg, #F59E0B, #EA580C); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                                </div>
+                            </div>
+
+                            <!-- 4-Signal Breakdown Grid -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                                <!-- 1. Questionnaire (Rq) -->
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">📋 Questionnaire</span>
+                                        <span id="sigRqVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">53%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="sigRqBar" style="width: 53%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                                <!-- 2. Emotion (Re) -->
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">😊 Emotion / Audio</span>
+                                        <span id="sigReVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">13%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="sigReBar" style="width: 13%; height: 100%; background: #10B981; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                                <!-- 3. Response Time (Rr) -->
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">⏱️ Response Time</span>
+                                        <span id="sigRrVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">46%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="sigRrBar" style="width: 46%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                                <!-- 4. Behavioral (Rb) -->
+                                <div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">🛡️ Behavioral</span>
+                                        <span id="sigRbVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">54%</span>
+                                    </div>
+                                    <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+                                        <div id="sigRbBar" style="width: 54%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Buttons -->
+                            <div style="display: flex; gap: 14px; margin-top: 8px;">
+                                <button onclick="refreshUnifiedPressure()" class="btn btn-gradient" style="flex: 1; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 0.96rem; display: flex; align-items: center; justify-content: center; gap: 8px;">↻ Refresh Data</button>
+                                <button onclick="switchDashboardView('cbt')" class="btn" style="flex: 1; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 0.96rem; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px;">🏥 Find Help</button>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Standardized Questionnaires with Cognitive Response-Time (ms/q) Tracking -->
+                        <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.18); margin-top: 14px; margin-bottom: 40px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                                <div>
+                                    <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">Clinical Self-Reporting Questionnaires</h3>
+                                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.65);">Includes automated cognitive response-time tracking (ms/question) per NeuroScan methodology</div>
+                                </div>
+                                <div style="display: flex; gap: 6px;">
+                                    <button onclick="switchQuestionnaire('phq9')" id="btnSurveyPHQ9" class="btn active" style="padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: #6366F1; color: #fff; border: none;">PHQ-9 (Depression)</button>
+                                    <button onclick="switchQuestionnaire('gad7')" id="btnSurveyGAD7" class="btn" style="padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: rgba(255,255,255,0.1); color: #fff; border: none;">GAD-7 (Anxiety)</button>
+                                    <button onclick="switchQuestionnaire('pss')" id="btnSurveyPSS" class="btn" style="padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: rgba(255,255,255,0.1); color: #fff; border: none;">PSS (Stress)</button>
+                                </div>
+                            </div>
+
+                            <div id="questionnaireContainer" style="display: flex; flex-direction: column; gap: 16px;">
+                                <!-- Questions injected dynamically via JS -->
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); flex-wrap: wrap; gap: 12px;">
+                                <div id="questionnaireScoreSummary" style="font-size: 1rem; font-weight: 700; color: #34D399;">PHQ-9 Total: 0/27 (Minimal) | Avg Response Latency: 0 ms</div>
+                                <button onclick="submitQuestionnaireSession()" class="btn btn-gradient" style="padding: 10px 24px; border-radius: 999px; font-weight: 800;">Save & Synchronize Risk Signals 🚀</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 6: WHAT-IF XAI & LONGITUDINAL TRAJECTORY (Unique features from 15 reference papers) -->
+                <div id="viewWhatIf" class="modality-view" style="display: none !important; padding-top: 60px;">
+                    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
+                        <div style="padding: 0 4px;">
+                            <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -0.02em;">Explainable AI & Counterfactual What-If Analysis</h2>
+                            <p style="color: rgba(255,255,255,0.7); font-size: 0.94rem;">Simulate lifestyle interventions and feature masking to see how your multi-modal risk profile responds.</p>
+                        </div>
+
+                        <!-- Card 1: Feature Masking & Counterfactual Simulator -->
+                        <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(236, 72, 153, 0.35);">
+                            <h3 style="font-size: 1.25rem; font-weight: 800; color: #EC4899; margin-bottom: 14px;">🛠️ Multi-Modal Signal Masking & Robustness Test</h3>
+                            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Toggle diagnostic modalities on/off to evaluate how each sensor signal contributes to the unified risk prediction.</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+                                <label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                                    <input type="checkbox" id="maskRq" checked onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;">
+                                    <span>Questionnaire (Rq)</span>
+                                </label>
+                                <label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                                    <input type="checkbox" id="maskRe" checked onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;">
+                                    <span>Vocal Acoustic (Re)</span>
+                                </label>
+                                <label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                                    <input type="checkbox" id="maskRr" checked onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;">
+                                    <span>Response Latency (Rr)</span>
+                                </label>
+                                <label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                                    <input type="checkbox" id="maskRb" checked onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;">
+                                    <span>Digital Behavioral (Rb)</span>
+                                </label>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Simulated Counterfactual Risk</div>
+                                    <div id="whatIfResultText" style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 4px;">45% (Moderate Risk)</div>
+                                </div>
+                                <span id="whatIfDeltaBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: #10B981; font-weight: 700; font-size: 0.85rem;">Calibrated to Baseline</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: 14-Day Longitudinal Mood & Circadian Trajectory Tracker -->
+                        <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                                <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">📅 14-Day Longitudinal Risk Trajectory</h3>
+                                <span class="badge" style="background: rgba(99, 102, 241, 0.25); color: #818CF8; border: 1px solid #818CF8;">Learning Vector Quantization Active</span>
+                            </div>
+                            <div style="height: 260px; width: 100%;">
+                                <canvas id="longitudinalChartCanvas"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Offline Privacy Guard -->
+                        <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+                            <div style="display: flex; align-items: center; gap: 14px; max-width: 620px;">
+                                <span style="font-size: 2.2rem;">🔒</span>
+                                <div>
+                                    <h4 style="font-size: 1.15rem; font-weight: 800; color: #38BDF8; margin: 0 0 4px 0;">MINDGUARD Offline Privacy & Local Processing Mode</h4>
+                                    <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.4;">When enabled, all behavioral telemetries, response-time calculations, and clinical screening models run completely inside your device's browser sandbox without cloud network transmission.</p>
+                                </div>
+                            </div>
+                            <button onclick="togglePrivacyGuard(this)" id="btnPrivacyGuardToggle" class="btn" style="padding: 12px 24px; border-radius: 999px; font-weight: 800; background: rgba(56, 189, 248, 0.2); border: 1px solid #38BDF8; color: #38BDF8; white-space: nowrap;">⚡ Local Mode: OFF</button>
                         </div>
                     </div>
                 </div>
