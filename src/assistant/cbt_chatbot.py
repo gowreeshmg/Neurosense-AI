@@ -38,7 +38,7 @@ class CBTEmpathyAssistant:
                 # Google Gemini Free API (OpenAI compatible endpoint)
                 self.client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
                 self.provider = "Google Gemini (Free Tier)"
-                self.model_name = "gemini-1.5-flash"
+                self.model_name = "gemini-flash-latest"
                 print(f"[CBT Assistant] Successfully connected to 100% FREE AI: {self.provider}.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize Gemini client: {e}")
@@ -135,25 +135,32 @@ class CBTEmpathyAssistant:
         Uses live OpenAI ChatGPT (GPT-4o-mini) if API key is present, otherwise falls back to local rule-based CBT logic.
         """
         if self.client and self.model_name:
-            try:
-                system_prompt = (
-                    "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, and daily pressure. "
-                    f"The user's recent multimodal check-in detected: {current_stress_category}. "
-                    "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
-                    "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; provide actionable CBT guidance tailored to any walk of life."
-                )
-                response = self.client.chat.completions.create(
-                    model=self.model_name,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_message}
-                    ],
-                    temperature=0.7,
-                    max_tokens=250
-                )
-                return response.choices[0].message.content.strip()
-            except Exception as e:
-                print(f"[CBT Assistant] {self.provider} API error during chat_reply ({e}). Using offline fallback.")
+            models_to_try = [self.model_name]
+            if "gemini" in self.model_name.lower():
+                models_to_try = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemma-4-31b-it"]
+
+            for model_id in models_to_try:
+                try:
+                    system_prompt = (
+                        "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, and daily pressure. "
+                        f"The user's recent multimodal check-in detected: {current_stress_category}. "
+                        "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
+                        "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic advice; provide actionable CBT guidance tailored to any walk of life."
+                    )
+                    response = self.client.chat.completions.create(
+                        model=model_id,
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_message}
+                        ],
+                        temperature=0.7,
+                        max_tokens=250
+                    )
+                    return response.choices[0].message.content.strip()
+                except Exception as e:
+                    # Try next free model in fallback list
+                    continue
+            print("[CBT Assistant] All live Gemini models currently busy or unavailable. Using offline fallback.")
 
         # Offline Fallback (Rule-based CBT logic)
         msg_lower = user_message.lower()
