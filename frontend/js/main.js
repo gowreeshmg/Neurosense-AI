@@ -36,13 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
         setDashboardBlur(4);
     }
 
-    // Ensure theme toggle and return home button are hidden on initial home screen load
+    // Ensure theme toggle, return home button, and all dashboard elements are hidden on initial home screen load
+    document.body.classList.remove('on-dashboard');
     const themeBtn = document.getElementById('btnThemeToggle');
     const returnHomeBtn = document.getElementById('btnReturnHomeFixed');
     const homeScreen = document.getElementById('lumoraHomeScreen');
+    const dashboardScreen = document.getElementById('appDashboardScreen');
+    const topControls = document.querySelector('header.navbar-top-controls');
+    const bottomDock = document.getElementById('bottomGlassDock');
     if (homeScreen && !homeScreen.classList.contains('hidden-screen')) {
         if (themeBtn) themeBtn.style.setProperty('display', 'none', 'important');
         if (returnHomeBtn) returnHomeBtn.style.setProperty('display', 'none', 'important');
+        if (dashboardScreen) dashboardScreen.style.setProperty('display', 'none', 'important');
+        if (topControls) topControls.style.setProperty('display', 'none', 'important');
+        if (bottomDock) bottomDock.style.setProperty('display', 'none', 'important');
     }
     for (let i = 0; i < 4; i++) {
         const vid = document.getElementById(`bgVideo${i}`);

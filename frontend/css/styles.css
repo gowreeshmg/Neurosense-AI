@@ -2254,28 +2254,28 @@ header.navbar-top-controls .top-center-title {
         margin-right: auto !important;
         float: none !important;
     }
-    header.navbar-top-controls {
+    body.on-dashboard header.navbar-top-controls {
         flex: 0 0 auto !important;
         width: 100% !important;
         margin: 64px auto 0 auto !important;
         position: relative !important;
         z-index: 10 !important;
     }
-    header.navbar-top-controls .top-center-title {
+    body.on-dashboard header.navbar-top-controls .top-center-title {
         font-size: 1.62rem !important;
         text-align: center !important;
         margin: 0 auto !important;
         width: 100% !important;
     }
-    header.navbar-top-controls .badge-ai {
+    body.on-dashboard header.navbar-top-controls .badge-ai {
         font-size: 0.72rem !important;
         margin: 4px auto 0 auto !important;
         display: inline-block !important;
     }
-    header.navbar-top-controls .back-home-slot {
+    body.on-dashboard header.navbar-top-controls .back-home-slot {
         display: none !important;
     }
-    #appDashboardScreen {
+    body.on-dashboard #appDashboardScreen {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -2404,7 +2404,7 @@ header.navbar-top-controls .top-center-title {
         margin: 0 !important;
     }
     /* Move bottom dock island slightly up and centered */
-    #bottomGlassDock {
+    body.on-dashboard #bottomGlassDock {
         bottom: 14px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -2483,4 +2483,19 @@ header.navbar-top-controls .top-center-title {
 @media (min-width: 901px) {
     .dock-label-desktop { display: inline !important; }
     .dock-label-mobile { display: none !important; }
+}
+
+/* ==========================================================================
+   Home Screen vs Dashboard Screen Universal Protection
+   Ensures dashboard top header and bottom dock NEVER appear on Home Screen
+   ========================================================================== */
+body:not(.on-dashboard) #appDashboardScreen,
+body:not(.on-dashboard) header.navbar-top-controls,
+body:not(.on-dashboard) #bottomGlassDock,
+body:not(.on-dashboard) #btnReturnHomeFixed,
+body:not(.on-dashboard) #btnThemeToggle {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
