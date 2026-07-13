@@ -167,45 +167,60 @@ class CBTEmpathyAssistant:
         if not messages or messages[-1].get("content") != user_message:
             messages.append({"role": "user", "content": user_message})
 
-        # STEP 1: Primary — Groq Llama 3.3 70B (fastest free API, consistent <2s)
-        if self.groq_client:
-            try:
-                response = self.groq_client.chat.completions.create(
-                    model=self.groq_model,
-                    messages=messages,
-                    temperature=0.65,
-                    max_tokens=200,   # 200 tokens ≈ 80-100 words, generates in <1s on Groq
-                    timeout=5.0
-                )
-                reply = response.choices[0].message.content.strip()
-                reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                if reply:
-                    return reply
-            except Exception as e:
-                print(f"[CBT Assistant] Groq primary attempt failed: {e}")
+        # Ensure clients are dynamically initialized if keys were added after startup
+        if OPENAI_AVAILABLE and not self.gemini_client:
+            gk = os.getenv("GEMINI_API_KEY", "").strip()
+            if len(gk) > 5:
+                try: self.gemini_client = OpenAI(api_key=gk, base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+                except Exception: pass
+        if OPENAI_AVAILABLE and not self.groq_client:
+            rk = os.getenv("GROQ_API_KEY", "").strip()
+            if len(rk) > 5:
+                try: self.groq_client = OpenAI(api_key=rk, base_url="https://api.groq.com/openai/v1")
+                except Exception: pass
 
-        # STEP 2: Fallback — Google Gemini Flash (try fastest model only)
+        # STEP 1: Primary — Google Gemini (Fast 4.5s timeout; auto-switch if quota runs out or takes too long)
         if self.gemini_client and not self.gemini_quota_exceeded:
-            try:
-                response = self.gemini_client.chat.completions.create(
-                    model="gemini-2.0-flash",
-                    messages=messages,
-                    temperature=0.65,
-                    max_tokens=200,
-                    timeout=6.0
-                )
-                reply = response.choices[0].message.content.strip()
-                reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                if reply:
-                    return reply
-            except Exception as e:
-                print(f"[CBT Assistant] Gemini fallback failed: {e}")
-                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
-                    self.gemini_quota_exceeded = True
+            for g_model in ["gemini-2.0-flash", "gemini-1.5-flash"]:
+                try:
+                    response = self.gemini_client.chat.completions.create(
+                        model=g_model,
+                        messages=messages,
+                        temperature=0.65,
+                        max_tokens=200,
+                        timeout=4.5
+                    )
+                    reply = response.choices[0].message.content.strip()
+                    reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    if reply:
+                        return reply
+                except Exception as e:
+                    print(f"[CBT Assistant] Gemini ({g_model}) failed or timed out ({e}), auto-switching to Llama...")
+                    if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
+                        self.gemini_quota_exceeded = True
+                        break
 
-        # STEP 3: OpenAI GPT-4o-mini backup (if configured)
+        # STEP 2: Auto-Switch — Llama via Groq (Llama 3.3 70B & Llama 3.1 8B Instant for <1.5s response)
+        if self.groq_client:
+            for l_model in [self.groq_model, "llama-3.1-8b-instant", "gemma2-9b-it"]:
+                try:
+                    response = self.groq_client.chat.completions.create(
+                        model=l_model,
+                        messages=messages,
+                        temperature=0.65,
+                        max_tokens=200,
+                        timeout=4.0
+                    )
+                    reply = response.choices[0].message.content.strip()
+                    reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    if reply:
+                        return reply
+                except Exception as e:
+                    print(f"[CBT Assistant] Llama ({l_model}) attempt failed: {e}")
+
+        # STEP 3: Backup — OpenAI GPT-4o-mini (if configured)
         if self.openai_client:
             try:
                 response = self.openai_client.chat.completions.create(
@@ -213,7 +228,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.65,
                     max_tokens=200,
-                    timeout=6.0
+                    timeout=4.0
                 )
                 reply = response.choices[0].message.content.strip()
                 if reply:
@@ -221,11 +236,10 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] OpenAI backup failed: {e}")
 
-        # STEP 4: Instant local CBT fallback (0ms, always works)
+        # STEP 4: Dynamic contextual inquiry (No pre-built or canned advice scripts)
         return (
-            f"I hear you. In your current {current_stress_category} context, it helps to pause and breathe. "
-            "Try box breathing: inhale for 4 seconds, hold 4, exhale 4, hold 4. "
-            "What one small step can you take right now to give yourself some mental space?"
+            f"Thank you for sharing your thoughts on '{user_message[:45]}'. "
+            f"Considering your current {current_stress_category} context, what specific feeling or aspect of this situation would you like us to explore and reframe together first?"
         )
 
 if __name__ == "__main__":

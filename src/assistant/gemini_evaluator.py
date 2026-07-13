@@ -107,7 +107,8 @@ class GeminiClinicalEvaluator:
                             {"role": "user", "content": prompt}
                         ],
                         temperature=0.4,
-                        max_tokens=400
+                        max_tokens=400,
+                        timeout=5.5
                     )
                     raw_content = response.choices[0].message.content.strip()
                     # Clean markdown code block if present
@@ -138,23 +139,18 @@ class GeminiClinicalEvaluator:
                 "recommended_intervention": "Please submit a text check-in or question directly related to your mental health, emotional state, or daily stress."
             }
 
+        score = custom_score if custom_score is not None else 45
+        tier = custom_tier if custom_tier is not None else "Mild Stress & Fatigue"
+
         t_lower = text.lower()
-        
-        # Calculate intelligent stress score and category
-        if custom_score is not None:
-            score = custom_score
-            tier = custom_tier
-        elif any(w in t_lower for w in ["suicid", "die", "hopeless", "can't take it", "panic attack", "severe", "depress", "overwhelm", "unbearable"]):
-            score = 84
+        if any(w in t_lower for w in ["overwhelm", "burnout", "can't cope", "exhaust", "crisis"]):
+            score = max(score, 76)
             tier = "Severe Emotional Distress / High Risk"
-        elif any(w in t_lower for w in ["anxious", "worry", "worried", "deadline", "exam", "job", "stress", "tired", "exhausted", "sleep", "pressure"]):
-            score = 66
+        elif any(w in t_lower for w in ["deadline", "exam", "worry", "anxious", "stress", "pressure"]):
+            score = max(score, 58)
             tier = "Moderate Anxiety & Burnout Risk"
-        elif any(w in t_lower for w in ["busy", "a bit", "manageable", "slight", "little stress"]):
-            score = 42
-            tier = "Mild Stress & Fatigue"
-        else:
-            score = 22
+        elif any(w in t_lower for w in ["calm", "good", "relax", "happy", "fine"]):
+            score = min(score, 24)
             tier = "Low / Baseline Calm"
 
         symptoms = []
@@ -175,7 +171,7 @@ class GeminiClinicalEvaluator:
             "Empathetic grounding and cognitive reappraisal are advised to mitigate stress accumulation."
         )
 
-        intervention = "Perform 4-4-4-4 Box Breathing immediately. Challenge negative thoughts using Socratic questioning and break pending tasks into manageable 15-minute intervals."
+        intervention = "Practice structured cognitive reframing, challenge negative assumptions using Socratic questioning, and break pending commitments into manageable 15-minute intervals."
 
         return {
             "ai_provider": "Offline Clinical Evaluator (Rule-Based Fallback)",

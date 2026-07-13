@@ -116,10 +116,23 @@
     --dashboard-bg-scale: 1.06;
 }
 
-/* Cinematic subtle blur & dim when in Dashboard interface */
+/* Enforce strictly zero blur on Home Screen for all custom and built-in backgrounds */
+body:not(.on-dashboard) #globalAmbientBgContainer .bg-video,
+body:not(.on-dashboard) #globalAmbientBgContainer .bg-custom-media,
+body:not(.on-dashboard) #bgCustomImage,
+body:not(.on-dashboard) #bgCustomVideo {
+    filter: blur(0px) brightness(1) !important;
+    -webkit-filter: blur(0px) brightness(1) !important;
+    transform: scale(1) !important;
+}
+
+/* Cinematic subtle blur & dim when in Dashboard interface ONLY */
 body.on-dashboard #globalAmbientBgContainer .bg-video.active,
-body.on-dashboard #globalAmbientBgContainer .bg-custom-media.active {
+body.on-dashboard #globalAmbientBgContainer .bg-custom-media.active,
+body.on-dashboard #bgCustomImage.active,
+body.on-dashboard #bgCustomVideo.active {
     filter: blur(var(--dashboard-bg-blur, 14px)) brightness(0.82) !important;
+    -webkit-filter: blur(var(--dashboard-bg-blur, 14px)) brightness(0.82) !important;
     transform: scale(var(--dashboard-bg-scale, 1.06)) !important;
 }
 

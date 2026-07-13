@@ -274,6 +274,12 @@ function switchScreen(screenName) {
         if (bottomDock) bottomDock.style.setProperty('display', 'none', 'important');
         document.body.style.backgroundColor = '';
         document.body.classList.remove('on-dashboard');
+        const activeMediaList = document.querySelectorAll('#globalAmbientBgContainer .bg-video, #globalAmbientBgContainer .bg-custom-media, #bgCustomImage, #bgCustomVideo');
+        activeMediaList.forEach(el => {
+            el.style.setProperty('filter', 'blur(0px) brightness(1)', 'important');
+            el.style.setProperty('-webkit-filter', 'blur(0px) brightness(1)', 'important');
+            el.style.setProperty('transform', 'scale(1)', 'important');
+        });
         window.scrollTo(0, 0);
     } else if (screenName === 'dashboard') {
         if (homeScreen) {
@@ -307,6 +313,10 @@ function switchScreen(screenName) {
         if (bottomDock) bottomDock.style.setProperty('display', 'inline-flex', 'important');
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.classList.add('on-dashboard');
+        if (typeof setDashboardBlur === 'function') {
+            const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
+            setDashboardBlur(Number(currBlur));
+        }
         window.scrollTo(0, 0);
         
         const resSec = document.getElementById('analysisResultsSection');
@@ -745,11 +755,18 @@ function setDashboardBlur(blurVal) {
     
     localStorage.setItem('lumora_dashboard_blur', val);
 
-    // Apply inline blur & scale directly to all background elements so they stay exactly like that on this device
-    const activeMediaList = document.querySelectorAll('#globalAmbientBgContainer .bg-video, #globalAmbientBgContainer .bg-custom-media');
+    // Only apply inline blur & scale directly if we are currently on the dashboard interface
+    const activeMediaList = document.querySelectorAll('#globalAmbientBgContainer .bg-video, #globalAmbientBgContainer .bg-custom-media, #bgCustomImage, #bgCustomVideo');
     activeMediaList.forEach(el => {
-        el.style.setProperty('filter', `blur(${val}px) brightness(0.82)`, 'important');
-        el.style.setProperty('transform', `scale(${scaleVal})`, 'important');
+        if (document.body.classList.contains('on-dashboard')) {
+            el.style.setProperty('filter', `blur(${val}px) brightness(0.82)`, 'important');
+            el.style.setProperty('-webkit-filter', `blur(${val}px) brightness(0.82)`, 'important');
+            el.style.setProperty('transform', `scale(${scaleVal})`, 'important');
+        } else {
+            el.style.setProperty('filter', 'blur(0px) brightness(1)', 'important');
+            el.style.setProperty('-webkit-filter', 'blur(0px) brightness(1)', 'important');
+            el.style.setProperty('transform', 'scale(1)', 'important');
+        }
     });
 }
 
@@ -1371,7 +1388,7 @@ function displayAnalysisResults(res, modality = 'both') {
             symBox.innerHTML = gem.detected_symptoms.map(s => `<span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">${s}</span>`).join('');
         }
         if (sum) sum.innerText = gem.empathetic_clinical_summary || "Healthy emotional regulation observed.";
-        if (interv) interv.innerText = gem.recommended_intervention || "Perform Box Breathing and pace your workload.";
+        if (interv) interv.innerText = gem.recommended_intervention || "Practice structured cognitive reframing and organize your immediate tasks into manageable intervals.";
     }
 
     // Scroll smoothly down to results after browser calculates new layout height
@@ -1666,7 +1683,7 @@ function generateFallbackResult(text, audioVector) {
             clinical_risk_tier: tier,
             detected_symptoms: ["Cognitive Overload", "Emotional Exhaustion", "High Task Pressure"],
             empathetic_clinical_summary: `Clinical screening notes symptoms aligned with ${cat.toLowerCase()}. Emotional indicators show moderate pressure that warrants gentle pacing and self-compassion.`,
-            recommended_intervention: "Practice 4-4-4-4 Box Breathing and structure immediate tasks into 15-minute achievable intervals."
+            recommended_intervention: "Practice structured cognitive reappraisal and break down immediate tasks into 15-minute achievable intervals."
         }
     };
 }
