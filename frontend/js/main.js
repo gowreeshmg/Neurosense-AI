@@ -137,7 +137,19 @@ function switchScreen(screenName) {
         }
         if (dashboardScreen) {
             dashboardScreen.classList.remove('hidden-screen');
-            dashboardScreen.style.setProperty('display', 'block', 'important');
+            const isMobile = window.innerWidth <= 900;
+            dashboardScreen.style.setProperty('display', isMobile ? 'flex' : 'block', 'important');
+            if (isMobile) {
+                dashboardScreen.style.setProperty('flex-direction', 'column', 'important');
+                dashboardScreen.style.setProperty('align-items', 'center', 'important');
+                dashboardScreen.style.setProperty('justify-content', 'flex-start', 'important');
+                dashboardScreen.style.setProperty('gap', '18px', 'important');
+            } else {
+                dashboardScreen.style.removeProperty('flex-direction');
+                dashboardScreen.style.removeProperty('align-items');
+                dashboardScreen.style.removeProperty('justify-content');
+                dashboardScreen.style.removeProperty('gap');
+            }
         }
         if (dashboardVideoBg) {
             dashboardVideoBg.style.setProperty('display', 'none', 'important');

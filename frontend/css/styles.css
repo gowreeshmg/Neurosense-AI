@@ -2255,7 +2255,9 @@ header.navbar-top-controls .top-center-title {
         float: none !important;
     }
     header.navbar-top-controls {
-        margin: 44px auto 14px auto !important;
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        margin: 48px auto 0 auto !important;
         position: relative !important;
         z-index: 10 !important;
     }
@@ -2274,12 +2276,22 @@ header.navbar-top-controls .top-center-title {
         display: none !important;
     }
     #appDashboardScreen {
-        padding: 4px 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 18px !important;
+        padding: 8px 10px !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        box-sizing: border-box !important;
     }
-    /* Move main dashboard content island to sit cleanly below header without overlapping and above bottom dock */
+    /* Move main dashboard content island to sit cleanly below header in flex stack above bottom dock */
     .dashboard-container {
-        margin-top: 10px !important;
-        padding: 0 10px 84px 10px !important;
+        flex: 1 1 auto !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 0 90px 0 !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -2287,19 +2299,31 @@ header.navbar-top-controls .top-center-title {
         position: relative !important;
         z-index: 2 !important;
     }
+    #studentPortal,
+    .modality-view,
+    .modality-split-grid,
+    .split-col-left {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+    }
     /* On mobile, check-in card fits screen right between top header and bottom dock compact and small without scroll */
     #viewVoice .split-col-left .input-card,
     #viewText .split-col-left .input-card {
+        width: 100% !important;
         height: auto !important;
-        max-height: calc(100vh - 210px) !important;
-        min-height: 320px !important;
+        max-height: calc(100vh - 220px) !important;
+        min-height: 300px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
-        margin-bottom: 24px !important;
+        margin: 0 !important;
         padding: 14px 16px !important;
         position: relative !important;
         z-index: 2 !important;
+        box-sizing: border-box !important;
     }
     #viewVoice .audio-visualizer-container {
         height: 64px !important;
