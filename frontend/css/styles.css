@@ -2337,22 +2337,43 @@ header.navbar-top-controls .top-center-title {
     }
     #viewVoice .card-desc,
     #viewText .card-desc {
-        font-size: 0.88rem !important;
-        line-height: 1.45 !important;
-        margin: 0 0 14px 0 !important;
+        font-size: 0.86rem !important;
+        line-height: 1.4 !important;
+        margin: 0 0 8px 0 !important;
     }
-    /* Check-in card fills available space between header and dock — spacious, not congested */
+    /* Info tips pills (biomarkers / reflection prompts) — compact on mobile */
+    .voice-tips-pill,
+    .narrative-tips-pill {
+        display: block !important;
+        padding: 10px 14px !important;
+        margin: 4px 0 10px 0 !important;
+        border-radius: 14px !important;
+        font-size: 0.82rem !important;
+        line-height: 1.4 !important;
+    }
+    .voice-tips-pill p,
+    .narrative-tips-pill p {
+        font-size: 0.8rem !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+    }
+    .voice-tips-pill > div:first-child,
+    .narrative-tips-pill > div:first-child {
+        font-size: 0.82rem !important;
+        margin-bottom: 4px !important;
+    }
+    /* Check-in card fills available space between header and dock — spacious with info tips */
     #viewVoice .split-col-left .input-card,
     #viewText .split-col-left .input-card {
         width: 100% !important;
         height: auto !important;
-        max-height: calc(100vh - 195px) !important;
-        min-height: 420px !important;
+        max-height: calc(100vh - 185px) !important;
+        min-height: 440px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
         margin: 0 auto !important;
-        padding: 20px 20px !important;
+        padding: 18px 18px !important;
         position: relative !important;
         z-index: 2 !important;
         box-sizing: border-box !important;
