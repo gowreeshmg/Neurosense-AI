@@ -812,14 +812,14 @@
 
     <section id="appDashboardScreen" class="view-screen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
         <!-- Top Navigation Controls (3-Column layout: Return to Home left, Brand Name top-center without icon, moving title below corner buttons and centered across screen) -->
-        <header class="navbar-top-controls" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 16px; margin: 74px auto 18px auto !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important;">
+        <header class="navbar-top-controls" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; margin: 68px auto 16px auto !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important; position: relative; z-index: 5;">
             <!-- Center: Brand Name & Title on TOP CENTER exact to home screen, centered nicely without icon -->
             <div style="display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">
-                <div class="nav-brand top-center-brand" style="display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important;">
-                    <div class="brand-text">
-                        <h1 class="font-serif-italic top-center-title" style="font-size: 1.85rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important;">NeuroSense AI</h1>
+                <div class="nav-brand top-center-brand" style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important; width: 100%; text-align: center;">
+                    <div class="brand-text" style="width: 100%; text-align: center;">
+                        <h1 class="font-serif-italic top-center-title" style="font-size: 1.88rem; letter-spacing: -0.5px; margin: 0; font-weight: 800; color: #FFFFFF !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65) !important; text-align: center;">NeuroSense AI</h1>
                     </div>
-                    <span class="badge badge-ai" style="margin-left: 4px;">Multimodal Check-in Dashboard</span>
+                    <span class="badge badge-ai" style="margin: 0 auto; text-align: center;">Multimodal Check-in Dashboard</span>
                 </div>
             </div>
         </header>

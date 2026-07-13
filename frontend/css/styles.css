@@ -2197,12 +2197,28 @@ body[data-theme="light"] #dockLiquidSlider {
     filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.35)) !important;
 }
 
+/* Universal Top Header Centering: start completely below corner buttons (68px) and center perfectly */
+header.navbar-top-controls {
+    margin: 68px auto 14px auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 5 !important;
+}
+
 /* Ensure mobile sliding dock is completely visible and fits any phone screen cleanly */
 @media (max-width: 900px) {
-    /* Top controls mobile layout: move name below fixed corner buttons on top center without being too below */
+    /* Top controls mobile layout: move name below fixed corner buttons on top center without being too below or overlapping */
     header.navbar-top-controls {
-        margin: 48px auto 8px auto !important;
+        margin: 68px auto 12px auto !important;
+        display: flex !important;
+        flex-direction: column !important;
         justify-content: center !important;
+        align-items: center !important;
         text-align: center !important;
         width: 100% !important;
     }
@@ -2224,9 +2240,9 @@ body[data-theme="light"] #dockLiquidSlider {
     /* On mobile, first check-in card fits screen right between top header and bottom dock without scroll */
     #viewVoice .split-col-left .input-card,
     #viewText .split-col-left .input-card {
-        height: calc(100vh - 188px) !important;
-        max-height: 560px !important;
-        min-height: 380px !important;
+        height: calc(100vh - 215px) !important;
+        max-height: 540px !important;
+        min-height: 360px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
@@ -2235,8 +2251,8 @@ body[data-theme="light"] #dockLiquidSlider {
     }
     #viewText #journalTextarea {
         flex: 1 1 auto !important;
-        min-height: 90px !important;
-        max-height: 160px !important;
+        min-height: 85px !important;
+        max-height: 150px !important;
         margin-bottom: 12px !important;
     }
     #viewVoice .audio-actions,
