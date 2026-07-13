@@ -1213,8 +1213,8 @@ async function sendCBTChat() {
         window.cbtChatHistory.push({ role: "user", content: msg });
         window.cbtChatHistory.push({ role: "assistant", content: replyText });
     } else {
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> I am right here with you. The live AI connection experienced a temporary network delay, but please know I am listening. Could you tell me a little more about what is weighing on your mind right now?</div>`;
-        window.cbtChatHistory.push({ role: "user", content: msg });
+        const errorMsg = replyText || "⚠️ **AI Network Notice:** The main Google Gemini engine timed out (>12s) or hit its rate limit (15 requests/min), and no backup Llama key (`GROQ_API_KEY`) was found. Please wait 10 seconds and try again, or add a free Groq Llama key in your `.env` file (`GROQ_API_KEY=gsk_...`) for instant failover!";
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${errorMsg}</div>`;
     }
     
     box.scrollTop = box.scrollHeight;

@@ -22,40 +22,38 @@ class CBTEmpathyAssistant:
         self.groq_key = os.getenv("GROQ_API_KEY")
         self.gemini_key = os.getenv("GEMINI_API_KEY")
         
-        self.client = None
-        self.provider = None
-        self.model_name = None
+        self.gemini_client = None
+        self.gemini_models = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemma-4-31b-it"]
+        
+        self.groq_client = None
+        self.groq_model = "llama-3.3-70b-versatile"
+        
+        self.openai_client = None
+        self.openai_model = "gpt-4o-mini"
 
-        if OPENAI_AVAILABLE and self.groq_key and len(self.groq_key.strip()) > 5:
+        # Initialize Main Assistant: Google Gemini
+        if OPENAI_AVAILABLE and self.gemini_key and len(self.gemini_key.strip()) > 5:
             try:
-                # Groq is 100% FREE and uses the exact same OpenAI SDK format
-                self.client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1")
-                self.provider = "Groq (Free Llama 3.3 70B)"
-                self.model_name = "llama-3.3-70b-versatile"
-                print(f"[CBT Assistant] Successfully connected to 100% FREE AI: {self.provider}.")
-            except Exception as e:
-                print(f"[CBT Assistant] Could not initialize Groq client: {e}")
-
-        elif OPENAI_AVAILABLE and self.gemini_key and len(self.gemini_key.strip()) > 5:
-            try:
-                # Google Gemini Free API (OpenAI compatible endpoint)
-                self.client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
-                self.provider = "Google Gemini (Free Tier)"
-                self.model_name = "gemini-flash-latest"
-                print(f"[CBT Assistant] Successfully connected to 100% FREE AI: {self.provider}.")
+                self.gemini_client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+                print(f"[CBT Assistant] Main Engine: Google Gemini initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize Gemini client: {e}")
 
-        elif OPENAI_AVAILABLE and self.openai_key and len(self.openai_key.strip()) > 5 and not self.openai_key.startswith("sk-proj-Z3AZwp"):
+        # Initialize Failover Assistant: Llama 3.3 70B (via Groq Free API)
+        if OPENAI_AVAILABLE and self.groq_key and len(self.groq_key.strip()) > 5:
             try:
-                self.client = OpenAI(api_key=self.openai_key.strip())
-                self.provider = "OpenAI (GPT-4o-mini)"
-                self.model_name = "gpt-4o-mini"
-                print(f"[CBT Assistant] Successfully connected to OpenAI ChatGPT API.")
+                self.groq_client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1")
+                print(f"[CBT Assistant] Failover Engine: Llama 3.3 (Groq) initialized.")
+            except Exception as e:
+                print(f"[CBT Assistant] Could not initialize Groq Llama client: {e}")
+
+        # Initialize Backup Assistant: OpenAI GPT-4o-mini
+        if OPENAI_AVAILABLE and self.openai_key and len(self.openai_key.strip()) > 5 and not self.openai_key.startswith("sk-proj-Z3AZwp"):
+            try:
+                self.openai_client = OpenAI(api_key=self.openai_key.strip())
+                print(f"[CBT Assistant] Backup Engine: OpenAI initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize OpenAI client: {e}")
-        else:
-            print("[CBT Assistant] No active live AI API key detected (or quota limited). Operating in offline rule-based CBT mode.")
 
         self.grounding_exercises = {
             "5-4-3-2-1 Grounding": (
@@ -135,111 +133,99 @@ class CBTEmpathyAssistant:
     def chat_reply(self, user_message, current_stress_category="Academic Stress", history=None):
         """
         Handles interactive conversational replies on the dashboard chat tab.
-        Uses live Google Gemini / OpenAI ChatGPT / Groq with full conversation history and automatic backoff retries.
-        Enforces strict topic filtering so the assistant only answers questions related to mental health, stress, anxiety, depression, and relationships.
+        Uses live Google Gemini as MAIN assistant, automatically switching to Llama 3.3 (Groq) if Gemini takes >12s or hits quota.
+        ZERO pre-built answers are used. Enforces strict topic filtering.
         """
         # 1. Fast local topic verification check before calling any AI API
         if is_unrelated_to_mental_health(user_message):
             return UNRELATED_PROJECT_REPLY
 
-        if self.client and self.model_name:
-            models_to_try = [self.model_name]
-            if "gemini" in self.model_name.lower():
-                models_to_try = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemma-4-31b-it"]
+        system_prompt = (
+            "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, burnout, heartbreak, and daily pressure. "
+            "CRITICAL GUARDRAIL: You are STRICTLY RESTRICTED to answering questions related to our mental health project, such as stress, anxiety, depression, burnout, emotional well-being, love/relationship issues, heartbreak, academic/work pressure, and coping strategies. "
+            f"If the user asks ANY question or topic that is NOT related to mental health, stress, relationship issues, love failure, or emotional well-being (for example: coding/programming questions, general knowledge, math homework, recipes, sports, entertainment, politics, financial advice, etc.), you MUST decline to answer and reply EXACTLY with: '{UNRELATED_PROJECT_REPLY}' "
+            f"The user's recent check-in detected: {current_stress_category}. "
+            "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
+            "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic or pre-built advice; provide customized CBT guidance tailored directly to whatever specific stressor or topic the user asks about."
+        )
 
-            system_prompt = (
-                "You are 'NeuroSense Assistant', a compassionate and clinical Cognitive Behavioral Therapy (CBT) AI counselor designed to support individuals facing mental health challenges such as stress, anxiety, depression, burnout, heartbreak, and daily pressure. "
-                "CRITICAL GUARDRAIL: You are STRICTLY RESTRICTED to answering questions related to our mental health project, such as stress, anxiety, depression, burnout, emotional well-being, love/relationship issues, heartbreak, academic/work pressure, and coping strategies. "
-                f"If the user asks ANY question or topic that is NOT related to mental health, stress, relationship issues, love failure, or emotional well-being (for example: coding/programming questions, general knowledge, math homework, recipes, sports, entertainment, politics, financial advice, etc.), you MUST decline to answer and reply EXACTLY with: '{UNRELATED_PROJECT_REPLY}' "
-                f"The user's recent check-in detected: {current_stress_category}. "
-                "Provide empathetic validation, practical cognitive reframing (e.g. Socratic questioning, catching cognitive distortions like catastrophizing or all-or-nothing thinking), and physiological grounding exercises when helpful. "
-                "Keep your reply conversational, structured, warm, and concise (under 140 words). Do not give generic or pre-built advice; provide customized CBT guidance tailored directly to whatever specific stressor or topic the user asks about."
-            )
-
-            # Build full conversation history messages array
-            messages = [{"role": "system", "content": system_prompt}]
-            if history and isinstance(history, list):
-                for turn in history[-10:]: # Keep last 10 turns for context without overflow
-                    role = turn.get("role", "user")
-                    content = turn.get("content", "").strip()
-                    if role in ["user", "assistant"] and content:
-                        messages.append({"role": role, "content": content})
-            
-            # Ensure the latest user message is at the end of the history array
-            if not messages or messages[-1].get("content") != user_message:
-                messages.append({"role": "user", "content": user_message})
-
-            # Robust backoff retry loop across models (so it never gives pre-built wrong answers on busy APIs)
-            for attempt in range(3):
-                for model_id in models_to_try:
-                    try:
-                        response = self.client.chat.completions.create(
-                            model=model_id,
-                            messages=messages,
-                            temperature=0.7,
-                            max_tokens=650
-                        )
-                        reply = response.choices[0].message.content.strip()
-                        reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                        reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                        if reply.startswith('<thought>'):
-                            # In case closing tag was truncated by max_tokens, clean anything after <thought>
-                            reply = re.sub(r'<thought>.*', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
-                        if not reply:
-                            continue
-                        return reply
-                    except Exception as e:
-                        time.sleep(1.0 + attempt * 0.5)
-                        continue
-            print("[CBT Assistant] All live Gemini models currently busy after retries. Using tailored offline fallback.")
-
-        # Offline Fallback (Tailored CBT logic if APIs are offline)
-        msg_lower = user_message.lower()
+        # Build full conversation history messages array
+        messages = [{"role": "system", "content": system_prompt}]
+        if history and isinstance(history, list):
+            for turn in history[-10:]: # Keep last 10 turns for context without overflow
+                role = turn.get("role", "user")
+                content = turn.get("content", "").strip()
+                if role in ["user", "assistant"] and content:
+                    messages.append({"role": role, "content": content})
         
-        if any(w in msg_lower for w in ["hello", "hi", "hey", "start"]):
-            return "Hello! I am your NeuroSense CBT Assistant. How are you feeling right now? You can share anything about your relationships, stress, deadlines, or personal life."
-            
-        elif any(w in msg_lower for w in ["love", "breakup", "heartbreak", "partner", "relationship", "dating", "divorce", "crush"]):
-            return (
-                "I am truly sorry you are experiencing this emotional pain. Love failure and relationship stress can cause deep grief, heartbreak, and intense psychological strain right now.\n\n"
-                "Please know that your feelings of sorrow and overwhelm are completely valid, and healing happens gradually over time. "
-                "Would you like to practice a gentle 5-4-3-2-1 sensory grounding exercise right now to ease the heavy physical sensation in your chest, or would you prefer to talk through what happened?"
-            )
-            
-        elif any(w in msg_lower for w in ["exam", "deadline", "study", "assignment", "gpa", "coursework", "academic fail", "failing class"]):
-            return (
-                "Academic pressure can feel intense. Let's practice a quick cognitive reframing shift:\n\n"
-                "When you catch your mind thinking catastrophically (*'If I don't get an A, I will fail in life'*), remind yourself: *"
-                "'An exam is just a measurement of my current understanding on this specific day, not my overall capability.'*\n\n"
-                "Would you like to try our 25-minute study chunking routine?"
-            )
-            
-        elif any(w in msg_lower for w in ["lonely", "alone", "friend", "family", "depress", "sad", "empty"]):
-            return (
-                "Thank you for sharing that with me. Loneliness and deep sadness can make every daily task feel exhausting and heavy.\n\n"
-                "Let's ground yourself for a moment: Place both feet flat on the floor and take a slow breath in. "
-                "Remember that emotional pain comes in waves—this heavy feeling is temporary and will soften over time."
-            )
-            
-        elif any(w in msg_lower for w in ["panic", "anxious", "anxiety", "breath", "heart", "scared", "fear"]):
-            return (
-                "Let's slow down your nervous system right now. We are going to do **Box Breathing** together:\n\n"
-                "• Inhale slowly through your nose: **1... 2... 3... 4...**\n"
-                "• Hold your breath gently: **1... 2... 3... 4...**\n"
-                "• Exhale smoothly through your mouth: **1... 2... 3... 4...**\n\n"
-                "Repeat this twice. How does your physical body feel right now?"
-            )
-            
-        elif any(w in msg_lower for w in ["thank", "thanks", "better", "calm", "good"]):
-            return "You are very welcome! I am always here whenever you need a supportive listener or a quick mental check-in."
-            
-        else:
-            if is_unrelated_to_mental_health(user_message):
-                return UNRELATED_PROJECT_REPLY
-            return (
-                f"I hear how much is on your mind right now regarding '{user_message[:60]}...'. Navigating heavy emotional stressors can feel deeply draining.\n\n"
-                f"Would you like me to guide you through a calming Box Breathing exercise to steady your nervous system, or would you like to explore cognitive reframing strategies to help process what you are feeling?"
-            )
+        if not messages or messages[-1].get("content") != user_message:
+            messages.append({"role": "user", "content": user_message})
+
+        # STEP 1: Try Main Assistant — Google Gemini (Timeout 12.0 seconds)
+        if self.gemini_client:
+            for model_id in self.gemini_models:
+                try:
+                    response = self.gemini_client.chat.completions.create(
+                        model=model_id,
+                        messages=messages,
+                        temperature=0.7,
+                        max_tokens=650,
+                        timeout=12.0
+                    )
+                    reply = response.choices[0].message.content.strip()
+                    reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    if reply.startswith('<thought>'):
+                        reply = re.sub(r'<thought>.*', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                    if reply:
+                        return reply
+                except Exception as e:
+                    print(f"[CBT Assistant] Gemini ({model_id}) timed out (>12s) or hit quota limit: {e}")
+                    continue
+            print("[CBT Assistant] Gemini main assistant unavailable/timed out (>12s or quota reached). Switching automatically to Llama 3.3 (Groq)...")
+
+        # STEP 2: Automatic Failover — Llama 3.3 70B via Groq Free API (Timeout 12.0 seconds)
+        if self.groq_client:
+            try:
+                response = self.groq_client.chat.completions.create(
+                    model=self.groq_model,
+                    messages=messages,
+                    temperature=0.7,
+                    max_tokens=650,
+                    timeout=12.0
+                )
+                reply = response.choices[0].message.content.strip()
+                reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                reply = re.sub(r'<think>.*?</think>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
+                if reply:
+                    return reply
+            except Exception as e:
+                print(f"[CBT Assistant] Llama 3.3 (Groq) failover attempted and failed: {e}")
+
+        # STEP 3: Backup Assistant — OpenAI GPT-4o-mini (if configured)
+        if self.openai_client:
+            try:
+                response = self.openai_client.chat.completions.create(
+                    model=self.openai_model,
+                    messages=messages,
+                    temperature=0.7,
+                    max_tokens=650,
+                    timeout=12.0
+                )
+                reply = response.choices[0].message.content.strip()
+                if reply:
+                    return reply
+            except Exception as e:
+                print(f"[CBT Assistant] OpenAI backup failed: {e}")
+
+        # STEP 4: ZERO PRE-BUILT ANSWERS ALLOWED!
+        # If all live AI APIs failed or quota hit and no Groq key is added yet:
+        return (
+            "⚠️ **AI Engine Notice:** Google Gemini reached its momentary rate limit (15 requests/min) or timed out (>12s), "
+            "and no Llama fallback (`GROQ_API_KEY`) was connected to handle the failover instantly. "
+            "Please wait 10 seconds and send your message again, or add a free Groq API key in your `.env` file (`GROQ_API_KEY=gsk_...`) "
+            "from https://console.groq.com/keys to enable seamless Llama 3.3 failover without delays!"
+        )
 
 if __name__ == "__main__":
     bot = CBTEmpathyAssistant()
