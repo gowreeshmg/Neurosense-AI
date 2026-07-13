@@ -198,6 +198,19 @@ function switchDashboardView(viewName) {
     const btnPressure = document.getElementById('dockBtnPressure');
     const btnWhatIf = document.getElementById('dockBtnWhatIf');
     
+    const isMobileView = window.innerWidth <= 900;
+    const setModalityDisplay = (el) => {
+        if (!el) return;
+        if (isMobileView) {
+            el.style.setProperty('display', 'flex', 'important');
+            el.style.setProperty('flex-direction', 'column', 'important');
+            el.style.setProperty('width', '100%', 'important');
+        } else {
+            el.style.setProperty('display', 'block', 'important');
+            el.style.removeProperty('flex-direction');
+        }
+    };
+    
     [vVoice, vText, vCBT, vLifestyle, vPressure, vWhatIf].forEach(v => {
         if (v) v.style.setProperty('display', 'none', 'important');
     });
@@ -212,7 +225,7 @@ function switchDashboardView(viewName) {
     });
     
     if (viewName === 'voice') {
-        if (vVoice) vVoice.style.setProperty('display', 'block', 'important');
+        setModalityDisplay(vVoice);
         if (btnVoice) { btnVoice.classList.add('active'); btnVoice.style.color = '#FA233B'; }
         const audioRes = document.getElementById('audioAnalysisResults');
         const shapBox = document.getElementById('shapBoxWrapper');
@@ -246,7 +259,7 @@ function switchDashboardView(viewName) {
             renderSHAPChart(drivers, 'voiceShapChartCanvas');
         }
     } else if (viewName === 'text') {
-        if (vText) vText.style.setProperty('display', 'block', 'important');
+        setModalityDisplay(vText);
         if (btnText) { btnText.classList.add('active'); btnText.style.color = '#FA233B'; }
         const textRes = document.getElementById('textAnalysisResults');
         const limeBox = document.getElementById('limeBoxWrapper');
@@ -269,22 +282,22 @@ function switchDashboardView(viewName) {
             }
         }
     } else if (viewName === 'cbt') {
-        if (vCBT) vCBT.style.setProperty('display', 'block', 'important');
+        setModalityDisplay(vCBT);
         if (btnCBT) { btnCBT.classList.add('active'); btnCBT.style.color = '#FA233B'; }
         const cbtBox = document.getElementById('cbtChatMessages');
         if (cbtBox) setTimeout(() => { cbtBox.scrollTop = cbtBox.scrollHeight; }, 50);
         if (typeof renderCBTArousalChart === 'function') renderCBTArousalChart();
     } else if (viewName === 'lifestyle') {
-        if (vLifestyle) vLifestyle.style.setProperty('display', 'block', 'important');
+        setModalityDisplay(vLifestyle);
         if (btnLifestyle) { btnLifestyle.classList.add('active'); btnLifestyle.style.color = '#FA233B'; }
         if (typeof updateLifestyleSimulation === 'function') updateLifestyleSimulation(false);
     } else if (viewName === 'pressure') {
-        if (vPressure) vPressure.style.setProperty('display', 'block', 'important');
+        setModalityDisplay(vPressure);
         if (btnPressure) { btnPressure.classList.add('active'); btnPressure.style.color = '#FA233B'; }
         if (typeof refreshUnifiedPressure === 'function') refreshUnifiedPressure();
         if (typeof switchQuestionnaire === 'function') switchQuestionnaire(window.activeSurveyType || 'phq9');
     } else if (viewName === 'whatif') {
-        if (vWhatIf) vWhatIf.style.setProperty('display', 'block', 'important');
+        setModalityDisplay(vWhatIf);
         if (btnWhatIf) { btnWhatIf.classList.add('active'); btnWhatIf.style.color = '#FA233B'; }
         if (typeof runWhatIfSimulation === 'function') runWhatIfSimulation();
         if (typeof initLongitudinalChart === 'function') initLongitudinalChart();
