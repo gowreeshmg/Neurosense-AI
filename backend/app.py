@@ -118,6 +118,18 @@ def read_root():
         return FileResponse(index_file)
     return {"status": "NeuroSense AI API running smoothly. Visit /docs for OpenAPI specifications."}
 
+@app.get("/api/debug")
+def debug_env():
+    """Diagnostic endpoint to verify Vercel environment variables are loaded."""
+    groq_key = os.getenv("GROQ_API_KEY", "")
+    gemini_key = os.getenv("GEMINI_API_KEY", "")
+    openai_key = os.getenv("OPENAI_API_KEY", "")
+    return {
+        "GROQ_API_KEY": f"SET ({len(groq_key)} chars, starts: {groq_key[:8]}...)" if len(groq_key) > 5 else "NOT SET",
+        "GEMINI_API_KEY": f"SET ({len(gemini_key)} chars, starts: {gemini_key[:6]}...)" if len(gemini_key) > 5 else "NOT SET",
+        "OPENAI_API_KEY": f"SET ({len(openai_key)} chars)" if len(openai_key) > 5 else "NOT SET",
+    }
+
 @app.get("/apple-touch-icon.png")
 @app.get("/apple-touch-icon-precomposed.png")
 def get_apple_touch_icon():
