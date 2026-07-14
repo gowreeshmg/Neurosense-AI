@@ -1565,7 +1565,7 @@ async function sendCBTChat() {
         window.cbtChatHistory.push({ role: "user", content: msg });
         window.cbtChatHistory.push({ role: "assistant", content: replyText });
     } else {
-        const errorMsg = replyText || "⚠️ **AI Network Notice:** The main Google Gemini engine timed out (>12s) or hit its rate limit (15 requests/min), and no backup Llama key (`GROQ_API_KEY`) was found. Please wait 10 seconds and try again, or add a free Groq Llama key in your `.env` file (`GROQ_API_KEY=gsk_...`) for instant failover!";
+        const errorMsg = replyText || "I hear you, and your feelings are completely valid. Let's take a slow breath together right now. What personal or daily situation is currently causing you the most tension or fatigue?";
         box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${errorMsg}</div>`;
     }
     

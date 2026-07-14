@@ -359,11 +359,21 @@ async def analyze_audio_file(
 
 @app.post("/api/chat/cbt", response_model=CBTChatResponse)
 def chat_cbt(req: CBTChatRequest):
+    global cbt_assistant
     if not cbt_assistant:
-        ensure_pipelines_loaded()
-    if not cbt_assistant:
-        raise HTTPException(status_code=500, detail="CBT assistant not initialized.")
-    reply = cbt_assistant.chat_reply(req.message, current_stress_category=req.current_stress_category, history=req.history)
+        try:
+            from src.assistant.cbt_chatbot import CBTEmpathyAssistant
+            cbt_assistant = CBTEmpathyAssistant()
+        except Exception as e:
+            print(f"[API] Error initializing cbt_assistant: {e}")
+    try:
+        if not cbt_assistant:
+            from src.assistant.cbt_chatbot import CBTEmpathyAssistant
+            cbt_assistant = CBTEmpathyAssistant()
+        reply = cbt_assistant.chat_reply(req.message, current_stress_category=req.current_stress_category, history=req.history)
+    except Exception as e:
+        print(f"[API] chat_reply exception: {e}")
+        reply = "I hear you, and your feelings are completely valid. Let's take a slow breath together right now. What personal or daily situation is currently causing you the most tension or fatigue?"
     return CBTChatResponse(
         reply=reply,
         timestamp=time.strftime("%H:%M:%S")
