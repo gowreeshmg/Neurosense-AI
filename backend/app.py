@@ -373,7 +373,7 @@ def chat_cbt(req: CBTChatRequest):
         reply = cbt_assistant.chat_reply(req.message, current_stress_category=req.current_stress_category, history=req.history)
     except Exception as e:
         print(f"[API] chat_reply exception: {e}")
-        reply = "I hear you, and your feelings are completely valid. Let's take a slow breath together right now. What personal or daily situation is currently causing you the most tension or fatigue?"
+        reply = "⚠️ AI Connection Error: Unable to reach Gemini or Llama API. Please check your Vercel Environment Variables (GROQ_API_KEY and GEMINI_API_KEY) and try again."
     return CBTChatResponse(
         reply=reply,
         timestamp=time.strftime("%H:%M:%S")

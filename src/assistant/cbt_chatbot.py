@@ -41,7 +41,7 @@ class CBTEmpathyAssistant:
         # Initialize Main Assistant: Google Gemini with zero retries for instant failover
         if OPENAI_AVAILABLE and self.gemini_key and len(self.gemini_key.strip()) > 5:
             try:
-                self.gemini_client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0, timeout=httpx.Timeout(3.5, connect=2.0))
+                self.gemini_client = OpenAI(api_key=self.gemini_key.strip(), base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0, timeout=httpx.Timeout(12.0, connect=5.0))
                 print(f"[CBT Assistant] Main Engine: Google Gemini initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize Gemini client: {e}")
@@ -49,7 +49,7 @@ class CBTEmpathyAssistant:
         # Initialize Failover Assistant: Llama 3.3 70B (via Groq Free API) with zero retries
         if OPENAI_AVAILABLE and self.groq_key and len(self.groq_key.strip()) > 5:
             try:
-                self.groq_client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1", max_retries=0, timeout=httpx.Timeout(3.5, connect=2.0))
+                self.groq_client = OpenAI(api_key=self.groq_key.strip(), base_url="https://api.groq.com/openai/v1", max_retries=0, timeout=httpx.Timeout(12.0, connect=5.0))
                 print(f"[CBT Assistant] Failover Engine: Llama 3.3 (Groq) initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize Groq Llama client: {e}")
@@ -57,7 +57,7 @@ class CBTEmpathyAssistant:
         # Initialize Backup Assistant: OpenAI GPT-4o-mini with zero retries
         if OPENAI_AVAILABLE and self.openai_key and len(self.openai_key.strip()) > 5 and not self.openai_key.startswith("sk-proj-Z3AZwp"):
             try:
-                self.openai_client = OpenAI(api_key=self.openai_key.strip(), max_retries=0, timeout=httpx.Timeout(3.5, connect=2.0))
+                self.openai_client = OpenAI(api_key=self.openai_key.strip(), max_retries=0, timeout=httpx.Timeout(12.0, connect=5.0))
                 print(f"[CBT Assistant] Backup Engine: OpenAI initialized.")
             except Exception as e:
                 print(f"[CBT Assistant] Could not initialize OpenAI client: {e}")
@@ -181,15 +181,15 @@ class CBTEmpathyAssistant:
         if OPENAI_AVAILABLE and not self.gemini_client:
             gk = os.getenv("GEMINI_API_KEY", "").strip()
             if len(gk) > 5:
-                try: self.gemini_client = OpenAI(api_key=gk, base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0, timeout=httpx.Timeout(3.5, connect=2.0))
+                try: self.gemini_client = OpenAI(api_key=gk, base_url="https://generativelanguage.googleapis.com/v1beta/openai/", max_retries=0, timeout=httpx.Timeout(12.0, connect=5.0))
                 except Exception: pass
         if OPENAI_AVAILABLE and not self.groq_client:
             rk = os.getenv("GROQ_API_KEY", "").strip()
             if len(rk) > 5:
-                try: self.groq_client = OpenAI(api_key=rk, base_url="https://api.groq.com/openai/v1", max_retries=0, timeout=httpx.Timeout(3.5, connect=2.0))
+                try: self.groq_client = OpenAI(api_key=rk, base_url="https://api.groq.com/openai/v1", max_retries=0, timeout=httpx.Timeout(12.0, connect=5.0))
                 except Exception: pass
 
-        # STEP 1: Primary — Groq Llama Instant (Try only 1 model with strict 3.5s timeout for Vercel cold-start resilience)
+        # STEP 1: Primary — Groq Llama Instant (Try 1 model with generous 12.0s timeout for Vercel cold-start resilience)
         if self.groq_client:
             try:
                 response = self.groq_client.chat.completions.create(
@@ -197,7 +197,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.65,
                     max_tokens=180,
-                    timeout=httpx.Timeout(3.5, connect=2.0)
+                    timeout=httpx.Timeout(12.0, connect=5.0)
                 )
                 reply = response.choices[0].message.content.strip()
                 reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
@@ -207,7 +207,7 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] Groq attempt failed or timed out ({e}), switching to Gemini...")
 
-        # STEP 2: Fast Failover — Google Gemini 2.0 Flash (Try only 1 model with strict 3.5s timeout)
+        # STEP 2: Fast Failover — Google Gemini 2.0 Flash (Try 1 model with generous 12.0s timeout)
         if self.gemini_client and not self.gemini_quota_exceeded:
             try:
                 response = self.gemini_client.chat.completions.create(
@@ -215,7 +215,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.65,
                     max_tokens=180,
-                    timeout=httpx.Timeout(3.5, connect=2.0)
+                    timeout=httpx.Timeout(12.0, connect=5.0)
                 )
                 reply = response.choices[0].message.content.strip()
                 reply = re.sub(r'<thought>.*?</thought>', '', reply, flags=re.DOTALL | re.IGNORECASE).strip()
@@ -227,7 +227,7 @@ class CBTEmpathyAssistant:
                 if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "quota" in str(e).lower():
                     self.gemini_quota_exceeded = True
 
-        # STEP 3: Backup — OpenAI GPT-4o-mini (Try only 1 model with strict 3.5s timeout)
+        # STEP 3: Backup — OpenAI GPT-4o-mini
         if self.openai_client:
             try:
                 response = self.openai_client.chat.completions.create(
@@ -235,7 +235,7 @@ class CBTEmpathyAssistant:
                     messages=messages,
                     temperature=0.65,
                     max_tokens=180,
-                    timeout=httpx.Timeout(3.5, connect=2.0)
+                    timeout=httpx.Timeout(12.0, connect=5.0)
                 )
                 reply = response.choices[0].message.content.strip()
                 if reply:
@@ -243,14 +243,8 @@ class CBTEmpathyAssistant:
             except Exception as e:
                 print(f"[CBT Assistant] OpenAI backup failed: {e}")
 
-        # STEP 4: Intelligent offline fallback tailored directly to user's question without loops
-        u_lower = user_message.lower()
-        if any(kw in u_lower for kw in ["not academic", "isn't academic", "not school", "not studying", "it is not academic"]):
-            return "I understand completely and apologize for assuming academic stress. Let's focus purely on what you are experiencing right now. What personal or daily situation is currently causing you the most tension or fatigue?"
-        elif any(kw in u_lower for kw in ["exercise", "exercises", "technique", "techniques", "practice", "reduce my stress", "calm"]):
-            return "Here is a powerful stress reduction technique right now: try the 4-7-8 Relaxation Cycle. Inhale quietly through your nose for 4 seconds, hold your breath gently for 7 seconds, and exhale completely through your mouth for 8 seconds. Repeat this 3 times to immediately lower your heart rate."
-        else:
-            return f"I hear you. Regarding '{user_message[:55]}', your feelings are completely valid. What one specific step can we take right now to help you feel more grounded and supported?"
+        # STEP 4: Never use pre-built answers. If all AI models fail or time out, return exact error message.
+        return "⚠️ AI Connection Error: Unable to reach Gemini or Llama API. Please ensure your Vercel Environment Variables (GROQ_API_KEY and GEMINI_API_KEY) are active and redeployed, or check your internet connection."
 
 if __name__ == "__main__":
     bot = CBTEmpathyAssistant()

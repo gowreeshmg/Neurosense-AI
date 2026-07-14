@@ -1565,7 +1565,7 @@ async function sendCBTChat() {
         window.cbtChatHistory.push({ role: "user", content: msg });
         window.cbtChatHistory.push({ role: "assistant", content: replyText });
     } else {
-        const errorMsg = replyText || "I hear you, and your feelings are completely valid. Let's take a slow breath together right now. What personal or daily situation is currently causing you the most tension or fatigue?";
+        const errorMsg = replyText || "⚠️ AI Connection Error: Unable to reach Gemini or Llama API. Please ensure your Vercel Environment Variables (GROQ_API_KEY and GEMINI_API_KEY) are active and redeployed, or check your internet connection.";
         box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${errorMsg}</div>`;
     }
     
