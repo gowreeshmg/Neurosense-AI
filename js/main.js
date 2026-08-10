@@ -940,13 +940,24 @@ function loadPrompt(type) {
 /**
  * Master Dual-Modality Analysis Trigger
  */
-async function runMultimodalAnalysis() {
+async function runMultimodalAnalysis(mode = 'combined') {
     const text = document.getElementById('journalTextarea').value.trim();
     const btn = document.getElementById('btnRunAnalysis');
     
-    if (!text && !audioBlob && !simulatedAudioVector) {
-        alert("⚠️ Please either record/load a voice sample or type a short journal reflection before analyzing!");
-        return;
+    const hasText = !!text;
+    const hasAudio = !!(window.audioBlob || window.simulatedAudioVector);
+    
+    if (mode === 'combined') {
+        if (!hasText && !hasAudio) {
+            alert("You haven't inputted the text and speech.");
+            return;
+        } else if (hasText && !hasAudio) {
+            alert("You have only given the text input and you haven't given voice input.");
+            return;
+        } else if (hasAudio && !hasText) {
+            alert("You have only given voice input, haven't given narrative journal entry.");
+            return;
+        }
     }
     
     if (btn) {
@@ -1034,22 +1045,32 @@ async function runMultimodalAnalysis() {
  */
 async function runSingleModalityAnalysis(modality) {
     const textElem = document.getElementById('journalTextarea');
+    const text = textElem.value.trim();
+    const hasAudio = !!(window.audioBlob || window.simulatedAudioVector);
     
     if (modality === 'text') {
+        if (!text) {
+            alert("You haven't input the text.");
+            return;
+        }
         const tempAudio = window.audioBlob;
         window.audioBlob = null; 
         const tempSim = window.simulatedAudioVector;
         window.simulatedAudioVector = null;
         
-        await runMultimodalAnalysis();
+        await runMultimodalAnalysis('text');
         
         window.audioBlob = tempAudio; 
         window.simulatedAudioVector = tempSim;
     } else if (modality === 'audio') {
+        if (!hasAudio) {
+            alert("You haven't input the audio.");
+            return;
+        }
         const tempText = textElem.value;
         textElem.value = ""; 
         
-        await runMultimodalAnalysis();
+        await runMultimodalAnalysis('audio');
         
         textElem.value = tempText; 
     }
@@ -1526,6 +1547,8 @@ async function sendCBTChat() {
                 const typingEl = document.getElementById(typingId);
                 if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/2)... ⌛`;
                 await new Promise(r => setTimeout(r, 400));
+            } else {
+                throw new Error("API returned " + res.status);
             }
         } catch (err) {
             if (attempt < 2) {
