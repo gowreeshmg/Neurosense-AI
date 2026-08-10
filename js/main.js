@@ -1016,12 +1016,16 @@ async function runMultimodalAnalysis(mode = 'combined') {
         }
         
         currentAnalysisResult = result;
-        displayAnalysisResults(result);
+        // Pass the mode so displayAnalysisResults shows the correct panel
+        // even when Whisper has filled the textarea (which would otherwise confuse modality detection)
+        const displayMode = mode === 'audio' ? 'audio' : (mode === 'text' ? 'text' : null);
+        displayAnalysisResults(result, displayMode);
         
     } catch (err) {
         console.error("Analysis error:", err);
         const fallback = generateFallbackResult(text, simulatedAudioVector);
-        displayAnalysisResults(fallback);
+        const displayMode = mode === 'audio' ? 'audio' : (mode === 'text' ? 'text' : null);
+        displayAnalysisResults(fallback, displayMode);
     } finally {
         if (btn) {
             btn.disabled = false;
@@ -1076,18 +1080,32 @@ async function runSingleModalityAnalysis(modality) {
         
         await runMultimodalAnalysis('audio');
         
-        textElem.value = tempText; 
+        // Restore text AFTER analysis is complete and displayed
+        // Note: do NOT restore here if Whisper just filled it — keep Whisper result
+        if (tempText && !textElem.value.trim()) {
+            textElem.value = tempText;
+        }
     }
 }
 
-function displayAnalysisResults(res) {
+function displayAnalysisResults(res, forcedModality) {
     if (!res) return;
     
     const textElem = document.getElementById('journalTextarea');
     const text = textElem ? textElem.value.trim() : "";
-    let modality = 'both';
-    if (text && !audioBlob && !simulatedAudioVector) modality = 'text';
-    if (!text && (audioBlob || simulatedAudioVector)) modality = 'audio';
+    
+    // Use the forced modality if provided (e.g. from audio analysis where Whisper fills the textarea)
+    // This prevents Whisper-filled text from making audio results look like text results
+    let modality;
+    if (forcedModality) {
+        modality = forcedModality;
+    } else if (text && !audioBlob && !simulatedAudioVector) {
+        modality = 'text';
+    } else if (!text && (audioBlob || simulatedAudioVector)) {
+        modality = 'audio';
+    } else {
+        modality = 'both';
+    }
     
     const rawScore = res.combined_stress_score !== undefined ? res.combined_stress_score : (res.stress_score || 0);
     let scoreNum = Math.round(rawScore);
