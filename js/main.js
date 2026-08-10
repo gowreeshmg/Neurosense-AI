@@ -969,6 +969,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
     
     try {
         let result = null;
+        let audioTranscriptionText = null; // Store transcription separately for display
         
         if (audioBlob) {
             try {
@@ -981,9 +982,13 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 if (res && res.data && res.data[0]) {
                     const data = res.data[0];
                     result = data.fusion_result;
-                    if (data.transcription && data.transcription.text && !text) {
-                        document.getElementById('journalTextarea').value = data.transcription.text;
-                        updateWordCount();
+                    // Save transcription for the display panel
+                    if (data.transcription && data.transcription.text) {
+                        audioTranscriptionText = data.transcription.text;
+                        if (!text) {
+                            document.getElementById('journalTextarea').value = audioTranscriptionText;
+                            updateWordCount();
+                        }
                     }
                 }
             } catch (err) {
@@ -1319,7 +1324,8 @@ function displayAnalysisResults(res) {
                 vToneElem.innerText = `Acoustic Tremor & Frequency Pitch: ${res.final_stress_category || "Moderate Stress"} (${scoreNum}%)`;
             }
             if (vTransElem) {
-                const trans = res.audio_analysis?.transcription || res.transcription || "Extracted words via Whisper ASR: I have been feeling quite tense and worried about my workload and deadlines...";
+                // Use the real transcription from HuggingFace, or the journal text, never the hardcoded fallback
+                const trans = audioTranscriptionText || res.audio_analysis?.transcription || res.transcription || text || "No transcription available.";
                 vTransElem.innerText = `"${trans}"`;
             }
         }
