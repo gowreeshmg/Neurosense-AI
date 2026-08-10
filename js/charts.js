@@ -57,7 +57,7 @@ function renderSHAPChart(topDrivers) {
         shapChartInstance.destroy();
     }
     
-    if (!topDrivers or topDrivers.length === 0) {
+    if (!topDrivers || topDrivers.length === 0) {
         return;
     }
     

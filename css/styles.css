@@ -1668,7 +1668,7 @@ textarea:focus {
 [data-theme="light"] textarea,
 [data-theme="light"] input[type="text"] {
     background: rgba(255, 255, 255, 0.88) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     border: 1px solid rgba(203, 213, 225, 0.9) !important;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.03) !important;
 }
@@ -1681,7 +1681,7 @@ textarea:focus {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(203, 213, 225, 0.85) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.04) !important;
 }
 
@@ -1689,7 +1689,7 @@ textarea:focus {
 [data-theme="light"] #btnUploadAudio,
 [data-theme="light"] #btnSimulateAudio {
     background: rgba(255, 255, 255, 0.92) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     border: 1px solid rgba(203, 213, 225, 0.9) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
@@ -1707,7 +1707,7 @@ textarea:focus {
 [data-theme="light"] #btnRunAudioAnalysis,
 [data-theme="light"] #btnRunTextAnalysis {
     background: linear-gradient(135deg, #60a5fa 0%, #818cf8 50%, #c084fc 100%) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     box-shadow: 0 6px 20px rgba(96, 165, 250, 0.35) !important;
     border: 1px solid rgba(255, 255, 255, 0.65) !important;
 }
@@ -1742,7 +1742,7 @@ textarea:focus {
 
 [data-theme="light"] .role-btn.active {
     background: rgba(255, 255, 255, 0.92) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     border: 1px solid rgba(203, 213, 225, 0.85) !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
 }
@@ -1901,7 +1901,7 @@ textarea:focus {
 [data-theme="light"] #btnRunAudioAnalysis,
 [data-theme="light"] #btnRunTextAnalysis {
     background: linear-gradient(135deg, #60a5fa 0%, #818cf8 50%, #c084fc 100%) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     box-shadow: 0 6px 20px rgba(96, 165, 250, 0.35) !important;
     border: 1px solid rgba(255, 255, 255, 0.65) !important;
 }
@@ -1936,7 +1936,7 @@ textarea:focus {
 
 [data-theme="light"] .role-btn.active {
     background: rgba(255, 255, 255, 0.92) !important;
-    color: #0f172a !important;
+    color: #0b0f19 !important;
     border: 1px solid rgba(203, 213, 225, 0.85) !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
 }
@@ -2521,10 +2521,9 @@ header.navbar-top-controls .top-center-title {
         bottom: 14px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: calc(100vw - 28px) !important;
-        max-width: 410px !important;
-        padding: 6px 6px !important;
-        gap: 4px !important;
+        width: max-content !important;
+        padding: 14px 24px !important;
+        gap: 16px !important;
         justify-content: space-around !important;
         border-radius: 999px !important;
         background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 25, 42, 0.92) !important;
@@ -2535,12 +2534,12 @@ header.navbar-top-controls .top-center-title {
         box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), inset 0 0 18px rgba(255, 255, 255, 0.08), 0 20px 45px -10px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.35) !important;
     }
     #bottomGlassDock .dock-btn {
-        flex: 1 1 0% !important;
+        flex: 0 1 auto !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 8px 4px !important;
+        padding: 10px 14px !important;
         border-radius: 999px !important;
         gap: 3px !important;
         font-size: 0.72rem !important;
@@ -2611,4 +2610,1851 @@ body:not(.on-dashboard) #btnThemeToggle {
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
+}
+
+/* ==========================================================================
+   Dashboard Redesign (No Glass)
+   ========================================================================== */
+body.on-dashboard {
+    background-color: var(--bg-dashboard, #ffffff) !important;
+    color: var(--text-dashboard, #333333) !important;
+}
+[data-theme="dark"] body.on-dashboard,
+[data-theme="deepwoods"] body.on-dashboard {
+    --bg-dashboard: #121212;
+    --text-dashboard: #f0f0f0;
+}
+[data-theme="light"] body.on-dashboard {
+    --bg-dashboard: #f9f9f9;
+    --text-dashboard: #333333;
+}
+
+/* Pro Card replaces glass-card */
+.pro-card {
+    background-color: var(--card-bg, #ffffff);
+    border: 1px solid var(--card-border, #e5e7eb);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    color: var(--text-dashboard);
+    transition: all 0.3s ease;
+}
+[data-theme="dark"] .pro-card, [data-theme="deepwoods"] .pro-card {
+    --card-bg: #1e1e1e;
+    --card-border: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.pro-card:hover {
+    border-color: var(--accent-cyan);
+}
+
+/* Sidebar layout */
+.dashboard-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+.dashboard-content-area {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+}
+.sidebar-dock {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: var(--card-bg, #ffffff);
+    border-top: 1px solid var(--card-border, #e5e7eb);
+    padding: 8px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+@media (min-width: 1024px) {
+    .dashboard-layout {
+        flex-direction: row;
+        padding-top: 60px;
+    }
+    .sidebar-dock {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        flex-direction: column;
+        justify-content: flex-start;
+        border-top: none;
+        border-right: 1px solid var(--card-border, #e5e7eb);
+        width: 250px;
+        height: calc(100vh - 80px);
+        padding: 20px 10px;
+        gap: 12px;
+        background: transparent;
+    }
+}
+.sidebar-dock .dock-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dashboard);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    font-size: 0.75rem;
+}
+@media (min-width: 1024px) {
+    .sidebar-dock .dock-btn {
+        flex-direction: row;
+        text-align: left;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        flex: none;
+    }
+}
+.sidebar-dock .dock-btn.active {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent-cyan);
+}
+.sidebar-dock .dock-btn:hover:not(.active) {
+    background: rgba(0,0,0,0.05);
+}
+[data-theme="dark"] .sidebar-dock .dock-btn:hover:not(.active) {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Unified Check-in Grid for Desktop */
+.unified-checkin-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+@media (min-width: 1024px) {
+    .unified-checkin-grid {
+        flex-direction: row;
+    }
+    .unified-checkin-col {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+/* Hide Lifestyle on Desktop */
+@media (min-width: 1024px) {
+    .hide-on-desktop {
+        display: none !important;
+    }
+}
+
+
+/* --- PROFESSIONAL WHITE DASHBOARD THEME OVERRIDES --- */
+body.on-dashboard {
+    background: #f0f4f8 !important; /* Soft professional off-white */
+}
+
+body.on-dashboard #bgVideo, body.on-dashboard .bg-video {
+    display: none !important;
+}
+
+/* Override inline white text colors */
+body.on-dashboard h1, 
+body.on-dashboard h2, 
+body.on-dashboard h3, 
+body.on-dashboard h4, 
+body.on-dashboard h5,
+body.on-dashboard p,
+body.on-dashboard span,
+body.on-dashboard div,
+body.on-dashboard label,
+body.on-dashboard li {
+    color: #334155 !important; /* Slate 700 */
+}
+
+/* Exempt specific elements from dark text */
+body.on-dashboard .btn, 
+body.on-dashboard .btn span,
+body.on-dashboard .btn div,
+body.on-dashboard .badge,
+body.on-dashboard .badge span,
+body.on-dashboard [id$="Badge"],
+body.on-dashboard [id*="Tier"],
+body.on-dashboard [id*="ScoreNumber"],
+body.on-dashboard [id*="Val"],
+body.on-dashboard [class*="badge"] {
+    /* Keep these their original colors if possible, or force white for buttons */
+}
+
+body.on-dashboard .btn, body.on-dashboard .btn * {
+    color: #ffffff !important;
+}
+
+body.on-dashboard .sidebar-dock {
+    background: #ffffff !important;
+    border-right: 1px solid #e2e8f0 !important;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05) !important;
+}
+
+.pro-card {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    border-radius: 16px !important;
+}
+
+/* Override inline dark backgrounds on inner elements */
+body.on-dashboard div[style*="background: rgba(0,0,0"] {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Sidebar button text */
+body.on-dashboard .dock-btn {
+    color: #475569 !important;
+}
+body.on-dashboard .dock-btn.active {
+    color: #0284c7 !important;
+    background: #f0f9ff !important;
+}
+
+/* Custom styling for specific charts/canvases to stand out */
+body.on-dashboard canvas {
+    filter: invert(0) !important; /* Ensure canvases are not affected by any accidental global filters */
+}
+
+
+
+/* --- MINIMALISTIC REDESIGN OVERRIDES --- */
+
+/* 1. BACKGROUND: White with grid lines and violet corners */
+body.on-dashboard {
+    background: 
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.12) 0%, transparent 35%),
+        radial-gradient(circle at top right, rgba(139, 92, 246, 0.12) 0%, transparent 35%),
+        #ffffff !important;
+}
+
+body.on-dashboard:not(.has-wallpaper) #globalAmbientBgContainer,
+body.on-dashboard #dashboardBgVideoContainer,
+body.on-dashboard .bg-video {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* 2. DOCKER: Move sidebar to bottom always */
+body.on-dashboard .dashboard-container {
+    flex-direction: column !important;
+}
+
+body.on-dashboard .sidebar-dock {
+    position: fixed !important;
+    bottom: 24px !important;
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 60px !important;
+    flex-direction: row !important;
+    background: #ffffff !important;
+    border-radius: 999px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+    padding: 8px 24px !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    gap: 16px !important;
+    align-items: center !important;
+}
+
+body.on-dashboard .dock-btn {
+    flex-direction: row !important;
+    gap: 8px !important;
+    padding: 10px 16px !important;
+    border-radius: 999px !important;
+    width: auto !important;
+    justify-content: center !important;
+}
+
+body.on-dashboard .dock-btn .dock-label-desktop {
+    display: inline-block !important; /* Show text on desktop bottom dock */
+}
+
+body.on-dashboard .dashboard-content-area {
+    padding-bottom: 120px !important; /* Space for the dock */
+    margin-left: 0 !important; /* Remove sidebar margin */
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+}
+
+/* 3. FIX SQUISHED LAYOUT: unified-checkin-grid */
+body.on-dashboard .unified-checkin-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)) !important;
+    gap: 32px !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+}
+
+body.on-dashboard .modality-split-grid {
+    display: flex !important;
+    flex-direction: column !important; /* Stack voice recording and assessment */
+    gap: 24px !important;
+}
+
+body.on-dashboard .modality-split-grid > * {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* 4. Tweak Pro Card appearance for minimalistic look */
+.pro-card {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    border-radius: 16px !important;
+}
+
+/* Hide mobile-only dock labels on desktop since we showed desktop labels */
+@media (min-width: 768px) {
+    body.on-dashboard .dock-btn .dock-label-mobile {
+        display: none !important;
+    }
+}
+@media (max-width: 767px) {
+    body.on-dashboard .dock-btn .dock-label-desktop {
+        display: none !important;
+    }
+    body.on-dashboard .sidebar-dock {
+        width: calc(100% - 32px) !important;
+        justify-content: space-between !important;
+        padding: 8px 12px !important;
+    }
+}
+
+
+
+
+
+
+
+/* ====================================================
+   NEUROSENSE DASHBOARD-ONLY STYLES (v10 - FINAL FIX)
+   ==================================================== */
+
+/* --- LIGHT MODE BACKGROUND --- */
+/* Applied to body when on dashboard - grid + purple shade */
+body.on-dashboard[data-theme="light"] {
+    background: linear-gradient(160deg, #ede8f7 0%, #e8e0f5 30%, #ede8f8 60%, #f2eefa 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* --- DARK MODE BACKGROUND --- */
+body.on-dashboard[data-theme="dark"],
+body.on-dashboard:not([data-theme="light"]) {
+    background:
+        radial-gradient(circle at 50% 30%, rgba(107, 33, 168, 0.45) 0%, transparent 60%),
+        #050505 !important;
+    background-attachment: fixed !important;
+}
+
+/* --- SINGLE SCROLL FIX --- */
+body.on-dashboard {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+.modality-view {
+    overflow: visible !important;
+    overflow-y: visible !important;
+}
+
+/* --- SIDEBAR DOCK DARK MODE VISIBILITY --- */
+body[data-theme="dark"] .sidebar-dock,
+body:not([data-theme="light"]) .sidebar-dock,
+body[data-theme="dark"] #sidebarDock,
+body:not([data-theme="light"]) #sidebarDock {
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(167, 139, 250, 0.25) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important;
+}
+body[data-theme="light"] .sidebar-dock,
+body[data-theme="light"] #sidebarDock {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    box-shadow: 0 4px 20px rgba(109, 40, 217, 0.1) !important;
+}
+
+/* Dock button text visibility in dark mode */
+body[data-theme="dark"] .sidebar-dock .dock-btn,
+body:not([data-theme="light"]) .sidebar-dock .dock-btn {
+    color: #cbd5e1 !important;
+}
+body[data-theme="dark"] .sidebar-dock .dock-btn span,
+body:not([data-theme="light"]) .sidebar-dock .dock-btn span {
+    color: #cbd5e1 !important;
+}
+body[data-theme="dark"] .sidebar-dock .dock-btn.active,
+body:not([data-theme="light"]) .sidebar-dock .dock-btn.active {
+    color: #e9d5ff !important;
+    background: rgba(139, 92, 246, 0.2) !important;
+}
+body[data-theme="dark"] .sidebar-dock .dock-btn.active span,
+body:not([data-theme="light"]) .sidebar-dock .dock-btn.active span {
+    color: #e9d5ff !important;
+}
+
+/* Dock button text in light mode */
+body[data-theme="light"] .sidebar-dock .dock-btn {
+    color: #475569 !important;
+}
+body[data-theme="light"] .sidebar-dock .dock-btn span {
+    color: #475569 !important;
+}
+body[data-theme="light"] .sidebar-dock .dock-btn.active {
+    color: #7c3aed !important;
+    background: rgba(139, 92, 246, 0.12) !important;
+}
+body[data-theme="light"] .sidebar-dock .dock-btn.active span {
+    color: #7c3aed !important;
+}
+
+/* --- BRAND TITLE --- */
+.main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="light"] .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="dark"] .main-brand-title,
+body:not([data-theme="light"]) .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* --- 3D GLASSMORPHISM CARDS --- */
+body[data-theme="light"] #appDashboardScreen .pro-card,
+body[data-theme="light"] #appDashboardScreen .tilt-card {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(120, 90, 180, 0.12), 0 1px 4px rgba(0,0,0,0.06) !important;
+    border-radius: 20px !important;
+}
+
+body[data-theme="dark"] #appDashboardScreen .pro-card,
+body:not([data-theme="light"]) #appDashboardScreen .pro-card,
+body[data-theme="dark"] #appDashboardScreen .tilt-card,
+body:not([data-theme="light"]) #appDashboardScreen .tilt-card {
+    background: rgba(15, 23, 42, 0.45) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 12px 20px 40px rgba(0, 0, 0, 0.7),
+        inset 0 2px 4px rgba(255, 255, 255, 0.08) !important;
+    border-radius: 24px !important;
+}
+
+/* --- DARK MODE TEXT VISIBILITY --- */
+body[data-theme="dark"] #appDashboardScreen,
+body:not([data-theme="light"]) #appDashboardScreen {
+    color: #f8fafc !important;
+}
+
+/* --- LIGHT MODE TEXT --- */
+body[data-theme="light"] #appDashboardScreen {
+    color: #1e293b !important;
+}
+
+/* --- BUTTONS DARK MODE --- */
+body[data-theme="dark"] #appDashboardScreen .btn-secondary,
+body:not([data-theme="light"]) #appDashboardScreen .btn-secondary,
+body[data-theme="dark"] #appDashboardScreen #btnUploadAudio,
+body:not([data-theme="light"]) #appDashboardScreen #btnUploadAudio,
+body[data-theme="dark"] #appDashboardScreen #btnSimulateAudio,
+body:not([data-theme="light"]) #appDashboardScreen #btnSimulateAudio {
+    background: rgba(30, 41, 59, 0.8) !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(167, 139, 250, 0.4) !important;
+}
+
+/* --- FULL WIDTH LAYOUT --- */
+#appDashboardScreen {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+}
+
+
+/* ====================================================
+   SURVEY QUESTIONNAIRE THEME-AWARE STYLES
+   ==================================================== */
+
+/* Survey question cards */
+body[data-theme="light"] .survey-question-card {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    box-shadow: 0 4px 20px rgba(120, 90, 180, 0.12), 0 1px 4px rgba(0,0,0,0.06) !important;
+    border-radius: 20px !important;
+}
+body[data-theme="dark"] .survey-question-card,
+body:not([data-theme="light"]) .survey-question-card {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Survey question text */
+body[data-theme="light"] .survey-question-text {
+    color: #1e293b !important;
+}
+body[data-theme="dark"] .survey-question-text,
+body:not([data-theme="light"]) .survey-question-text {
+    color: #f1f5f9 !important;
+}
+
+/* Survey option buttons - unselected */
+body[data-theme="light"] .survey-option-btn:not(.active) {
+    background: rgba(139, 92, 246, 0.08) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    color: #334155 !important;
+}
+body[data-theme="light"] .survey-option-btn:not(.active):hover {
+    background: rgba(139, 92, 246, 0.15) !important;
+    border-color: rgba(139, 92, 246, 0.5) !important;
+}
+body[data-theme="dark"] .survey-option-btn:not(.active),
+body:not([data-theme="light"]) .survey-option-btn:not(.active) {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #e2e8f0 !important;
+}
+
+/* Survey option buttons - selected */
+.survey-option-btn.active {
+    background: #6366F1 !important;
+    border: 1px solid #6366F1 !important;
+    color: #ffffff !important;
+}
+
+/* Score summary text */
+body[data-theme="light"] #questionnaireScoreSummary {
+    color: #059669 !important;
+}
+
+/* ====================================================
+   DOUBLE SCROLLBAR FIX - NUCLEAR
+   ==================================================== */
+html {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+body {
+    overflow-x: hidden !important;
+}
+body.on-dashboard {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+/* Kill ALL inner scrollbars on dashboard views */
+#appDashboardScreen,
+#appDashboardScreen .modality-view,
+#appDashboardScreen .dashboard-content-area,
+#appDashboardScreen .dashboard-container,
+#viewCheckin, #viewCBT, #viewLifestyle, #viewPressure, #viewWhatIf,
+#studentPortal, #counselorPortal {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+    max-height: none !important;
+    height: auto !important;
+}
+
+/* Pressure & Survey section text colors for light mode */
+body[data-theme="light"] #viewPressure h3,
+body[data-theme="light"] #viewPressure span,
+body[data-theme="light"] #viewPressure div,
+body[data-theme="light"] #viewPressure p {
+    color: #1e293b !important;
+}
+body[data-theme="light"] #viewPressure .pro-card {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(24px) saturate(200%) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    box-shadow: 0 4px 20px rgba(120, 90, 180, 0.12), 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+/* Light mode inner elements - light gray bg, no colored tint */
+body[data-theme="light"] #appDashboardScreen .audio-visualizer-container,
+body[data-theme="light"] #appDashboardScreen textarea,
+body[data-theme="light"] #appDashboardScreen .lime-token-box,
+body[data-theme="light"] #appDashboardScreen .result-box,
+body[data-theme="light"] #appDashboardScreen .voice-tips-pill,
+body[data-theme="light"] #appDashboardScreen .narrative-tips-pill,
+body[data-theme="light"] #appDashboardScreen .btn-secondary,
+body[data-theme="light"] #appDashboardScreen #btnUploadAudio,
+body[data-theme="light"] #appDashboardScreen #btnSimulateAudio {
+    background: #f8f5fe !important;
+    border: 1px solid rgba(139, 92, 246, 0.15) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+/* Ensure text in light mode inner elements is dark */
+body[data-theme="light"] #appDashboardScreen .btn-secondary,
+body[data-theme="light"] #appDashboardScreen #btnUploadAudio,
+body[data-theme="light"] #appDashboardScreen #btnSimulateAudio {
+    color: #374151 !important;
+}
+
+/* Sidebar dock in light mode - clean white */
+body[data-theme="light"] .sidebar-dock,
+body[data-theme="light"] #sidebarDock {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(120, 90, 180, 0.15) !important;
+    backdrop-filter: none !important;
+}
+
+/* Bottom dock in light mode */
+body[data-theme="light"] #bottomGlassDock {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(120, 90, 180, 0.15) !important;
+    backdrop-filter: none !important;
+}
+
+/* Force text colors and dark backgrounds for specific boxes in Dark Mode */
+body[data-theme="dark"] div[style*="background: rgba(0,0,0,0.28)"],
+body:not([data-theme="light"]) div[style*="background: rgba(0,0,0,0.28)"],
+body[data-theme="dark"] div[style*="background: rgba(0,0,0,0.08)"],
+body:not([data-theme="light"]) div[style*="background: rgba(0,0,0,0.08)"],
+body[data-theme="dark"] div[style*="background: rgba(0,0,0,0.3)"],
+body:not([data-theme="light"]) div[style*="background: rgba(0,0,0,0.3)"] {
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] div[style*="background: rgba(0,0,0,0.28)"] *,
+body:not([data-theme="light"]) div[style*="background: rgba(0,0,0,0.28)"] *,
+body[data-theme="dark"] div[style*="background: rgba(0,0,0,0.08)"] *,
+body:not([data-theme="light"]) div[style*="background: rgba(0,0,0,0.08)"] *,
+body[data-theme="dark"] div[style*="background: rgba(0,0,0,0.3)"] *,
+body:not([data-theme="light"]) div[style*="background: rgba(0,0,0,0.3)"] * {
+    color: inherit !important;
+}
+
+/* Ensure headings inside these boxes keep their specific colors in Dark Mode */
+body[data-theme="dark"] div[style*="color: #38BDF8"],
+body:not([data-theme="light"]) div[style*="color: #38BDF8"] {
+    color: #38BDF8 !important;
+}
+body[data-theme="dark"] div[style*="color: #F59E0B"],
+body:not([data-theme="light"]) div[style*="color: #F59E0B"] {
+    color: #F59E0B !important;
+}
+body[data-theme="dark"] div[style*="color: #A855F7"],
+body:not([data-theme="light"]) div[style*="color: #A855F7"] {
+    color: #A855F7 !important;
+}
+
+/* Ensure Light Mode keeps dark text on these specific boxes */
+body[data-theme="light"] div[style*="background: rgba(0,0,0,0.28)"],
+body[data-theme="light"] div[style*="background: rgba(0,0,0,0.08)"],
+body[data-theme="light"] div[style*="background: rgba(0,0,0,0.3)"] {
+    background: rgba(255, 255, 255, 0.5) !important;
+    color: #1e293b !important;
+    border-color: rgba(139, 92, 246, 0.2) !important;
+}
+body[data-theme="light"] div[style*="background: rgba(0,0,0,0.28)"] *,
+body[data-theme="light"] div[style*="background: rgba(0,0,0,0.08)"] *,
+body[data-theme="light"] div[style*="background: rgba(0,0,0,0.3)"] * {
+    color: inherit !important;
+}
+body[data-theme="light"] div[style*="color: #38BDF8"] { color: #0284c7 !important; }
+body[data-theme="light"] div[style*="color: #F59E0B"] { color: #d97706 !important; }
+body[data-theme="light"] div[style*="color: #A855F7"] { color: #7c3aed !important; }
+
+
+
+/* ====================================================
+   MAGIC UI DOCK EFFECT
+   ==================================================== */
+.sidebar-dock.magic-dock {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: flex-end !important;
+    padding: 12px 16px !important;
+    border-radius: 24px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    position: fixed !important;
+    bottom: 24px !important;
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    z-index: 1000 !important;
+    flex-direction: row !important;
+}
+
+body[data-theme="light"] .sidebar-dock.magic-dock {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.magic-dock .dock-btn {
+    position: relative !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent !important;
+    transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1), height 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #94a3b8 !important;
+}
+
+body[data-theme="light"] .magic-dock .dock-btn {
+    color: #64748b !important;
+}
+
+.magic-dock .dock-btn:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+body[data-theme="light"] .magic-dock .dock-btn:hover {
+    color: #000 !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.magic-dock .dock-btn.active {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+body[data-theme="light"] .magic-dock .dock-btn.active {
+    color: #000 !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.magic-dock .icon-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+}
+
+.magic-dock .icon-container svg {
+    width: 24px !important;
+    height: 24px !important;
+    transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1), height 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Tooltips */
+.magic-dock .dock-tooltip {
+    position: absolute;
+    bottom: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(15, 23, 42, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 100;
+}
+
+body[data-theme="light"] .magic-dock .dock-tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.magic-dock .dock-btn:hover .dock-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* Hide old labels if they accidentally render */
+.magic-dock .dock-label-desktop,
+.magic-dock .dock-label-mobile {
+    display: none !important;
+}
+
+
+/* ====================================================
+   BORDER BEAM ANIMATION (MAGIC UI STYLE)
+   ==================================================== */
+.pro-card {
+    position: relative; /* Ensure the absolute wrapper is contained */
+}
+
+.border-beam-wrapper {
+    position: absolute;
+    inset: 0; /* Or -1px if you want it slightly outside */
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 10;
+    border: 1.5px solid transparent; /* Thickness of the beam */
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) padding-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    overflow: hidden;
+}
+
+.border-beam-wrapper::before {
+    content: "";
+    position: absolute;
+    left: -100%;
+    top: -100%;
+    width: 300%;
+    height: 300%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 75%,
+        #38bdf8 85%,
+        #a855f7 95%,
+        transparent 100%
+    );
+    animation: beam-spin-anim 8s linear infinite;
+}
+
+@keyframes beam-spin-anim {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Light mode adjustments */
+body[data-theme="light"] .border-beam-wrapper::before {
+    background: conic-gradient(
+        from 0deg,
+        transparent 75%,
+        #0284c7 85%,
+        #7c3aed 95%,
+        transparent 100%
+    );
+    opacity: 0.75;
+}
+
+/* Mobile optimizations for input islands */
+@media (max-width: 768px) {
+    #textInputIsland, #voiceInputIsland {
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+}
+
+
+
+/* Add a touch of vibrant background tint to the dashboard */
+body.on-dashboard::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% -20%, rgba(168, 85, 247, 0.15), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+body[data-theme="light"].on-dashboard::before {
+    background: radial-gradient(circle at 50% -20%, rgba(168, 85, 247, 0.08), transparent 60%);
+}
+
+/* Add more purple shade for light theme background */
+body[data-theme="light"].on-dashboard::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(192, 132, 252, 0.25) 0%, rgba(168, 85, 247, 0.1) 50%, rgba(236, 72, 153, 0.05) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Force dark text for light mode subtitle to be visible */
+body[data-theme="light"] p[style*="color: rgba(255,255,255,0.7)"] {
+    color: #475569 !important;
+}
+
+/* Active Chat Layout Shifts */
+#cbtCompanionIsland.chat-active {
+    justify-content: flex-end !important;
+    padding-bottom: 20px !important;
+}
+#cbtCompanionIsland.chat-active #cbtChatMessages {
+    display: flex !important;
+}
+#cbtCompanionIsland.chat-active #v0HeroTitle,
+#cbtCompanionIsland.chat-active #v0Pills {
+    display: none !important;
+}
+#cbtCompanionIsland.chat-active #v0InputWrapper {
+    margin-top: 14px !important;
+}
+
+/* Force title dark text for light mode */
+body[data-theme="light"] #v0HeroTitle {
+    color: #1e293b !important;
+}
+
+/* ===== POINT 1: Remove transparent island from CBT companion - show pure background ===== */
+.cbt-chat-container,
+#cbtCompanionIsland {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* ===== POINT 4 & 5: Fix Pressure & Survey + What-If dark-mode text visibility ===== */
+/* Force white text on dark backgrounds for pressure/whatif views */
+#viewPressure h2, #viewPressure h3, #viewPressure h4,
+#viewPressure p, #viewPressure span, #viewPressure div,
+#viewPressure label, #viewPressure small {
+    color: #fff;
+}
+
+#viewWhatIf h2, #viewWhatIf h3, #viewWhatIf h4,
+#viewWhatIf p, #viewWhatIf span, #viewWhatIf div,
+#viewWhatIf label, #viewWhatIf small {
+    color: #fff;
+}
+
+/* Light mode overrides for pressure & whatif views */
+body[data-theme="light"] #viewPressure h2,
+body[data-theme="light"] #viewPressure h3,
+body[data-theme="light"] #viewPressure h4,
+body[data-theme="light"] #viewPressure p,
+body[data-theme="light"] #viewPressure span,
+body[data-theme="light"] #viewPressure label,
+body[data-theme="light"] #viewPressure small {
+    color: #1e293b !important;
+}
+
+body[data-theme="light"] #viewWhatIf h2,
+body[data-theme="light"] #viewWhatIf h3,
+body[data-theme="light"] #viewWhatIf h4,
+body[data-theme="light"] #viewWhatIf p,
+body[data-theme="light"] #viewWhatIf span,
+body[data-theme="light"] #viewWhatIf label,
+body[data-theme="light"] #viewWhatIf small {
+    color: #1e293b !important;
+}
+
+/* Fix light mode pro-card backgrounds for pressure & whatif */
+body[data-theme="light"] #viewPressure .pro-card,
+body[data-theme="light"] #viewWhatIf .pro-card {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(168, 85, 247, 0.2) !important;
+    box-shadow: 0 8px 32px rgba(120,90,180,0.12) !important;
+}
+
+/* Fix questionnaire/survey inputs in light mode */
+body[data-theme="light"] .questionnaire-option,
+body[data-theme="light"] .q-option {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(99, 102, 241, 0.3) !important;
+    color: #1e293b !important;
+}
+
+/* Fix purple background in light theme */
+body[data-theme="light"] #appDashboardScreen {
+    background: linear-gradient(135deg, rgba(237, 233, 254, 0.9) 0%, rgba(221, 214, 254, 0.7) 40%, rgba(233, 213, 255, 0.6) 70%, rgba(250, 232, 255, 0.5) 100%) !important;
+}
+
+/* ===== COMPREHENSIVE LIGHT MODE TEXT FIX - Pressure & Survey + What-If ===== */
+
+/* Fix all text inside viewPressure to be dark on white/glass background */
+body[data-theme="light"] #viewPressure *:not(button):not(.btn-gradient):not(#btnSurveyPHQ9):not(#btnSurveyGAD7):not(#btnSurveyPSS):not(.active) {
+    color: #1e293b !important;
+}
+
+/* Except colored labels that need to keep their hue - just darken slightly */
+body[data-theme="light"] #viewPressure [style*="color: #F59E0B"] { color: #b45309 !important; }
+body[data-theme="light"] #viewPressure [style*="color: #818CF8"] { color: #4338ca !important; }
+body[data-theme="light"] #viewPressure [style*="color: #34D399"] { color: #059669 !important; }
+body[data-theme="light"] #viewPressure [style*="color: #38BDF8"] { color: #0284c7 !important; }
+
+/* All text in whatif view */
+body[data-theme="light"] #viewWhatIf *:not(button):not(.btn-gradient):not(.badge) {
+    color: #1e293b !important;
+}
+body[data-theme="light"] #viewWhatIf [style*="color: #EC4899"] { color: #9d174d !important; }
+body[data-theme="light"] #viewWhatIf [style*="color: #818CF8"] { color: #4338ca !important; }
+body[data-theme="light"] #viewWhatIf [style*="color: #10B981"] { color: #065f46 !important; }
+
+/* Survey option buttons in light mode */
+body[data-theme="light"] .survey-option-btn {
+    color: #1e293b !important;
+    background: rgba(99, 102, 241, 0.08) !important;
+    border-color: rgba(99, 102, 241, 0.2) !important;
+}
+body[data-theme="light"] .survey-option-btn.active {
+    color: #fff !important;
+    background: #6366F1 !important;
+}
+
+/* Survey question card in light mode */
+body[data-theme="light"] .survey-question-card {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(99, 102, 241, 0.2) !important;
+}
+
+/* What-If XAI label boxes in light mode */
+body[data-theme="light"] #viewWhatIf label {
+    background: rgba(99, 102, 241, 0.08) !important;
+    border: 1px solid rgba(99, 102, 241, 0.2) !important;
+    color: #1e293b !important;
+}
+body[data-theme="light"] #viewWhatIf .pro-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(99, 102, 241, 0.18) !important;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1) !important;
+}
+
+/* Fix the questionnaire summary and score area in light mode */
+body[data-theme="light"] #questionnaireScoreSummary {
+    color: #059669 !important;
+}
+
+
+/* ===== BRAND TITLE: Override gradient to solid indigo, remove old font ===== */
+.main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme=''light''] .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="dark"] .main-brand-title,
+body:not([data-theme="light"]) .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* =====================================================================
+   MASTER FIX BLOCK - v23
+   ===================================================================== */
+
+/* ── POINT 1: Ensure modality views are visible when active ── */
+.modality-view.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    overflow-y: auto !important;
+    min-height: 200px !important;
+}
+#viewLifestyle.active,
+#viewPressure.active,
+#viewWhatIf.active {
+    display: block !important;
+    visibility: visible !important;
+}
+/* Ensure dashboard content area doesn't clip content */
+.dashboard-content-area {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: calc(100vh - 130px) !important;
+}
+#studentPortal, #counselorPortal {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 100% !important;
+}
+
+/* ── POINT 2: Assessment islands – side by side, responsive ── */
+#middleAssessmentRow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+}
+@media (max-width: 768px) {
+    #middleAssessmentRow {
+        grid-template-columns: 1fr !important;
+    }
+}
+#voiceAssessmentIsland, #textAssessmentIsland {
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+/* ── POINT 3: Hide tips on mobile, show on desktop ── */
+.desktop-only-tip {
+    display: block !important;
+}
+@media (max-width: 768px) {
+    .desktop-only-tip {
+        display: none !important;
+    }
+}
+
+/* ── POINT 4: Reduce input island height ── */
+.input-card {
+    min-height: unset !important;
+}
+.input-card .audio-visualizer-container {
+    height: 70px !important;
+    min-height: 70px !important;
+}
+.input-card .audio-visualizer-container canvas {
+    height: 70px !important;
+}
+.input-card #journalTextarea {
+    min-height: 100px !important;
+    max-height: 150px !important;
+}
+
+/* ── POINT 5: NeuraMind brand title - visible in both themes ── */
+.main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="light"] .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="dark"] .main-brand-title,
+body:not([data-theme="light"]) .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* ── POINT 5b: CBT Assistant - not too black in dark mode ── */
+#viewCBT,
+#cbtCompanionIsland {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+#v0InputWrapper > div:not(#v0Pills),
+.v0-input-wrapper > div[style*="background: #09090b"],
+.v0-input-wrapper > div[style*="#09090b"] {
+    background: rgba(15, 15, 20, 0.75) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+body[data-theme="light"] #v0InputWrapper > div:not(#v0Pills),
+body[data-theme="light"] .v0-input-wrapper > div[style*="background"] {
+    background: rgba(250, 250, 250, 0.8) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+/* Action pills: glassmorphic in dark mode */
+body:not([data-theme="light"]) #v0Pills button {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #e2e8f0 !important;
+    backdrop-filter: blur(8px) !important;
+}
+body[data-theme="light"] #v0Pills button {
+    background: rgba(15, 10, 40, 0.75) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    color: #e2e8f0 !important;
+}
+/* Hero title in CBT - visible on dark mode */
+body:not([data-theme="light"]) #v0HeroTitle {
+    color: #f1f5f9 !important;
+}
+body[data-theme="light"] #v0HeroTitle {
+    color: #1e1b4b !important;
+}
+
+/* ── POINT 6: Light theme purple background shade ── */
+body[data-theme="light"] #appDashboardScreen {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 30%, #e9d5ff 60%, #fae8ff 100%) !important;
+}
+body[data-theme="light"]::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(236, 72, 153, 0.10) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── POINT 7: Glassmorphism on cards when custom BG is active ── */
+body.has-custom-bg .pro-card,
+body.has-custom-bg .input-card,
+body.has-custom-bg .cbt-card {
+    background: rgba(10, 5, 30, 0.55) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+}
+body.has-custom-bg .dashboard-content-area,
+body.has-custom-bg #appDashboardScreen {
+    background: transparent !important;
+}
+/* Ensure bg image is always behind content */
+#bgCustomImage {
+    z-index: 1 !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    object-fit: cover !important;
+    pointer-events: none !important;
+}
+body.has-custom-bg .top-header-bar {
+    background: rgba(10, 5, 30, 0.7) !important;
+    backdrop-filter: blur(20px) !important;
+}
+
+/* ── LIGHT MODE PRESSURE & SURVEY + WHATIF TEXT VISIBILITY ── */
+/* Nuclear option: all text in these views must be dark on light theme */
+body[data-theme="light"] #viewPressure,
+body[data-theme="light"] #viewPressure * {
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+}
+/* Re-apply colored accent pills */
+body[data-theme="light"] #viewPressure #pressureTierBadge,
+body[data-theme="light"] #viewPressure [style*="#F59E0B"],
+body[data-theme="light"] #viewPressure [style*="color: #F59E0B"] {
+    color: #b45309 !important;
+    -webkit-text-fill-color: #b45309 !important;
+}
+body[data-theme="light"] #viewPressure #questionnaireScoreSummary {
+    color: #059669 !important;
+    -webkit-text-fill-color: #059669 !important;
+}
+body[data-theme="light"] #viewWhatIf,
+body[data-theme="light"] #viewWhatIf * {
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+}
+body[data-theme="light"] #viewLifestyle,
+body[data-theme="light"] #viewLifestyle * {
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+}
+/* Keep score/chart values colored */
+body[data-theme="light"] #viewLifestyle #lifestyleRiskTitle { color: #b45309 !important; -webkit-text-fill-color: #b45309 !important; }
+body[data-theme="light"] #viewWhatIf #whatIfResultText { color: #1e293b !important; -webkit-text-fill-color: #1e293b !important; }
+
+/* Light mode survey buttons */
+body[data-theme="light"] .survey-option-btn { color: #1e293b !important; -webkit-text-fill-color: #1e293b !important; }
+body[data-theme="light"] .survey-option-btn.active { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+body[data-theme="light"] #btnSurveyPHQ9, body[data-theme="light"] #btnSurveyGAD7, body[data-theme="light"] #btnSurveyPSS {
+    color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+
+/* =====================================================================
+   MASTER FIX BLOCK v24 - All final overrides
+   ===================================================================== */
+
+/* ── POINT 1: Voice Assessment forced into same row as Narrative ── */
+#middleAssessmentRow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+    align-items: start !important;
+}
+#voiceAssessmentIsland, #textAssessmentIsland {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+@media (max-width: 900px) {
+    #middleAssessmentRow {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ── POINT 2: Fix timer-display overlap in voice island ── */
+.audio-visualizer-container {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0 !important;
+    min-height: 90px !important;
+    max-height: 90px !important;
+}
+.timer-display {
+    font-size: 0.82rem !important;
+    padding: 4px 0 !important;
+    margin-top: 0 !important;
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* ── POINT 4: CBT chat - glassmorphic purple, not solid black ── */
+#v0InputWrapper > div:nth-child(2),
+.v0-input-wrapper > div[style*="background"] {
+    background: rgba(20, 10, 60, 0.72) !important;
+    backdrop-filter: blur(24px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.35) !important;
+    box-shadow: 0 8px 32px rgba(99, 51, 255, 0.2) !important;
+}
+/* Action pills - transparent backdrop, no solid box */
+#v0Pills {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+#v0Pills button {
+    background: rgba(99, 51, 255, 0.15) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    color: #e2e8f0 !important;
+    backdrop-filter: blur(8px) !important;
+}
+#v0Pills button:hover {
+    background: rgba(139, 92, 246, 0.35) !important;
+    color: #fff !important;
+}
+/* CBT textarea */
+#cbtChatInput {
+    color: #f1f5f9 !important;
+    background: transparent !important;
+}
+#cbtChatInput::placeholder {
+    color: rgba(199, 180, 255, 0.6) !important;
+}
+body[data-theme="light"] #cbtChatInput::placeholder {
+    color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* ── POINT 5: Nuclear fix for blank views ── */
+.modality-view {
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+.modality-view[style*="display: none"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+/* When JS sets display:block via .active class */
+#viewLifestyle,
+#viewPressure,
+#viewWhatIf {
+    /* these should be block when active - ensure no overflow clipping from parent */
+    overflow: visible !important;
+}
+#viewLifestyle.active,
+#viewPressure.active,
+#viewWhatIf.active,
+#viewCheckin.active,
+#viewCBT.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+/* Ensure dashboard content area is scrollable */
+.dashboard-content-area {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: calc(100vh - 130px) !important;
+}
+
+
+
+/* ── POINT 7: CalmSync AI brand title ── */
+.main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="light"] .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="dark"] .main-brand-title,
+body:not([data-theme="light"]) .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+/* Also fix the subtitle / badge */
+.top-center-subtitle,
+.top-badge-btn {
+    display: block !important;
+    text-align: center !important;
+}
+
+/* Light theme purple background - stronger coverage */
+body[data-theme="light"] {
+    background: linear-gradient(160deg, #f3e8ff 0%, #ede9fe 25%, #ddd6fe 60%, #e0e7ff 100%) !important;
+}
+body[data-theme="light"] #appDashboardScreen,
+body[data-theme="light"] .dashboard-content-area {
+    background: transparent !important;
+}
+
+/* Light mode text readability for header area */
+body[data-theme="light"] .top-center-title ~ p,
+body[data-theme="light"] .main-brand-title ~ p {
+    color: #6d28d9 !important;
+}
+
+/* Fix CBT Input area for both themes */
+body[data-theme="light"] #v0InputWrapper > div:nth-child(2),
+body[data-theme="light"] .v0-input-wrapper > div:nth-child(2) {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+}
+
+body[data-theme="dark"] #v0InputWrapper > div:nth-child(2),
+body[data-theme="dark"] .v0-input-wrapper > div:nth-child(2),
+body:not([data-theme="light"]) #v0InputWrapper > div:nth-child(2) {
+    background: rgba(30, 30, 40, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Remove black background from pills completely */
+#v0Pills {
+    background: transparent !important;
+    border: none !important;
+}
+#v0Pills button {
+    background: rgba(139, 92, 246, 0.1) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    color: #8b5cf6 !important;
+}
+body[data-theme="dark"] #v0Pills button,
+body:not([data-theme="light"]) #v0Pills button {
+    color: #c4b5fd !important;
+    border: 1px solid rgba(196, 181, 253, 0.4) !important;
+}
+
+#bottomGlassDock {
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+}
+.dock-btn {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+
+
+/* Font color for NeuroSense AI */
+.main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+body[data-theme="dark"] .main-brand-title,
+body:not([data-theme="light"]) .main-brand-title {
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7) !important;
+}
+
+#viewCheckin.active, #viewCBT.active, #viewLifestyle.active, #viewPressure.active, #viewWhatIf.active {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: auto !important;
+    min-height: 500px !important;
+    z-index: 10 !important;
+}
+
+
+/* ===== VIEW CONTROL SYSTEM ===== */
+/* All views hidden by default - JS adds 'active' class to show one */
+#viewCheckin,
+#viewCBT,
+#viewLifestyle,
+#viewPressure,
+#viewWhatIf {
+    display: none !important;
+}
+
+#viewCheckin.active,
+#viewCBT.active,
+#viewLifestyle.active,
+#viewPressure.active,
+#viewWhatIf.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 200px;
+}
+
+/* appDashboardScreen: hidden until JS adds on-dashboard to body */
+#appDashboardScreen {
+    display: none !important;
+}
+body.on-dashboard #appDashboardScreen {
+    display: block !important;
+}
+
+
+/* Dashboard screen: flex on mobile when active */
+@media (max-width: 900px) {
+    body.on-dashboard #appDashboardScreen {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 18px;
+    }
+}
+
+
+/* ===== RESULT ISLANDS SIDE BY SIDE ON DESKTOP ===== */
+.bottom-results-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+    margin-top: 24px !important;
+}
+@media (max-width: 900px) {
+    .bottom-results-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ===== TOP INPUTS: Narrative Left, Voice Right on desktop ===== */
+@media (min-width: 901px) {
+    .top-inputs-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 24px !important;
+    }
+}
+@media (max-width: 900px) {
+    .top-inputs-row {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 18px !important;
+    }
+    /* On phone: only show top input islands (narrative + voice check-in),
+       hide result islands by default - they show after test runs */
+    .bottom-results-row {
+        display: none !important;
+    }
+    .bottom-results-row.results-visible {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 18px !important;
+    }
+}
+
+
+/* ===== CLINICAL ASSESSMENT ISLANDS: Narrative Left, Voice Right ===== */
+#middleAssessmentRow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+    margin-bottom: 32px !important;
+}
+@media (max-width: 900px) {
+    #middleAssessmentRow {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ============================================================
+   FINAL FIX v26c — All layout and visibility corrections
+   ============================================================ */
+
+/* --- Island Order: Narrative LEFT, Voice RIGHT on desktop --- */
+/* Top inputs row: use CSS order to put textInputIsland (narrative) first */
+.top-inputs-row {
+    display: grid !important;
+}
+
+/* Narrative journal (textInputIsland) appears FIRST/LEFT */
+#textInputIsland {
+    order: -1 !important; /* pulls it to the left */
+}
+/* Voice check-in (voiceInputIsland) appears SECOND/RIGHT */
+#voiceInputIsland {
+    order: 1 !important;
+}
+
+/* On mobile: stacked vertically, Narrative first, Voice second */
+@media (max-width: 900px) {
+    .top-inputs-row {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    #textInputIsland {
+        order: -1 !important; /* Narrative journal at top */
+    }
+    #voiceInputIsland {
+        order: 1 !important; /* Voice check-in below it */
+    }
+}
+
+/* --- Result Islands: Text/Linguistic LEFT, Audio/Speech RIGHT --- */
+/* Results row - 2 column grid on desktop */
+.bottom-results-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+    margin-top: 24px !important;
+}
+
+/* textAnalysisResults (Linguistic) LEFT */
+#textAnalysisResults {
+    order: -1 !important;
+}
+/* audioAnalysisResults (Speech Acoustic) RIGHT */
+#audioAnalysisResults {
+    order: 1 !important;
+}
+
+/* On mobile: result row hidden by default, shows after test */
+@media (max-width: 900px) {
+    .bottom-results-row {
+        display: none !important;
+        grid-template-columns: 1fr !important;
+    }
+    .bottom-results-row.results-visible {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    #textAnalysisResults, #audioAnalysisResults {
+        order: unset !important;
+    }
+}
+
+/* --- Clinical Assessment Row: Narrative LEFT, Voice RIGHT --- */
+#middleAssessmentRow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+}
+/* Narrative Clinical (textAssessmentIsland) LEFT */
+#textAssessmentIsland {
+    order: -1 !important;
+}
+/* Voice Clinical (voiceAssessmentIsland) RIGHT */
+#voiceAssessmentIsland {
+    order: 1 !important;
+}
+@media (max-width: 900px) {
+    #middleAssessmentRow {
+        grid-template-columns: 1fr !important;
+    }
+    #textAssessmentIsland, #voiceAssessmentIsland {
+        order: unset !important;
+    }
+}
+
+/* --- Fix View Sections Visibility (class-based toggle) --- */
+#viewCheckin,
+#viewCBT,
+#viewLifestyle,
+#viewPressure,
+#viewWhatIf {
+    display: none !important;
+    visibility: hidden;
+}
+#viewCheckin.active,
+#viewCBT.active,
+#viewLifestyle.active,
+#viewPressure.active,
+#viewWhatIf.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* --- Fix Dashboard Screen visibility (body class-based) --- */
+#appDashboardScreen {
+    display: none !important;
+}
+body.on-dashboard #appDashboardScreen {
+    display: block !important;
+}
+@media (max-width: 900px) {
+    body.on-dashboard #appDashboardScreen {
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* --- Fix grid overlap at top of screen --- */
+#appDashboardScreen::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(rgba(139, 92, 246, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 92, 246, 0.12) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none !important;
+    z-index: 0;
+}
+body[data-theme="light"] #appDashboardScreen::before {
+    background-image:
+        linear-gradient(rgba(100, 60, 220, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 60, 220, 0.1) 1px, transparent 1px);
+}
+
+/* Ensure content is above grid overlay */
+#appDashboardScreen > * {
+    position: relative;
+    z-index: 1;
+}
+
+body.has-custom-bg.on-dashboard { background: transparent !important; }
+
+body #appDashboardScreen #v0InputWrapper > div:not(#v0Pills), body #appDashboardScreen .v0-input-wrapper > div { max-width: 1400px !important; width: 100% !important; }
+
+#cbtCompanionIsland { max-width: 1400px !important; width: 100% !important; }
+
+/* Ensure card headers and desc are dark in light mode */
+body[data-theme="light"] .card-header h3,
+body[data-theme="light"] .card-desc {
+    color: #1e293b !important;
+}
+
+/* Ensure lifestyle dock button only visible on mobile */
+@media (min-width: 769px) {
+    #dockBtnLifestyle {
+        display: none !important;
+    }
+}
+
+/* Robust Fixes for CBT Input */
+body.on-dashboard[data-theme="light"] #cbtChatInput {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+body.on-dashboard:not([data-theme="light"]) #cbtChatInput {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Robust Fixes for Top Center Title */
+body.on-dashboard[data-theme="light"] .top-center-title {
+    color: #0F172A !important;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95) !important;
+}
+body.on-dashboard:not([data-theme="light"]) .top-center-title {
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+}
+
+/* --- Fix Layout Overlap on Mobile --- */
+@media (max-width: 900px) {
+    /* Ensure the header title drops below the absolute back/theme buttons */
+    body.on-dashboard header.navbar-top-controls {
+        margin-top: 68px !important;
+    }
+    
+    /* Fix the check-in view columns from overlapping */
+    #viewCheckin .dual-modality-columns {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 32px !important;
+    }
+    #viewCheckin .modality-column {
+        height: auto !important;
+        overflow: visible !important;
+        margin-bottom: 0 !important;
+    }
+    #textInputIsland, #voiceInputIsland {
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        position: relative !important;
+        margin-top: 0 !important;
+        top: 0 !important;
+        transform: none !important;
+    }
+    
+    /* Show result islands when triggered */
+    #textAssessmentIsland.show-result, 
+    #voiceAssessmentIsland.show-result, 
+    #combinedAssessmentIsland.show-result {
+        display: flex !important;
+    }
+}
+
+/* Ensure show-result class works on desktop too */
+@media (min-width: 769px) {
+    #textAssessmentIsland.show-result, 
+    #voiceAssessmentIsland.show-result, 
+    #combinedAssessmentIsland.show-result {
+        display: flex !important;
+    }
+}
+
+/* Extra layout fixes from subagent */
+@media (max-width: 900px) {
+    header.navbar-top-controls > div:first-child.top-center-wrapper {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+    body.on-dashboard header.navbar-top-controls {
+        margin-top: 60px !important;
+    }
+}
+
+/* Ensure hidden result tiles are actually hidden */
+#textAnalysisResults.hidden, #audioAnalysisResults.hidden, .results-section.hidden {
+    display: none !important;
+}
+
+/* Force all result sections to be column layout globally */
+.results-section, #textAnalysisResults, #audioAnalysisResults {
+    flex-direction: column !important;
 }

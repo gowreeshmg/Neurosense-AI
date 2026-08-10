@@ -80,6 +80,17 @@ async function clearCustomBgFromIndexedDB() {
 
 // Initialize UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[name="bgScope"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            localStorage.setItem('neurosense_bg_scope', e.target.value);
+            const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home';
+            applyBackgroundState(currentScreen);
+        });
+    });
+    const savedScope = localStorage.getItem('neurosense_bg_scope') || 'both';
+    const scopeRadio = document.querySelector(`input[name="bgScope"][value="${savedScope}"]`);
+    if (scopeRadio) scopeRadio.checked = true;
+
     // Check saved theme preference
     const savedTheme = localStorage.getItem('neurosense_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -124,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let i = 0; i < 4; i++) {
                     const defVid = document.getElementById(`bgVideo${i}`);
                     if (defVid) {
-                        defVid.style.setProperty('opacity', '0', 'important');
-                        defVid.style.setProperty('display', 'none', 'important');
+                        defVid.style.setProperty('opacity', '0');
+                        defVid.style.setProperty('display', 'none');
                         defVid.classList.remove('active');
                     }
                 }
@@ -145,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     vidEl.muted = true; vidEl.loop = true; vidEl.playsInline = true; vidEl.autoplay = true;
                     vidEl.src = fileUrl;
                     vidEl.style.setProperty('display', 'block', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
                     vidEl.style.setProperty('opacity', '1', 'important');
                     vidEl.style.setProperty('z-index', '30', 'important');
                     vidEl.classList.add('active');
@@ -154,11 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (vidEl) { vidEl.pause(); vidEl.style.setProperty('display', 'none', 'important'); vidEl.classList.remove('active'); }
                     imgEl.src = fileUrl;
                     imgEl.style.setProperty('display', 'block', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
                     imgEl.style.setProperty('opacity', '1', 'important');
                     imgEl.style.setProperty('z-index', '30', 'important');
                     imgEl.classList.add('active');
                 }
-                if (statusEl) {
+                const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home'; applyBackgroundState(currentScreen);
+    if (statusEl) {
                     statusEl.innerText = `✓ Active: ${(fileName || 'custom media').slice(0, 24)}`;
                     statusEl.style.display = 'block';
                 }
@@ -184,14 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (vid) {
                 if (i === savedIdx) {
                     vid.classList.add('active');
-                    vid.style.setProperty('display', 'block', 'important');
-                    vid.style.setProperty('opacity', '1', 'important');
-                    vid.style.setProperty('z-index', '2', 'important');
+                    vid.style.setProperty('display', 'block');
+                    vid.style.setProperty('opacity', '1');
+                    vid.style.setProperty('z-index', '2');
                     if (vid.paused) vid.play().catch(() => {});
                 } else {
                     vid.classList.remove('active');
-                    vid.style.setProperty('opacity', '0', 'important');
-                    vid.style.setProperty('z-index', '1', 'important');
+                    vid.style.setProperty('opacity', '0');
+                    vid.style.setProperty('z-index', '1');
                 }
             }
             if (btn) {
@@ -251,6 +265,88 @@ function toggleTheme() {
 /**
  * Switches between RIVR-style Home Screen and Main Project Dashboard
  */
+
+function applyBackgroundState(screenName) {
+    const useCustom = localStorage.getItem('neurosense_use_custom_bg') === 'true';
+    const scope = localStorage.getItem('neurosense_bg_scope') || 'both';
+    
+    let showCustom = false;
+    if (useCustom) {
+        if (scope === 'both') showCustom = true;
+        else if (scope === 'dashboard' && screenName === 'dashboard') showCustom = true;
+        else if (scope === 'home' && screenName === 'home') showCustom = true;
+    }
+    
+    const imgEl = document.getElementById('bgCustomImage');
+    const vidEl = document.getElementById('bgCustomVideo');
+    const overlayTree = document.getElementById('bgOverlayTree');
+    
+    if (showCustom) {
+        if (overlayTree) overlayTree.style.setProperty('display', 'none', 'important');
+        for (let i = 0; i < 4; i++) {
+            const defVid = document.getElementById(`bgVideo${i}`);
+            if (defVid) {
+                defVid.style.setProperty('opacity', '0');
+                defVid.style.setProperty('display', 'none');
+            }
+        }
+        
+        const isVideo = localStorage.getItem('neurosense_bg_type') === 'video';
+        if (isVideo) {
+            if (vidEl) {
+                vidEl.style.setProperty('display', 'block', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
+                vidEl.style.setProperty('opacity', '1', 'important');
+            }
+            if (imgEl) {
+                imgEl.style.setProperty('display', 'none', 'important');
+                imgEl.style.setProperty('opacity', '0', 'important');
+            }
+        } else {
+            if (imgEl) {
+                imgEl.style.setProperty('display', 'block', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
+                imgEl.style.setProperty('opacity', '1', 'important');
+            }
+            if (vidEl) {
+                vidEl.style.setProperty('display', 'none', 'important');
+                vidEl.style.setProperty('opacity', '0', 'important');
+            }
+        }
+    } else {
+        document.body.style.removeProperty('background-color');
+        if (vidEl) {
+            vidEl.style.setProperty('display', 'none', 'important');
+            vidEl.style.setProperty('opacity', '0', 'important');
+        }
+        if (imgEl) {
+            imgEl.style.setProperty('display', 'none', 'important');
+            imgEl.style.setProperty('opacity', '0', 'important');
+        }
+        
+        let activeIdx = localStorage.getItem('lumora_active_video_index');
+        if (activeIdx === null) activeIdx = 0;
+        
+        for (let i = 0; i < 4; i++) {
+            const defVid = document.getElementById(`bgVideo${i}`);
+            if (defVid) {
+                if (i == activeIdx) {
+                    defVid.style.setProperty('opacity', '1');
+                    defVid.style.setProperty('display', 'block');
+                } else {
+                    defVid.style.setProperty('opacity', '0');
+                    defVid.style.setProperty('display', 'none');
+                }
+            }
+        }
+        if (overlayTree && activeIdx == 0) {
+            overlayTree.style.setProperty('display', 'block', 'important');
+        } else if (overlayTree) {
+            overlayTree.style.setProperty('display', 'none', 'important');
+        }
+    }
+}
+
 function switchScreen(screenName) {
     const homeScreen = document.getElementById('lumoraHomeScreen');
     const dashboardScreen = document.getElementById('appDashboardScreen');
@@ -286,6 +382,7 @@ function switchScreen(screenName) {
             el.style.setProperty('transform', 'scale(1)', 'important');
         });
         window.scrollTo(0, 0);
+        applyBackgroundState('home');
     } else if (screenName === 'dashboard') {
         if (homeScreen) {
             homeScreen.classList.add('hidden-screen');
@@ -293,19 +390,7 @@ function switchScreen(screenName) {
         }
         if (dashboardScreen) {
             dashboardScreen.classList.remove('hidden-screen');
-            const isMobile = window.innerWidth <= 900;
-            dashboardScreen.style.setProperty('display', isMobile ? 'flex' : 'block', 'important');
-            if (isMobile) {
-                dashboardScreen.style.setProperty('flex-direction', 'column', 'important');
-                dashboardScreen.style.setProperty('align-items', 'center', 'important');
-                dashboardScreen.style.setProperty('justify-content', 'flex-start', 'important');
-                dashboardScreen.style.setProperty('gap', '18px', 'important');
-            } else {
-                dashboardScreen.style.removeProperty('flex-direction');
-                dashboardScreen.style.removeProperty('align-items');
-                dashboardScreen.style.removeProperty('justify-content');
-                dashboardScreen.style.removeProperty('gap');
-            }
+            dashboardScreen.style.removeProperty('display'); // CSS body.on-dashboard handles this
         }
         if (dashboardVideoBg) {
             dashboardVideoBg.style.setProperty('display', 'none', 'important');
@@ -316,8 +401,9 @@ function switchScreen(screenName) {
         // Restore dashboard chrome: top header and bottom dock
         if (topControls) topControls.style.setProperty('display', 'flex', 'important');
         if (bottomDock) bottomDock.style.setProperty('display', 'inline-flex', 'important');
-        document.body.style.setProperty('background-color', 'transparent', 'important');
+        // Background is handled by CSS body.on-dashboard rules
         document.body.classList.add('on-dashboard');
+        applyBackgroundState('dashboard');
         if (typeof setDashboardBlur === 'function') {
             const currBlur = localStorage.getItem('lumora_dashboard_blur') || 4;
             setDashboardBlur(Number(currBlur));
@@ -339,152 +425,74 @@ function switchScreen(screenName) {
         }
         
         if (typeof setupLiquidDockBehavior === 'function') setupLiquidDockBehavior();
-        switchDashboardView('voice');
+        switchDashboardView('checkin');
     }
 }
 
 /**
  * Switches active dashboard tab view between Voice, Text, and CBT/GPT Assistant
  */
+
 function switchDashboardView(viewName) {
-    const vVoice = document.getElementById('viewVoice');
-    const vText = document.getElementById('viewText');
-    const vCBT = document.getElementById('viewCBT');
-    const vLifestyle = document.getElementById('viewLifestyle');
-    const vPressure = document.getElementById('viewPressure');
-    const vWhatIf = document.getElementById('viewWhatIf');
-    
-    const btnVoice = document.getElementById('dockBtnVoice');
-    const btnText = document.getElementById('dockBtnText');
-    const btnCBT = document.getElementById('dockBtnCBT');
-    const btnLifestyle = document.getElementById('dockBtnLifestyle');
-    const btnPressure = document.getElementById('dockBtnPressure');
-    const btnWhatIf = document.getElementById('dockBtnWhatIf');
-    
-    const isMobileView = window.innerWidth <= 900;
-    const setModalityDisplay = (el) => {
-        if (!el) return;
-        if (isMobileView) {
-            el.style.setProperty('display', 'flex', 'important');
-            el.style.setProperty('flex-direction', 'column', 'important');
-            el.style.setProperty('width', '100%', 'important');
-        } else {
-            el.style.setProperty('display', 'block', 'important');
-            el.style.removeProperty('flex-direction');
-        }
+    const views = {
+        'checkin': document.getElementById('viewCheckin'),
+        'cbt': document.getElementById('viewCBT'),
+        'lifestyle': document.getElementById('viewLifestyle'),
+        'pressure': document.getElementById('viewPressure'),
+        'whatif': document.getElementById('viewWhatIf')
     };
     
-    [vVoice, vText, vCBT, vLifestyle, vPressure, vWhatIf].forEach(v => {
-        if (v) v.style.setProperty('display', 'none', 'important');
-    });
-    
-    [btnVoice, btnText, btnCBT, btnLifestyle, btnPressure, btnWhatIf].forEach(btn => {
-        if (btn) {
-            btn.classList.remove('active');
-            btn.style.background = 'transparent';
-            btn.style.boxShadow = 'none';
-            btn.style.color = 'rgba(255,255,255,0.78)';
+    const btns = {
+        'checkin': document.getElementById('dockBtnVoice'), // we reused this button
+        'cbt': document.getElementById('dockBtnCBT'),
+        'lifestyle': document.getElementById('dockBtnLifestyle'),
+        'pressure': document.getElementById('dockBtnPressure'),
+        'whatif': document.getElementById('dockBtnWhatIf')
+    };
+
+    // Hide all - ONLY use class toggling, no inline styles
+    Object.values(views).forEach(v => {
+        if (v) {
+            v.style.removeProperty('display');
+            v.classList.remove('active');
         }
     });
     
-    if (viewName === 'voice') {
-        setModalityDisplay(vVoice);
-        if (btnVoice) { btnVoice.classList.add('active'); btnVoice.style.color = '#FA233B'; }
-        const audioRes = document.getElementById('audioAnalysisResults');
-        const shapBox = document.getElementById('shapBoxWrapper');
-        if (window.innerWidth >= 1024) {
-            if (audioRes) {
-                audioRes.classList.remove('hidden');
-                audioRes.style.setProperty('display', 'flex', 'important');
-            }
-            if (shapBox) {
-                if (currentAnalysisResult && (currentAnalysisResult.audio_xai || currentAnalysisResult.audio_analysis)) {
-                    shapBox.style.setProperty('display', 'block', 'important');
-                } else {
-                    shapBox.style.setProperty('display', 'none', 'important');
-                }
-            }
-        } else {
-            if (audioRes && (!currentAnalysisResult || (!currentAnalysisResult.audio_xai && !currentAnalysisResult.audio_analysis))) {
-                audioRes.classList.add('hidden');
-                audioRes.style.setProperty('display', 'none', 'important');
-            }
-        }
-        if (typeof initVisualizer === 'function') initVisualizer();
-        if (typeof renderVoiceEmotionChart === 'function') renderVoiceEmotionChart(currentAnalysisResult ? currentAnalysisResult.audio_analysis : null);
-        if (typeof renderSHAPChart === 'function') {
-            const drivers = (currentAnalysisResult && currentAnalysisResult.audio_xai && currentAnalysisResult.audio_xai.top_acoustic_drivers) ? currentAnalysisResult.audio_xai.top_acoustic_drivers : [
-                { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
-                { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
-                { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
-                { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
-            ];
-            renderSHAPChart(drivers, 'voiceShapChartCanvas');
-        }
-    } else if (viewName === 'text') {
-        setModalityDisplay(vText);
-        if (btnText) { btnText.classList.add('active'); btnText.style.color = '#FA233B'; }
-        const textRes = document.getElementById('textAnalysisResults');
-        const limeBox = document.getElementById('limeBoxWrapper');
-        if (window.innerWidth >= 1024) {
-            if (textRes) {
-                textRes.classList.remove('hidden');
-                textRes.style.setProperty('display', 'flex', 'important');
-            }
-            if (limeBox) {
-                if (currentAnalysisResult && (currentAnalysisResult.text_xai || currentAnalysisResult.text_analysis)) {
-                    limeBox.style.setProperty('display', 'block', 'important');
-                } else {
-                    limeBox.style.setProperty('display', 'none', 'important');
-                }
-            }
-        } else {
-            if (textRes && (!currentAnalysisResult || (!currentAnalysisResult.text_xai && !currentAnalysisResult.text_analysis))) {
-                textRes.classList.add('hidden');
-                textRes.style.setProperty('display', 'none', 'important');
-            }
-        }
-    } else if (viewName === 'cbt') {
-        setModalityDisplay(vCBT);
-        if (btnCBT) { btnCBT.classList.add('active'); btnCBT.style.color = '#FA233B'; }
-        const cbtBox = document.getElementById('cbtChatMessages');
-        if (cbtBox) setTimeout(() => { cbtBox.scrollTop = cbtBox.scrollHeight; }, 50);
-        if (typeof renderCBTArousalChart === 'function') renderCBTArousalChart();
-    } else if (viewName === 'lifestyle') {
-        setModalityDisplay(vLifestyle);
-        if (btnLifestyle) { btnLifestyle.classList.add('active'); btnLifestyle.style.color = '#FA233B'; }
-        if (typeof updateLifestyleSimulation === 'function') updateLifestyleSimulation(false);
-    } else if (viewName === 'pressure') {
-        setModalityDisplay(vPressure);
-        if (btnPressure) { btnPressure.classList.add('active'); btnPressure.style.color = '#FA233B'; }
-        if (typeof refreshUnifiedPressure === 'function') refreshUnifiedPressure();
-        if (typeof switchQuestionnaire === 'function') switchQuestionnaire(window.activeSurveyType || 'phq9');
-    } else if (viewName === 'whatif') {
-        setModalityDisplay(vWhatIf);
-        if (btnWhatIf) { btnWhatIf.classList.add('active'); btnWhatIf.style.color = '#FA233B'; }
-        if (typeof runWhatIfSimulation === 'function') runWhatIfSimulation();
-        if (typeof initLongitudinalChart === 'function') initLongitudinalChart();
+    // Remove active from all buttons
+    Object.values(btns).forEach(b => {
+        if (b) b.classList.remove('active');
+    });
+
+    // Show selected - CSS .active class handles display:block
+    const activeView = views[viewName];
+    if (activeView) {
+        activeView.classList.add('active');
+        activeView.style.setProperty('display', 'block', 'important');
+        activeView.style.setProperty('visibility', 'visible', 'important');
+        activeView.style.setProperty('opacity', '1', 'important');
+        
+        // Scroll to top
+        const contentArea = document.querySelector('#studentPortal') || document.body;
+        if (contentArea) contentArea.scrollTop = 0;
     }
     
-    // Smoothly slide our liquid indicator pill (#dockLiquidSlider) right under the active tab button
-    setTimeout(() => {
-        const activeBtnId = viewName === 'voice' ? 'dockBtnVoice' :
-                            viewName === 'text' ? 'dockBtnText' :
-                            viewName === 'cbt' ? 'dockBtnCBT' :
-                            viewName === 'lifestyle' ? 'dockBtnLifestyle' :
-                            viewName === 'pressure' ? 'dockBtnPressure' : 'dockBtnWhatIf';
-        const activeBtn = document.getElementById(activeBtnId);
-        const slider = document.getElementById('dockLiquidSlider');
-        if (activeBtn && slider) {
-            slider.style.left = `${activeBtn.offsetLeft}px`;
-            slider.style.width = `${activeBtn.offsetWidth}px`;
-            slider.style.top = `${activeBtn.offsetTop}px`;
-            slider.style.height = `${activeBtn.offsetHeight}px`;
-        }
-    }, 15);
+    const activeBtn = btns[viewName];
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+
+    // Auto-render questionnaire when Pressure & Survey view opens
+    if (viewName === 'pressure' && typeof switchQuestionnaire === 'function') {
+        const activeType = window.activeSurveyType || 'phq9';
+        switchQuestionnaire(activeType);
+    }
     
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Initialize chart if What-If view is opened
+    if (viewName === 'whatif' && typeof initLongitudinalChart === 'function') {
+        setTimeout(initLongitudinalChart, 100);
+    }
 }
+
 
 /**
  * Sets up Apple Music style liquid glass dock sliding & dragging behavior
@@ -650,9 +658,9 @@ function switchBgVideo(targetIdx, targetTheme) {
         if (vid) {
             if (i === targetIdx) {
                 vid.classList.add('active');
-                vid.style.setProperty('display', 'block', 'important');
-                vid.style.setProperty('opacity', '1', 'important');
-                vid.style.setProperty('z-index', '2', 'important');
+                vid.style.setProperty('display', 'block');
+                vid.style.setProperty('opacity', '1');
+                vid.style.setProperty('z-index', '2');
                 if (vid.paused || vid.readyState < 3 || vid.currentTime === 0) {
                     vid.load();
                     vid.play().catch(err => console.log("Video play error:", err));
@@ -661,8 +669,8 @@ function switchBgVideo(targetIdx, targetTheme) {
                 }
             } else {
                 vid.classList.remove('active');
-                vid.style.setProperty('opacity', '0', 'important');
-                vid.style.setProperty('z-index', '1', 'important');
+                vid.style.setProperty('opacity', '0');
+                vid.style.setProperty('z-index', '1');
             }
         }
         if (btn) {
@@ -808,18 +816,7 @@ function handleCustomBackgroundUpload(event) {
 
     const fileUrl = URL.createObjectURL(file);
 
-    // Hide default videos and the tree overlay so custom photo/video is complete fullscreen without overlap
-    if (overlayTree) {
-        overlayTree.style.setProperty('display', 'none', 'important');
-    }
-    for (let i = 0; i < 4; i++) {
-        const defVid = document.getElementById(`bgVideo${i}`);
-        if (defVid) {
-            defVid.style.setProperty('opacity', '0', 'important');
-            defVid.style.setProperty('display', 'none', 'important');
-            defVid.classList.remove('active');
-        }
-    }
+
 
     // Case-insensitive detection for video & live photo files (.MOV, .MP4, etc.)
     const fileName = file.name.toLowerCase();
@@ -848,6 +845,7 @@ function handleCustomBackgroundUpload(event) {
             vidEl.autoplay = true;
             vidEl.src = fileUrl;
             vidEl.style.setProperty('display', 'block', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
             vidEl.style.setProperty('opacity', '1', 'important');
             vidEl.style.setProperty('z-index', '30', 'important');
             vidEl.classList.add('active');
@@ -866,12 +864,22 @@ function handleCustomBackgroundUpload(event) {
         if (imgEl) {
             imgEl.src = fileUrl;
             imgEl.style.setProperty('display', 'block', 'important');
-            imgEl.style.setProperty('opacity', '1', 'important');
+                document.body.style.setProperty('background-color', 'transparent', 'important');
+            imgEl.style.setProperty('position', 'fixed', 'important');
+            imgEl.style.setProperty('inset', '0', 'important');
             imgEl.style.setProperty('z-index', '30', 'important');
+            imgEl.style.setProperty('width', '100%', 'important');
+            imgEl.style.setProperty('height', '100%', 'important');
+            imgEl.style.setProperty('object-fit', 'cover', 'important');
             imgEl.classList.add('active');
+            // Fade in
+            setTimeout(() => imgEl.style.setProperty('opacity', '1', 'important'), 50);
+            // Enable glassmorphism on all cards when bg image is active
+            document.body.classList.add('has-custom-bg');
         }
     }
 
+    const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home'; applyBackgroundState(currentScreen);
     if (statusEl) {
         statusEl.innerText = `✓ Active: ${file.name.slice(0, 24)}`;
         statusEl.style.display = 'block';
@@ -884,6 +892,7 @@ function handleCustomBackgroundUpload(event) {
 }
 
 function resetCustomBackground() {
+    document.body.classList.remove('has-custom-bg');
     clearCustomBgFromIndexedDB();
     localStorage.setItem('neurosense_use_custom_bg', 'false');
 
@@ -907,6 +916,7 @@ function resetCustomBackground() {
         vidEl.classList.remove('active');
         vidEl.src = '';
     }
+    const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home'; applyBackgroundState(currentScreen);
     if (statusEl) {
         statusEl.style.display = 'none';
     }
@@ -920,14 +930,14 @@ function resetCustomBackground() {
         const defVid = document.getElementById(`bgVideo${i}`);
         if (defVid) {
             if (i === currentVideoIdx) {
-                defVid.style.setProperty('display', 'block', 'important');
-                defVid.style.setProperty('opacity', '1', 'important');
-                defVid.style.setProperty('z-index', '2', 'important');
+                defVid.style.setProperty('display', 'block');
+                defVid.style.setProperty('opacity', '1');
+                defVid.style.setProperty('z-index', '2');
                 defVid.classList.add('active');
                 if (defVid.paused) defVid.play().catch(() => {});
             } else {
-                defVid.style.setProperty('display', 'none', 'important');
-                defVid.style.setProperty('opacity', '0', 'important');
+                defVid.style.setProperty('display', 'none');
+                defVid.style.setProperty('opacity', '0');
                 defVid.classList.remove('active');
             }
         }
@@ -981,19 +991,24 @@ async function runMultimodalAnalysis() {
     try {
         let result = null;
         
-        // If real audio file was recorded, send via FormData to audio_file endpoint
+        // Convert Blob to Base64
+        const blobToBase64 = (blob) => new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => resolve(reader.result);
+        });
+
         if (audioBlob) {
-            const formData = new FormData();
-            formData.append("file", audioBlob, "voice_recording.webm");
-            formData.append("include_text_transcription", "true");
-            
-            const res = await fetch('/api/analyze/audio_file', {
+            const base64Audio = await blobToBase64(audioBlob);
+            const res = await fetch('https://[YOUR_BACKEND_SPACE].hf.space/run/analyze_audio', {
                 method: 'POST',
-                body: formData
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: [{ "name": "audio.wav", "data": base64Audio }] })
             });
             
             if (res.ok) {
-                const data = await res.json();
+                const gradioData = await res.json();
+                const data = gradioData.data[0];
                 result = data.fusion_result;
                 if (data.transcription && data.transcription.text && !text) {
                     document.getElementById('journalTextarea').value = data.transcription.text;
@@ -1004,21 +1019,15 @@ async function runMultimodalAnalysis() {
         
         // If no blob or fallback needed, send JSON directly to multimodal endpoint
         if (!result) {
-            const payload = {
-                text: text || null,
-                audio_features_195: simulatedAudioVector || null,
-                include_xai: true,
-                include_cbt: true
-            };
-            
-            const res = await fetch('/api/analyze/multimodal', {
+            const res = await fetch('https://[YOUR_BACKEND_SPACE].hf.space/run/analyze_text', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ data: [text || ""] })
             });
             
             if (res.ok) {
-                result = await res.json();
+                const gradioData = await res.json();
+                result = gradioData.data[0];
             } else {
                 // Standalone fallback calculation if server offline during local testing
                 result = generateFallbackResult(text, simulatedAudioVector);
@@ -1035,7 +1044,21 @@ async function runMultimodalAnalysis() {
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<span>⚡</span> Run Dual-Modality XAI Analysis';
+            btn.innerHTML = '<span>⚡</span> Run Combined Dual-Modality Check-in Analysis';
+
+            // REVEAL ISLANDS
+            const textIsland = document.getElementById('textAssessmentIsland');
+            const voiceIsland = document.getElementById('voiceAssessmentIsland');
+            const combinedIsland = document.getElementById('combinedAssessmentIsland');
+            if (textIsland) textIsland.classList.add('show-result');
+            if (voiceIsland) voiceIsland.classList.add('show-result');
+            if (combinedIsland) combinedIsland.classList.add('show-result');
+            
+            // SCROLL
+            setTimeout(() => {
+                if (combinedIsland) combinedIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (textIsland) textIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
         }
     }
 }
@@ -1044,127 +1067,32 @@ async function runMultimodalAnalysis() {
  * Single-Modality Analysis Trigger (Voice or Text exactly one at a time)
  */
 async function runSingleModalityAnalysis(modality) {
+    const audioRes = document.getElementById('audioAnalysisResults');
+    const textRes = document.getElementById('textAnalysisResults');
+    const limeBox = document.getElementById('limeBoxWrapper');
+    const shapBox = document.getElementById('shapBoxWrapper');
     const text = document.getElementById('journalTextarea').value.trim();
     const audioBtn = document.getElementById('btnRunAudioAnalysis');
     const textBtn = document.getElementById('btnRunTextAnalysis');
-    
-    if (modality === 'audio') {
-        if (!audioBlob && !simulatedAudioVector) {
-            alert("⚠️ Please either upload an audio file or click 'Load Sample Stressed Voice' first before running voice check-in!");
-            return;
-        }
-        if (audioBtn) {
-            audioBtn.disabled = true;
-            audioBtn.innerHTML = '<span>⚡</span> Analyzing Voice Acoustic Biomarkers...';
-        }
-    } else if (modality === 'text') {
-        if (!text) {
-            alert("⚠️ Please type or quick-load a journal reflection first before running narrative check-in!");
-            return;
-        }
-        if (textBtn) {
-            textBtn.disabled = true;
-            textBtn.innerHTML = '<span>⚡</span> Analyzing Linguistic Biomarkers...';
-        }
-    }
-    
-    try {
-        let result = null;
-        
-        // If real audio file was recorded/uploaded and modality is audio
-        if (modality === 'audio' && audioBlob) {
-            const formData = new FormData();
-            formData.append("file", audioBlob, "voice_recording.webm");
-            formData.append("include_text_transcription", "false");
-            
-            const res = await fetch('/api/analyze/audio_file', {
-                method: 'POST',
-                body: formData
-            });
-            
-            if (res.ok) {
-                const data = await res.json();
-                result = data.fusion_result;
-            }
-        }
-        
-        // If no result or sending JSON directly to multimodal endpoint
-        if (!result) {
-            const payload = {
-                text: modality === 'text' ? text : null,
-                audio_features_195: modality === 'audio' ? (simulatedAudioVector || Array.from({length: 195}, () => 0.65)) : null,
-                include_xai: true,
-                include_cbt: true
-            };
-            
-            const res = await fetch('/api/analyze/multimodal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            
-            if (res.ok) {
-                result = await res.json();
-            } else {
-                result = generateFallbackResult(modality === 'text' ? text : null, modality === 'audio' ? (simulatedAudioVector || Array.from({length: 195}, () => 0.65)) : null);
-            }
-        }
-        
-        currentAnalysisResult = result;
-        displayAnalysisResults(result, modality);
-        
-    } catch (err) {
-        console.error("Single modality analysis error:", err);
-        const fallback = generateFallbackResult(modality === 'text' ? text : null, modality === 'audio' ? (simulatedAudioVector || Array.from({length: 195}, () => 0.65)) : null);
-        displayAnalysisResults(fallback, modality);
-    } finally {
-        if (audioBtn) {
-            audioBtn.disabled = false;
-            audioBtn.innerHTML = '<span>⚡</span> Run Voice Check-in Analysis';
-        }
-        if (textBtn) {
-            textBtn.disabled = false;
-            textBtn.innerHTML = '<span>⚡</span> Run Narrative Text Check-in Analysis';
-        }
-    }
-}
-
-/**
- * Updates all UI elements, gauges, XAI words, and CBT exercises on the dashboard
- */
-function displayAnalysisResults(res, modality = 'both') {
-    const section = document.getElementById('analysisResultsSection');
-    if (section) {
-        section.classList.remove('hidden');
-        section.style.setProperty('display', 'block', 'important');
-    }
-    
-    // Toggle visibility of LIME vs SHAP islands based on single modality tested
-    const limeBox = document.getElementById('limeBoxWrapper');
-    const shapBox = document.getElementById('shapBoxWrapper');
-    const audioRes = document.getElementById('audioAnalysisResults');
-    const textRes = document.getElementById('textAnalysisResults');
-    const scoreNum = Math.round(res.combined_stress_score || 0);
     
     if (modality === 'audio') {
         if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
         if (audioRes) {
             audioRes.classList.remove('hidden');
+            audioRes.classList.add('visible');
             audioRes.style.setProperty('display', 'flex', 'important');
         }
         if (textRes) {
             textRes.style.setProperty('display', 'none', 'important');
         }
-        // Mobile: reveal secondary voice clinical assessment island after results
         const voiceAssess = document.getElementById('voiceAssessmentIsland');
         if (voiceAssess && window.innerWidth < 1024) {
             voiceAssess.style.removeProperty('display');
             voiceAssess.style.display = 'flex';
         }
-        // Auto-scroll to results on mobile
-        if (window.innerWidth < 1024 && audioRes) {
-            setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        if (audioRes) {
+            setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
         }
         const aNum = document.getElementById('audioStressScoreNumber');
         const aTier = document.getElementById('audioRiskTierText');
@@ -1179,20 +1107,19 @@ function displayAnalysisResults(res, modality = 'both') {
         if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
         if (textRes) {
             textRes.classList.remove('hidden');
+            textRes.classList.add('visible');
             textRes.style.setProperty('display', 'flex', 'important');
         }
         if (audioRes) {
             audioRes.style.setProperty('display', 'none', 'important');
         }
-        // Mobile: reveal secondary narrative clinical assessment island after results
         const textAssess = document.getElementById('textAssessmentIsland');
         if (textAssess && window.innerWidth < 1024) {
             textAssess.style.removeProperty('display');
             textAssess.style.display = 'flex';
         }
-        // Auto-scroll to results on mobile
-        if (window.innerWidth < 1024 && textRes) {
-            setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        if (textRes) {
+            setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
         }
         const tNum = document.getElementById('textStressScoreNumber');
         const tTier = document.getElementById('textRiskTierText');
@@ -1205,8 +1132,8 @@ function displayAnalysisResults(res, modality = 'both') {
     } else {
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
-        if (audioRes) { audioRes.classList.remove('hidden'); audioRes.style.setProperty('display', 'block', 'important'); }
-        if (textRes) { textRes.classList.remove('hidden'); textRes.style.setProperty('display', 'block', 'important'); }
+        if (audioRes) { audioRes.classList.add('visible'); audioRes.style.setProperty('display', 'block', 'important'); }
+        if (textRes) { textRes.classList.add('visible'); textRes.style.setProperty('display', 'block', 'important'); }
         const badge = document.getElementById('resultModalityBadge');
         if (badge) badge.innerText = res.modality_status || "Dual-Modality Active";
     }
@@ -1507,6 +1434,30 @@ function filterTriageTable() {
  * Handles sending chat messages to the CBT Assistant
  */
 async function sendCBTChat() {
+    const wrapper = document.getElementById('v0InputWrapper');
+    const heroTitle = document.getElementById('v0HeroTitle');
+    const pills = document.getElementById('v0Pills');
+    const msgs = document.getElementById('cbtChatMessages');
+    
+    if (wrapper && wrapper.classList.contains('centered-initial')) {
+        wrapper.classList.remove('centered-initial');
+        wrapper.style.top = 'auto';
+        wrapper.style.bottom = '10px';
+        wrapper.style.transform = 'translateY(0)';
+        
+        if (heroTitle) {
+            heroTitle.style.opacity = '0';
+            setTimeout(() => { heroTitle.style.height = '0'; heroTitle.style.margin = '0'; }, 300);
+        }
+        if (pills) {
+            pills.style.opacity = '0';
+            setTimeout(() => { pills.style.height = '0'; pills.style.margin = '0'; }, 300);
+        }
+        if (msgs) {
+            msgs.style.display = 'flex';
+        }
+    }
+
     const input = document.getElementById('cbtChatInput');
     const msg = input.value.trim();
     if (!msg) return;
@@ -1514,6 +1465,11 @@ async function sendCBTChat() {
     const box = document.getElementById('cbtChatMessages');
     box.innerHTML += `<div class="chat-msg user-msg">${msg}</div>`;
     input.value = '';
+    document.getElementById('cbtCompanionIsland').classList.add('chat-active');
+    if (input.style) {
+        input.style.height = 'auto';
+        input.style.overflowY = 'hidden';
+    }
     box.scrollTop = box.scrollHeight;
     
     window.cbtChatHistory = window.cbtChatHistory || [];
@@ -1591,6 +1547,11 @@ function resetCBTChat() {
     }
     const input = document.getElementById('cbtChatInput');
     if (input) input.value = '';
+    document.getElementById('cbtCompanionIsland').classList.add('chat-active');
+    if (input.style) {
+        input.style.height = 'auto';
+        input.style.overflowY = 'hidden';
+    }
 }
 
 /**
@@ -1673,7 +1634,7 @@ function generateFallbackResult(text, audioVector) {
         final_stress_category: cat,
         risk_tier: tier,
         color_code: color,
-        action_summary: `Detected symptoms of ${cat.lower()}. Recommended: structured CBT reframing and grounding techniques.`,
+        action_summary: `Detected symptoms of ${cat.toLowerCase()}. Recommended: structured CBT reframing and grounding techniques.`,
         fusion_weights: { text_weight: text ? 0.6 : 0.0, audio_weight: audioVector ? 0.4 : (text ? 0.4 : 1.0) },
         text_analysis: text ? { predicted_category: cat, linguistic_stress_score: score, metadata: { word_count: text.split(' ').length, first_person_ratio: 0.12 } } : null,
         audio_analysis: audioVector ? { predicted_emotion: "Angry", acoustic_stress_score: score } : null,
@@ -1794,14 +1755,14 @@ function switchQuestionnaire(type) {
     survey.questions.forEach((qText, idx) => {
         const selectedVal = currentAnswers[idx] !== undefined ? currentAnswers[idx] : -1;
         html += `
-            <div class="glass-card" style="padding: 16px 20px; border-radius: 16px; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.12);">
-                <div style="font-weight: 600; font-size: 0.96rem; color: #fff; margin-bottom: 12px;">${qText}</div>
+            <div class="pro-card survey-question-card" style="padding: 16px 20px; border-radius: 16px;">
+                <div class="survey-question-text" style="font-weight: 600; font-size: 0.96rem; margin-bottom: 12px;">${qText}</div>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
         `;
         survey.options.forEach((optText, optIdx) => {
             const isSelected = selectedVal === optIdx;
             html += `
-                <button onclick="selectQuestionAnswer(${idx}, ${optIdx}, '${type}')" type="button" class="btn ${isSelected ? 'active' : ''}" style="padding: 8px 14px; border-radius: 12px; font-size: 0.84rem; font-weight: 600; border: 1px solid ${isSelected ? '#6366F1' : 'rgba(255,255,255,0.18)'}; background: ${isSelected ? '#6366F1' : 'rgba(255,255,255,0.06)'}; color: #fff; transition: all 0.2s;">
+                <button onclick="selectQuestionAnswer(${idx}, ${optIdx}, '${type}')" type="button" class="btn survey-option-btn ${isSelected ? 'active' : ''}" style="padding: 8px 14px; border-radius: 12px; font-size: 0.84rem; font-weight: 600; border: 1px solid ${isSelected ? '#6366F1' : 'rgba(100,100,120,0.3)'}; background: ${isSelected ? '#6366F1' : 'rgba(100,100,120,0.08)'}; color: ${isSelected ? '#fff' : 'inherit'}; transition: all 0.2s;">
                     ${optText}
                 </button>
             `;
@@ -1848,7 +1809,12 @@ function updateSurveyScoreSummary() {
     let totalScore = 0;
     let answeredCount = 0;
     for (const k in answers) {
-        totalScore += answers[k];
+        let val = answers[k];
+        // Reverse scoring for PSS positively-phrased questions (index 3 and 4)
+        if (type === 'pss' && (parseInt(k) === 3 || parseInt(k) === 4)) {
+            val = 4 - val;
+        }
+        totalScore += val;
         answeredCount++;
     }
     
@@ -1879,7 +1845,7 @@ function updateSurveyScoreSummary() {
         if (rqPct >= 75) severityLabel = "Severe";
         else if (rqPct >= 50) severityLabel = "Moderate / High";
         else if (rqPct >= 25) severityLabel = "Mild";
-        summaryEl.innerHTML = `${type.toUpperCase()} Score: ${totalScore}/${survey.maxScore} (${severityLabel}) | Avg Cognitive Response Latency: ${avgLatency} ms/q (Rr: ${rrPct}%)`;
+        summaryEl.innerHTML = `${type.toUpperCase()} Score: ${totalScore} out of ${survey.maxScore} max (${severityLabel}) | ${answeredCount}/${survey.questions.length} answered | Latency: ${avgLatency} ms/q`;
     }
 }
 
@@ -1888,6 +1854,8 @@ function updateSurveyScoreSummary() {
  */
 function submitQuestionnaireSession() {
     updateSurveyScoreSummary();
+    const s = window.neuroSignalState;
+    localStorage.setItem('neuro_pressure_state', JSON.stringify(s));
     refreshUnifiedPressure();
     
     const alertDiv = document.createElement('div');
@@ -1909,9 +1877,26 @@ function updateLifestyleSimulation(randomize) {
     let sleepConst = parseInt(document.getElementById('simSleepRange') ? document.getElementById('simSleepRange').value : 80);
     
     if (randomize) {
-        unlocks = Math.floor(Math.random() * 80) + 35;
-        nightRatio = Math.floor(Math.random() * 45) + 10;
-        sleepConst = Math.floor(Math.random() * 40) + 60;
+        // Try to load from localStorage first so it stays consistent across reloads
+        const savedUnlocks = localStorage.getItem('neuro_sim_unlocks');
+        const savedNight = localStorage.getItem('neuro_sim_night');
+        const savedSleep = localStorage.getItem('neuro_sim_sleep');
+        
+        if (savedUnlocks && savedNight && savedSleep) {
+            unlocks = parseInt(savedUnlocks);
+            nightRatio = parseInt(savedNight);
+            sleepConst = parseInt(savedSleep);
+        } else {
+            // Generate realistic values and save them
+            unlocks = 55 + Math.floor(Math.random() * 20); // 55-75
+            nightRatio = 15 + Math.floor(Math.random() * 15); // 15-30
+            sleepConst = 75 + Math.floor(Math.random() * 15); // 75-90
+            
+            localStorage.setItem('neuro_sim_unlocks', unlocks);
+            localStorage.setItem('neuro_sim_night', nightRatio);
+            localStorage.setItem('neuro_sim_sleep', sleepConst);
+        }
+        
         if (document.getElementById('simUnlockRange')) document.getElementById('simUnlockRange').value = unlocks;
         if (document.getElementById('simNightRange')) document.getElementById('simNightRange').value = nightRatio;
         if (document.getElementById('simSleepRange')) document.getElementById('simSleepRange').value = sleepConst;
@@ -1978,7 +1963,18 @@ function onLifestyleSliderChange() {
  * Refresh and calculate Unified Mental Pressure Snapshot (Unified M = wq*Rq + we*Re + wr*Rr + wb*Rb)
  */
 function refreshUnifiedPressure() {
-    const s = window.neuroSignalState;
+    let s = window.neuroSignalState;
+    
+    // Load from localStorage if available and not overridden by new survey
+    if (!window.surveyAnswers || Object.keys(window.surveyAnswers).length === 0) {
+        const saved = localStorage.getItem('neuro_pressure_state');
+        if (saved) {
+            try {
+                s = JSON.parse(saved);
+                window.neuroSignalState = s;
+            } catch(e) {}
+        }
+    }
     
     // Check if we have recent audio or text analysis results from voice/text tabs to update Re
     if (window.currentAnalysisResult) {
@@ -2209,3 +2205,137 @@ window.addEventListener('focus', () => {
         activeVid.play().catch(() => {});
     }
 });
+
+
+// MagicUI Dock Effect (macOS magnification)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[name="bgScope"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            localStorage.setItem('neurosense_bg_scope', e.target.value);
+            const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home';
+            applyBackgroundState(currentScreen);
+        });
+    });
+    const savedScope = localStorage.getItem('neurosense_bg_scope') || 'both';
+    const scopeRadio = document.querySelector(`input[name="bgScope"][value="${savedScope}"]`);
+    if (scopeRadio) scopeRadio.checked = true;
+
+    const dock = document.getElementById('sidebarDock');
+    if (!dock || !dock.classList.contains('magic-dock')) return;
+    
+    const icons = dock.querySelectorAll('.dock-btn');
+    const baseSize = 48;
+    const maxSize = 64; // 1.33x scale
+    const distanceThreshold = 150;
+
+    dock.addEventListener('mousemove', (e) => {
+        icons.forEach(icon => {
+            const rect = icon.getBoundingClientRect();
+            const iconCenterX = rect.left + rect.width / 2;
+            const distance = Math.abs(e.clientX - iconCenterX);
+            
+            let size = baseSize;
+            if (distance < distanceThreshold) {
+                // Cosine interpolation for smooth curve
+                const val = (Math.cos((distance / distanceThreshold) * Math.PI) + 1) / 2;
+                size = baseSize + (maxSize - baseSize) * val;
+            }
+            icon.style.setProperty('width', `${size}px`, 'important');
+            icon.style.setProperty('height', `${size}px`, 'important');
+            
+            // Scale the inner SVG slightly less but proportionally
+            const svg = icon.querySelector('svg');
+            if (svg) {
+                const svgSize = (size / baseSize) * 24;
+                svg.style.setProperty('width', `${svgSize}px`, 'important');
+                svg.style.setProperty('height', `${svgSize}px`, 'important');
+            }
+        });
+    });
+
+    dock.addEventListener('mouseleave', () => {
+        icons.forEach(icon => {
+            icon.style.setProperty('width', `${baseSize}px`, 'important');
+            icon.style.setProperty('height', `${baseSize}px`, 'important');
+            
+            const svg = icon.querySelector('svg');
+            if (svg) {
+                svg.style.setProperty('width', `24px`, 'important');
+                svg.style.setProperty('height', `24px`, 'important');
+            }
+        });
+    });
+});
+
+
+// Inject Border Beam Wrapper into all Pro Cards
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[name="bgScope"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            localStorage.setItem('neurosense_bg_scope', e.target.value);
+            const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home';
+            applyBackgroundState(currentScreen);
+        });
+    });
+    const savedScope = localStorage.getItem('neurosense_bg_scope') || 'both';
+    const scopeRadio = document.querySelector(`input[name="bgScope"][value="${savedScope}"]`);
+    if (scopeRadio) scopeRadio.checked = true;
+
+    const cards = document.querySelectorAll('.pro-card, .survey-question-card, .cbt-card, .glass-card, .dashboard-stats-card, .stat-pill');
+    cards.forEach(card => {
+        // Prevent duplicate wrappers
+        if (card.querySelector('.border-beam-wrapper')) return;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border-beam-wrapper';
+        card.appendChild(wrapper);
+    });
+});
+
+// Auto-resize textarea logic for v0 chat
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[name="bgScope"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            localStorage.setItem('neurosense_bg_scope', e.target.value);
+            const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home';
+            applyBackgroundState(currentScreen);
+        });
+    });
+    const savedScope = localStorage.getItem('neurosense_bg_scope') || 'both';
+    const scopeRadio = document.querySelector(`input[name="bgScope"][value="${savedScope}"]`);
+    if (scopeRadio) scopeRadio.checked = true;
+
+    const tx = document.getElementById('cbtChatInput');
+    if (tx) {
+        tx.setAttribute('style', tx.getAttribute('style') + 'overflow-y:hidden;');
+        tx.addEventListener('input', OnInput, false);
+    }
+    function OnInput() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+        if (this.scrollHeight > 250) {
+            this.style.overflowY = 'auto';
+        } else {
+            this.style.overflowY = 'hidden';
+        }
+    }
+});
+
+
+
+// Auto-scroll to result islands after analysis completes (mobile: show results first)
+function showAndScrollToResults() {
+    const bottomRow = document.querySelector('.bottom-results-row');
+    if (!bottomRow) return;
+    
+    const isMobile = window.innerWidth <= 900;
+    if (isMobile) {
+        // On mobile: show the results row (it's hidden by default)
+        bottomRow.classList.add('results-visible');
+    }
+    
+    // Auto-scroll to the results
+    setTimeout(() => {
+        bottomRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+}

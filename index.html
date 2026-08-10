@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NeuroSense AI — Dual-Modality Mental Health Detection &amp; Explainable CBT System</title>
+<!-- PWA & Mobile Home Screen App Icons -->
+<link href="/manifest.json" rel="manifest"/>
+<link href="/static/img/neurosense-logo.svg" rel="icon" type="image/svg+xml"/>
+<link href="/favicon.png" rel="icon" type="image/png"/>
+<link href="/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon-precomposed"/>
+<link href="/static/img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="NeuroSense AI" name="apple-mobile-web-app-title"/>
+<meta content="#182C41" name="theme-color"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Chart.js for data visualization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="/static/css/styles.css?v=20260807_fix10" rel="stylesheet"/>
+<style id="ios-dashboard-glass">
+        @font-face {
+            font-family: 'Helvetica Now Text';
+            src: url('https://db.onlinewebfonts.com/c/08e020de1811ec4489f82d1247a42c09?family=Helvetica+Now+Text');
+            font-weight: normal;
+            font-style: normal;
+        }
+        * {
+            font-family: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.01);
+            background-blend-mode: luminosity;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: none;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.4px;
+            background: linear-gradient(180deg,
+              rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+              rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+              rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        @keyframes dropdown-in {
+            from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-dropdown { animation: dropdown-in 0.2s ease-out; }
+        .duration-400 { transition-duration: 400ms; }
+        /* EXACT iPHONE iOS GLASSMORPHISM & TRANSPARENT BODY OVERRIDE FOR DASHBOARD */
+        #lumoraHomeScreen.hidden-screen,
+        #lumoraHomeScreen[style*="display: none"],
+        #lumoraHomeScreen[style*="display:none"] {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        body.on-dashboard {
+            background-color: transparent !important;
+            background: transparent !important;
+        }
+        #dashboardBgVideoContainer {
+            display: none !important;
+        }
+        #appDashboardScreen {
+            position: relative !important;
+            z-index: 2 !important;
+            background: transparent !important;
+        }
+        /* =========================================================================
+           1. UNIVERSAL iPHONE iOS LIQUID GLASS ISLAND HIERARCHY (OUTER vs INNER)
+           ========================================================================= */
+        #globalAmbientBgContainer {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            background: #000000;
+            pointer-events: none;
+        }
+
+        /* Fix Brain Emoji Visibility on Windows/Edge/Chrome */
+        body.on-dashboard .brand-icon,
+        .brand-icon {
+            background: none !important;
+            -webkit-background-clip: border-box !important;
+            -webkit-text-fill-color: initial !important;
+            color: initial !important;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)) !important;
+            font-size: 2.2rem !important;
+            display: inline-block !important;
+            opacity: 1 !important;
+        }
+
+        /* Round Top Right Theme Toggle Glassmorphism Island */
+        #btnThemeToggle.round-glass-btn {
+            position: fixed !important;
+            top: 22px !important;
+            right: 26px !important;
+            z-index: 1000 !important;
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.45) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.45rem !important;
+            cursor: pointer !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            padding: 0 !important;
+        }
+        #btnThemeToggle.round-glass-btn:hover {
+            transform: scale(1.1) rotate(15deg) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
+        }
+
+        /* =========================================================================
+           2. DARK MODE SLEEK GLASS ISLANDS & ELEGANT HIGH-CONTRAST TYPOGRAPHY
+           ========================================================================= */
+        /* Outer Islands & Glass Pills: Completely Transparent so the blurred background shines through cleanly */
+        body.on-dashboard .glass-card,
+        body.on-dashboard .glass-card-accent,
+        body.on-dashboard .cbt-card,
+        body.on-dashboard .cbt-chat-container,
+        body.on-dashboard .hero-banner,
+        body.on-dashboard .counselor-banner,
+        body.on-dashboard .counselor-card,
+        body.on-dashboard .footer,
+        body.on-dashboard .navbar-top-controls .glass-pill,
+        body.on-dashboard .navbar-top-controls button.glass-pill,
+        body.on-dashboard .navbar-top-controls div.glass-pill,
+        body.on-dashboard .role-selector.glass-pill,
+        body.on-dashboard .role-selector,
+        body.on-dashboard .glass-pill,
+        body.on-dashboard #btnThemeToggle.round-glass-btn {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+        }
+
+        /* Inner Islands ("islands inside other islands should be darker so that its easily visible and would also looks good") */
+        body.on-dashboard:not([data-theme="light"]) .audio-visualizer-container,
+        body.on-dashboard:not([data-theme="light"]) textarea,
+        body.on-dashboard:not([data-theme="light"]) .lime-token-box,
+        body.on-dashboard:not([data-theme="light"]) .result-box,
+        body.on-dashboard:not([data-theme="light"]) .xai-text-box,
+        body.on-dashboard:not([data-theme="light"]) .xai-audio-box,
+        body.on-dashboard:not([data-theme="light"]) .gauge-box,
+        body.on-dashboard:not([data-theme="light"]) .toggle-group,
+        body.on-dashboard:not([data-theme="light"]) .prompt-chip,
+        body.on-dashboard:not([data-theme="light"]) .btn-secondary,
+        body.on-dashboard:not([data-theme="light"]) .role-btn:not(.active),
+        body.on-dashboard:not([data-theme="light"]) .cbt-exercise-box,
+        body.on-dashboard:not([data-theme="light"]) .cbt-coping-box,
+        body.on-dashboard:not([data-theme="light"]) .bot-msg,
+        body.on-dashboard:not([data-theme="light"]) .chat-input-bar input,
+        body.on-dashboard:not([data-theme="light"]) .stat-pill,
+        body.on-dashboard:not([data-theme="light"]) .progress-bar {
+            background: rgba(6, 11, 22, 0.55) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+        }
+
+        /* Top Center Title in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) .top-center-title {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+        }
+
+        /* Crisp, elegant Headings in Dark Mode (pure white with clean drop shadow, no blurry neon) */
+        body.on-dashboard:not([data-theme="light"]) h2,
+        body.on-dashboard:not([data-theme="light"]) h3,
+        body.on-dashboard:not([data-theme="light"]) .cbt-exercise-box h4,
+        body.on-dashboard:not([data-theme="light"]) .cbt-coping-box h4,
+        body.on-dashboard:not([data-theme="light"]) .cbt-chat-container h4 {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85) !important;
+            font-weight: 400 !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        /* Refined, readable Body Text & Labels in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen h1:not(.top-center-title),
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen p,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen span:not(.badge):not(.status-indicator):not(.cbt-tag),
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen label,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen div,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen table,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen th,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen td,
+        body.on-dashboard:not([data-theme="light"]) .cbt-steps,
+        body.on-dashboard:not([data-theme="light"]) .chat-msg {
+            color: #E2E8F0 !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) .card-desc,
+        body.on-dashboard:not([data-theme="light"]) .hero-content p,
+        body.on-dashboard:not([data-theme="light"]) .toggle-label {
+            color: #CBD5E1 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) textarea#journalTextarea::placeholder {
+            color: rgba(203, 213, 225, 0.65) !important;
+            text-shadow: none !important;
+        }
+
+        /* Sleek Sapphire / Azure Ocean Gradient Buttons in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) .role-btn.active,
+        body.on-dashboard:not([data-theme="light"]) .btn-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+            font-weight: 400 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.on-dashboard:not([data-theme="light"]) #btnRoleCounselor.active {
+            background: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%) !important;
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4) !important;
+        }
+
+        /* Sleek Glass Badges & Status Indicators in Dark Mode (no jarring neon) */
+        body.on-dashboard:not([data-theme="light"]) .badge,
+        body.on-dashboard:not([data-theme="light"]) .status-indicator,
+        body.on-dashboard:not([data-theme="light"]) .cbt-tag {
+            background: rgba(56, 189, 248, 0.18) !important;
+            border: 1px solid rgba(56, 189, 248, 0.45) !important;
+            color: #38BDF8 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+            text-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) .status-indicator.ready {
+            background: rgba(52, 211, 153, 0.18) !important;
+            border: 1px solid rgba(52, 211, 153, 0.45) !important;
+            color: #34D399 !important;
+        }
+
+        /* Progress Bar Fills */
+        body.on-dashboard:not([data-theme="light"]) .fill-text {
+            background: linear-gradient(90deg, #9333EA 0%, #EC4899 100%) !important;
+            box-shadow: 0 0 12px rgba(236, 72, 153, 0.5) !important;
+            color: #ffffff !important;
+            font-weight: 400 !important;
+        }
+        body.on-dashboard:not([data-theme="light"]) .fill-audio {
+            background: linear-gradient(90deg, #0284C7 0%, #38BDF8 100%) !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5) !important;
+            color: #ffffff !important;
+            font-weight: 400 !important;
+        }
+
+        /* =========================================================================
+           3. LIGHT MODE REFINED GLASS ISLANDS & CRISP TYPOGRAPHY
+           ========================================================================= */
+        /* Outer Islands: Sleek translucent white glass */
+        body.on-dashboard[data-theme="light"] .glass-card,
+        body.on-dashboard[data-theme="light"] .glass-card-accent,
+        body.on-dashboard[data-theme="light"] .hero-banner,
+        body.on-dashboard[data-theme="light"] .counselor-banner,
+        body.on-dashboard[data-theme="light"] .counselor-card,
+        body.on-dashboard[data-theme="light"] .footer,
+        body.on-dashboard[data-theme="light"] .navbar-top-controls .glass-pill {
+            background: rgba(255, 255, 255, 0.62) !important;
+            backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Inner Islands: Clean recessed inner frosted glass */
+        body.on-dashboard[data-theme="light"] .audio-visualizer-container,
+        body.on-dashboard[data-theme="light"] textarea,
+        body.on-dashboard[data-theme="light"] .lime-token-box,
+        body.on-dashboard[data-theme="light"] .result-box,
+        body.on-dashboard[data-theme="light"] .xai-text-box,
+        body.on-dashboard[data-theme="light"] .xai-audio-box,
+        body.on-dashboard[data-theme="light"] .gauge-box,
+        body.on-dashboard[data-theme="light"] .role-selector,
+        body.on-dashboard[data-theme="light"] .toggle-group,
+        body.on-dashboard[data-theme="light"] .prompt-chip,
+        body.on-dashboard[data-theme="light"] .btn-secondary,
+        body.on-dashboard[data-theme="light"] .role-btn:not(.active),
+        body.on-dashboard[data-theme="light"] .cbt-exercise-box,
+        body.on-dashboard[data-theme="light"] .cbt-coping-box,
+        body.on-dashboard[data-theme="light"] .cbt-chat-container,
+        body.on-dashboard[data-theme="light"] .bot-msg,
+        body.on-dashboard[data-theme="light"] .chat-input-bar input,
+        body.on-dashboard[data-theme="light"] .stat-pill,
+        body.on-dashboard[data-theme="light"] .progress-bar {
+            background: rgba(241, 245, 249, 0.78) !important;
+            backdrop-filter: blur(16px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Top Center Title in Light Mode */
+        body.on-dashboard[data-theme="light"] .top-center-title {
+            color: #0F172A !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Premium Charcoal Slate Headings in Light Mode */
+        body.on-dashboard[data-theme="light"] h2,
+        body.on-dashboard[data-theme="light"] h3,
+        body.on-dashboard[data-theme="light"] .cbt-exercise-box h4,
+        body.on-dashboard[data-theme="light"] .cbt-coping-box h4,
+        body.on-dashboard[data-theme="light"] .cbt-chat-container h4 {
+            color: #0F172A !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+            font-weight: 400 !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        body.on-dashboard[data-theme="light"] #appDashboardScreen h1:not(.top-center-title),
+        body.on-dashboard[data-theme="light"] #appDashboardScreen p,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen span:not(.badge):not(.status-indicator):not(.cbt-tag),
+        body.on-dashboard[data-theme="light"] #appDashboardScreen label,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen div,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen table,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen th,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen td,
+        body.on-dashboard[data-theme="light"] .cbt-steps,
+        body.on-dashboard[data-theme="light"] .chat-msg {
+            color: #334155 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .card-desc,
+        body.on-dashboard[data-theme="light"] .hero-content p,
+        body.on-dashboard[data-theme="light"] .toggle-label {
+            color: #475569 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] textarea#journalTextarea::placeholder {
+            color: rgba(71, 85, 105, 0.65) !important;
+            text-shadow: none !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .role-btn.active,
+        body.on-dashboard[data-theme="light"] .btn-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+            font-weight: 400 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.on-dashboard[data-theme="light"] #btnRoleCounselor.active {
+            background: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%) !important;
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.35) !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .badge,
+        body.on-dashboard[data-theme="light"] .status-indicator,
+        body.on-dashboard[data-theme="light"] .cbt-tag {
+            background: rgba(2, 132, 199, 0.12) !important;
+            border: 1px solid rgba(2, 132, 199, 0.35) !important;
+            color: #0284C7 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+            text-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .status-indicator.ready {
+            background: rgba(5, 150, 105, 0.12) !important;
+            border: 1px solid rgba(5, 150, 105, 0.35) !important;
+            color: #059669 !important;
+        }
+
+        /* Small Theme Toggle Button & Responsive Layout Overrides */
+        #btnThemeToggle.round-glass-btn {
+            position: fixed !important;
+            top: 16px !important;
+            right: 20px !important;
+            z-index: 1000 !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.14) !important;
+            backdrop-filter: blur(28px) saturate(210%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.55) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.15rem !important;
+            cursor: pointer !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            padding: 0 !important;
+        }
+
+        #btnThemeToggle.round-glass-btn:hover {
+            transform: scale(1.08) !important;
+            background: rgba(255, 255, 255, 0.22) !important;
+        }
+
+        @media (max-width: 900px) {
+            /* 1. Theme Toggle on Top Right Corner */
+            #btnThemeToggle.round-glass-btn {
+                position: fixed !important;
+                top: 10px !important;
+                right: 12px !important;
+                width: 34px !important;
+                height: 34px !important;
+                font-size: 1.05rem !important;
+                z-index: 1000 !important;
+            }
+
+            /* 2. Return to Home on Top Left Corner */
+            header.navbar-top-controls > div:first-child {
+                position: fixed !important;
+                top: 10px !important;
+                left: 12px !important;
+                width: auto !important;
+                min-width: 0 !important;
+                flex: none !important;
+                z-index: 1000 !important;
+                display: block !important;
+            }
+
+            header.navbar-top-controls > div:first-child button.glass-pill {
+                padding: 6px 14px !important;
+                font-size: 0.82rem !important;
+                height: 34px !important;
+                border-radius: 999px !important;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.28) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 6px !important;
+                margin: 0 !important;
+            }
+
+            /* 3. Top Center Header: Big NeuroSense AI Text & Title */
+            header.navbar-top-controls {
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                margin: 0 auto 18px auto !important;
+                padding: 46px 0 0 0 !important; /* Space so it sits centered right below top corner buttons */
+                width: 100% !important;
+            }
+
+            header.navbar-top-controls > div:nth-child(2) {
+                width: 100% !important;
+                min-width: 100% !important;
+                flex: none !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            header.navbar-top-controls .nav-brand.top-center-brand {
+                width: 100% !important;
+                padding: 0 !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 4px !important;
+                text-align: center !important;
+            }
+
+            header.navbar-top-controls .nav-brand .brand-icon {
+                font-size: 2.6rem !important;
+                display: inline-block !important;
+            }
+
+            header.navbar-top-controls .nav-brand .brand-text h1,
+            header.navbar-top-controls .nav-brand .brand-text h1.top-center-title {
+                font-size: 2.2rem !important;
+                font-weight: 800 !important;
+                letter-spacing: -0.6px !important;
+                line-height: 1.1 !important;
+                margin: 0 !important;
+                display: block !important;
+                text-align: center !important;
+                color: #182C41 !important;
+                text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;
+            }
+
+            body.on-dashboard:not([data-theme="light"]) header.navbar-top-controls .nav-brand .brand-text h1,
+            body.on-dashboard:not([data-theme="light"]) header.navbar-top-controls .nav-brand .brand-text h1.top-center-title {
+                color: #FFFFFF !important;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+            }
+
+            header.navbar-top-controls .nav-brand .badge-ai {
+                margin: 6px auto 0 auto !important;
+                font-size: 0.72rem !important;
+                padding: 4px 12px !important;
+                display: inline-block !important;
+            }
+
+            /* 4. Role selector on mobile right underneath center title */
+            header.navbar-top-controls > div:nth-child(3) {
+                width: 100% !important;
+                min-width: 100% !important;
+                flex: none !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            header.navbar-top-controls .role-selector {
+                width: 90% !important;
+                max-width: 360px !important;
+                display: flex !important;
+                justify-content: space-between !important;
+            }
+
+            header.navbar-top-controls .role-selector .role-btn {
+                flex: 1 !important;
+                padding: 8px 10px !important;
+                font-size: 0.85rem !important;
+                justify-content: center !important;
+            }
+
+            /* 5. Voice and Narrative cards NEXT TO EACH OTHER on phone screens (2 columns) */
+            .input-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 10px !important;
+            }
+
+            .input-grid .glass-card {
+                padding: 12px 10px !important;
+                border-radius: 18px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+
+            .input-grid .card-header h3 {
+                font-size: 0.92rem !important;
+                line-height: 1.25 !important;
+            }
+
+            .input-grid .card-desc {
+                font-size: 0.74rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 8px !important;
+            }
+
+            .audio-actions .btn,
+            .quick-access .prompt-chip,
+            .journal-footer .btn {
+                font-size: 0.74rem !important;
+                padding: 6px 4px !important;
+                min-height: 38px !important;
+                line-height: 1.2 !important;
+                white-space: normal !important;
+                text-align: center !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin-bottom: 6px !important;
+                border-radius: 10px !important;
+            }
+
+            .audio-visualizer-container {
+                min-height: 80px !important;
+                padding: 6px !important;
+                margin-bottom: 8px !important;
+            }
+
+            textarea#journalTextarea {
+                height: 115px !important;
+                font-size: 0.8rem !important;
+                padding: 8px !important;
+                margin-bottom: 8px !important;
+            }
+
+            #appDashboardScreen {
+                padding: 10px 12px !important;
+            }
+        }
+
+        /* Remove island / glass box around center NeuroSense AI brand on dashboard */
+        header.navbar-top-controls .nav-brand.top-center-brand {
+            background: transparent !important;
+            border: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+
+        header.navbar-top-controls .nav-brand.top-center-brand .top-center-title {
+            color: #182C41 !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;
+            font-weight: 800 !important;
+        }
+
+        /* Enforce complete invisibility of result island until a test completes */
+        #analysisResultsSection.hidden,
+        .results-section.hidden,
+        .hidden {
+            display: none !important;
+        }
+
+        /* Fallback canvas color */
+        html { background: #ffffff; }
+        html[data-theme="dark"] { background: #050505; }
+        body[data-theme="dark"] { background: #050505; }
+    </style>
+<style>
+        @media (min-width: 769px) {
+            .mobile-dock-only { display: none !important; }
+        }
+    </style>
+<style id="magic-dock-styles">
+        .magic-dock {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 10px 16px !important;
+            border-radius: 9999px !important;
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+            position: fixed !important;
+            bottom: 30px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 1000 !important;
+            margin: 0 !important;
+            width: auto !important;
+        }
+
+        body[data-theme="dark"] .magic-dock {
+            background: rgba(30, 30, 30, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .dock-separator {
+            width: 1px !important;
+            height: 32px !important;
+            background: rgba(0, 0, 0, 0.1) !important;
+            margin: 0 12px !important;
+        }
+
+        body[data-theme="dark"] .dock-separator {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dock-icon {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 50% !important;
+            color: #4B5563 !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease, color 0.2s ease, margin 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+            transform-origin: bottom center !important;
+            margin: 0 8px !important; /* Base distance between icons */
+        }
+
+        body[data-theme="dark"] .dock-icon {
+            color: #9CA3AF !important;
+        }
+
+        .dock-icon:hover {
+            background: rgba(0, 0, 0, 0.04) !important;
+            color: #111827 !important;
+        }
+
+        body[data-theme="dark"] .dock-icon:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #F3F4F6 !important;
+        }
+
+        /* Clean Tooltips without black background */
+        .dock-icon::before {
+            content: attr(data-label) !important;
+            position: absolute !important;
+            top: -24px !important;
+            left: 50% !important;
+            transform: translateX(-50%) scale(0.9) !important;
+            background: transparent !important;
+            color: #000000 !important; /* Light theme black text */
+            padding: 0 !important;
+            border-radius: 0 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            font-family: inherit !important;
+            white-space: nowrap !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+            z-index: 2000 !important;
+            box-shadow: none !important;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 2px rgba(255,255,255,1) !important;
+        }
+
+        body[data-theme="dark"] .dock-icon::before {
+            color: #ffffff !important; /* Dark theme white text */
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1) !important;
+        }
+
+        .dock-icon:hover::before {
+            opacity: 1 !important;
+            transform: translateX(-50%) scale(1) !important;
+        }
+        
+        #viewCheckin {
+            padding-bottom: 120px !important;
+        }
+
+        /* Force exactly equal heights for the input islands */
+        #textInputIsland, #voiceInputIsland {
+            min-height: 480px; height: 100%;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+        }
+
+        /* Prevent Voice Check-in buttons from overlapping */
+        .audio-actions {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            margin-top: 24px !important; /* give enough space from the visualizer */
+        }
+        
+        #btnRunAudioAnalysis {
+            width: 100% !important;
+            margin-top: auto !important;
+        }
+    </style>
+<style id="dynamic-glassmorphism-styles">
+        /* 1. Light Theme (Default, NO wallpaper) */
+        body:not([data-theme="dark"]):not(.has-wallpaper) .input-card,
+        body:not([data-theme="dark"]):not(.has-wallpaper) .glass-card,
+        body[data-theme="light"]:not(.has-wallpaper) .input-card,
+        body[data-theme="light"]:not(.has-wallpaper) .glass-card {
+            background: #ffffff !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+            color: #000000 !important;
+        }
+
+        body:not([data-theme="dark"]) .input-card h3,
+        body:not([data-theme="dark"]) .input-card p,
+        body:not([data-theme="dark"]) .input-card span:not(.status-indicator):not(.btn span),
+        body[data-theme="light"] .input-card h3,
+        body[data-theme="light"] .input-card p,
+        body[data-theme="light"] .input-card span:not(.status-indicator):not(.btn span) {
+            color: #000000 !important;
+            text-shadow: none !important;
+        }
+        
+        body:not([data-theme="dark"]) .input-card textarea,
+        body[data-theme="light"] .input-card textarea {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid rgba(0,0,0,0.2) !important;
+        }
+
+        /* 2. Dark Theme (NO wallpaper) */
+        body[data-theme="dark"]:not(.has-wallpaper) .input-card,
+        body[data-theme="dark"]:not(.has-wallpaper) .glass-card {
+            background: #0a0a0a !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+            color: #F3F4F6 !important;
+        }
+
+        body[data-theme="dark"] .input-card h3,
+        body[data-theme="dark"] .input-card p,
+        body[data-theme="dark"] .input-card span:not(.status-indicator):not(.btn span) {
+            color: #F3F4F6 !important;
+            text-shadow: none !important;
+        }
+        
+        body[data-theme="dark"]:not(.has-wallpaper) .input-card textarea {
+            background: #0a0a0a !important;
+            color: #F3F4F6 !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+        }
+
+        /* 3. Wallpaper Active (Glassmorphism Effect) */
+        body.has-wallpaper .input-card,
+        body.has-wallpaper .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(240, 248, 255, 0.12) 50%, rgba(255, 240, 255, 0.05) 100%) !important;
+            backdrop-filter: blur(28px) saturate(180%) contrast(110%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(110%) !important;
+            
+            box-shadow: 
+                0 16px 40px 0 rgba(31, 38, 135, 0.20), 
+                inset 0 2px 4px rgba(255, 255, 255, 0.5), 
+                inset -2px -2px 6px rgba(255, 255, 255, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.05) !important;
+                
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-top: 2px solid rgba(255, 255, 255, 0.65) !important;
+            border-left: 1.5px solid rgba(255, 255, 255, 0.5) !important;
+            border-radius: 28px !important;
+            
+            color: #ffffff !important;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4) !important;
+            transition: all 0.4s ease !important;
+        }
+
+        body[data-theme="dark"].has-wallpaper .input-card h3,
+        body[data-theme="dark"].has-wallpaper .input-card p,
+        body[data-theme="dark"].has-wallpaper .input-card span:not(.status-indicator):not(.btn span) {
+            color: #ffffff !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+        }
+        
+        body.has-wallpaper .input-card textarea {
+            background: rgba(0, 0, 0, 0.2) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+            text-shadow: none !important;
+        }
+        body.has-wallpaper .input-card textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+    
+
+        /* Ensure wallpaper is visible by clearing ALL background layers (grids, gradients) */
+        body[data-theme].has-wallpaper.on-dashboard,
+        body[data-theme].has-wallpaper,
+        html.has-wallpaper,
+        body.has-wallpaper #appDashboardScreen {
+            background: transparent !important;
+            background-color: transparent !important;
+            background-image: none !important;
+        }
+        
+        /* Ensure the custom background image covers the entire screen in the dashboard */
+        body[data-theme].has-wallpaper.on-dashboard #bgCustomImage,
+        body[data-theme].has-wallpaper.on-dashboard #bgCustomVideo,
+        body[data-theme].has-wallpaper #bgCustomImage,
+        body[data-theme].has-wallpaper #bgCustomVideo {
+            z-index: 0 !important;
+            display: block !important;
+            opacity: 1 !important;
+            position: fixed !important;
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        /* Make sure the main dashboard container does not have a background that blocks the wallpaper */
+        body.has-wallpaper #appDashboardScreen,
+        body.has-wallpaper .modality-view,
+        body.has-wallpaper .dashboard-grid {
+            background: transparent !important;
+            background-image: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+        </style>
+</head>
+<body data-theme="dark">
+<!-- Ambient Background Orbs (ONLY for Dashboard Screen) -->
+<div class="app-background" style="display: none;">
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+</div>
+<!-- ==================== SHARED GLOBAL AMBIENT BACKGROUND LAYER (Active across Home Screen & Dashboard) ==================== -->
+<div class="fixed inset-0 w-full h-full pointer-events-none" id="globalAmbientBgContainer" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; background: #000000;">
+<video autoplay="" class="bg-video active absolute inset-0 w-full h-full object-cover" id="bgVideo0" loop="" muted="" playsinline="" preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4" style="opacity: 1; z-index: 2; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
+<video autoplay="" class="bg-video absolute inset-0 w-full h-full object-cover" id="bgVideo1" loop="" muted="" playsinline="" preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4" style="opacity: 0; z-index: 1; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
+<video autoplay="" class="bg-video absolute inset-0 w-full h-full object-cover" id="bgVideo2" loop="" muted="" playsinline="" preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081042_df7202bf-bd80-4b2b-bbc6-1f09ba2870e9.mp4" style="opacity: 0; z-index: 1; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
+<video autoplay="" class="bg-video absolute inset-0 w-full h-full object-cover" id="bgVideo3" loop="" muted="" playsinline="" preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4" style="opacity: 0; z-index: 1; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
+<!-- Custom uploaded background media (Image / Live Photo / GIF / Video) -->
+<img alt="Custom Background" class="bg-custom-media absolute inset-0 w-full h-full object-cover" id="bgCustomImage" style="display: none; opacity: 1; z-index: 30; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"/>
+<video autoplay="" class="bg-custom-media absolute inset-0 w-full h-full object-cover" id="bgCustomVideo" loop="" muted="" playsinline="" preload="auto" style="display: none; opacity: 1; z-index: 30; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
+<!-- Transparent PNG Overlay (z-index 10) with continuous train-bob animation -->
+<img alt="Overlay" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-10 animate-train-bob" id="bgOverlayTree" src="https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png" style="transform: scale(1.03);"/>
+</div>
+<!-- ==================== SCREEN 1: LUMORA-STYLE FULLSCREEN HERO (NEUROSENSE AI) ==================== -->
+<section class="view-screen active w-full relative flex flex-col justify-between" id="lumoraHomeScreen" style="min-height: 100vh; height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; position: relative; z-index: 2; background: transparent !important; padding: 12px 0 28px 0; gap: 24px;">
+<!-- Navigation (top) - clean minimal header -->
+<header class="w-full relative z-30 px-5 sm:px-6 md:px-12 lg:px-16 py-5 sm:py-6 flex items-center justify-between">
+<!-- Left: "NeuroSense AI" in modern, clean, larger bold font with no airpipe curve image -->
+<div class="flex items-center cursor-pointer" onclick="switchScreen('home')">
+<span class="text-white text-2xl sm:text-4xl tracking-tight font-extrabold" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; letter-spacing: -0.5px; filter: drop-shadow(0 2px 12px rgba(0,242,254,0.4));">NeuroSense AI</span>
+</div>
+</header>
+<!-- Hero Content (centered, below nav) - transitions color via #homeHeroContent -->
+<div class="flex-1 flex flex-col items-center justify-center relative z-20 px-4 sm:px-6 w-full text-white transition-colors duration-700 ease-in-out py-4" id="homeHeroContent">
+<div class="text-center max-w-4xl mx-auto flex flex-col items-center justify-center">
+<!-- Heading -->
+<h1 class="text-[2.6rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] leading-[1.12] w-full font-normal tracking-tight px-0" style="font-family: 'Instrument Serif', serif; color: inherit;">
+                    Clinical Clarity<br/>
+                    in an Endlessly<br/>
+                    Complex Mental<br class="block sm:hidden"/>
+<span class="hidden sm:inline"> </span>Health Reality
+                </h1>
+<!-- Subtext -->
+<p class="text-base sm:text-base md:text-lg leading-relaxed max-w-full sm:max-w-xl mx-auto mt-3 sm:mt-4 opacity-85 px-1" style="font-family: system-ui, sans-serif; color: inherit;">
+                    Rise above subjective guesswork and unstructured intake notes. NeuroSense AI unifies voice biomarkers and written reflections into real-time explainable triage, guiding your team to genuine clinical breakthroughs.
+                </p>
+<!-- Standalone Button to Dashboard -->
+<div class="flex items-center justify-center mt-4 sm:mt-6">
+<button class="px-8 sm:px-10 py-3.5 sm:py-4 bg-white text-gray-900 text-base sm:text-lg font-semibold rounded-full hover:bg-white/90 shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer" onclick="switchScreen('dashboard')" style="font-family: system-ui, sans-serif;">
+                        Go to Dashboard
+                    </button>
+</div>
+<!-- Video Switcher: Row of 4 interactive glass pill buttons -->
+<div class="flex flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-5 sm:mt-6 max-w-full relative z-50">
+<button class="video-switch-btn active" id="videoBtn0" onclick="switchBgVideo(0)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.45); font-size: 0.86rem; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">Golden Hour</button>
+<button class="video-switch-btn" id="videoBtn1" onclick="switchBgVideo(1)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); font-size: 0.86rem; font-weight: 600;">Still Water</button>
+<button class="video-switch-btn" id="videoBtn2" onclick="switchBgVideo(2)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); font-size: 0.86rem; font-weight: 600;">Deep Woods</button>
+<button class="video-switch-btn" id="videoBtn3" onclick="switchBgVideo(3)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); font-size: 0.86rem; font-weight: 600;">Quiet Dawn</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== SCREEN 2: MAIN PROJECT DASHBOARD ==================== -->
+<!-- Fullscreen Unblurred Background Video for Main Dashboard (Exact prompt video URL, 100% unblurred) -->
+<div id="dashboardBgVideoContainer" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none;">
+<video autoplay="" class="w-full h-full object-cover" loop="" muted="" playsinline="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: none !important; opacity: 1 !important;"></video>
+<div class="dashboard-video-tint" style="display: none !important; background: transparent !important;"></div>
+</div>
+<!-- Top Left Round Glassmorphism Return Home Island Button (hidden on home screen by default, shown on dashboard) -->
+<button class="round-glass-btn liquid-glass" id="btnReturnHomeFixed" onclick="switchScreen('home')" style="display: none !important; position: fixed; top: 16px; left: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Return to Home Screen">
+<span style="display: inline-flex; align-items: center; justify-content: center; filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.35)); color: var(--text-primary, #FFFFFF);">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="20"><path d="M15 18l-6-6 6-6"></path></svg>
+</span>
+</button>
+<!-- Top Right Round Glassmorphism Theme Toggle Island Button (hidden on home screen by default) -->
+<button class="round-glass-btn liquid-glass" id="btnThemeToggle" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" style="display: inline-flex !important; position: fixed; top: 16px; right: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Click: Switch Theme | Double-Click: Blur &amp; Atmosphere Controls">
+<span id="themeIcon" style="display: inline-flex; align-items: center; justify-content: center;">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.45)); color: #00F2FE;" viewbox="0 0 24 24" width="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+</span>
+</button>
+<!-- Floating Blur & Atmosphere Control Island (Opened by double-clicking theme button) -->
+<div class="glass-card hidden" id="blurControlPopover" style="display: none; position: fixed; top: 80px; right: 26px; z-index: 1050; width: 330px; background: linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.75) !important; backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important; -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important; border: 1px solid rgba(255,255,255,0.35) !important; border-top: 1.5px solid rgba(255,255,255,0.60) !important; box-shadow: inset 0 1px 2px rgba(255,255,255,0.45), inset 0 0 18px rgba(255,255,255,0.08), 0 24px 60px rgba(0,0,0,0.55) !important; border-radius: 22px; padding: 22px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px;">
+<h4 style="margin: 0; font-size: 1.08rem; font-weight: 800; background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px;">
+<span>✨</span> Atmosphere &amp; Blur
+            </h4>
+<button onclick="toggleBlurControlPopover()" onmouseout="this.style.color='#94A3B8'" onmouseover="this.style.color='#FFFFFF'" style="background: none; border: none; color: #94A3B8; cursor: pointer; font-size: 1.3rem; line-height: 1; transition: color 0.2s;">✕</button>
+</div>
+<!-- Toggle Blur On / Off -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+<span style="font-size: 0.95rem; font-weight: 700; color: #F8FAFC;">Background Blur</span>
+<label class="toggle-switch" style="cursor: pointer; display: inline-flex; align-items: center;">
+<input checked="" id="chkBlurToggle" onchange="handleBlurToggleChange(this.checked)" style="width: 18px; height: 18px; cursor: pointer; accent-color: #00F2FE;" type="checkbox"/>
+</label>
+</div>
+<!-- Blur Intensity Slider -->
+
+<!-- Custom Background Media Upload (Image / Live Photo / GIF / Video) -->
+<div style="margin-bottom: 20px; padding: 14px; border-radius: 16px; background: rgba(0,0,0,0.35); border: 1px solid rgba(0, 242, 254, 0.35);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+<span style="font-size: 0.88rem; font-weight: 800; color: #00F2FE; display: flex; align-items: center; gap: 6px;">🖼️ Custom Background</span>
+<span style="font-size: 0.74rem; color: rgba(255,255,255,0.65);">Image / Live Photo / GIF</span>
+</div>
+<p style="font-size: 0.78rem; color: rgba(255,255,255,0.75); margin: 0 0 12px 0; line-height: 1.4;">Upload any photo, live photo, GIF, or video wallpaper. Fully adjustable with blur sliders above!</p>
+<div style="display: flex; gap: 8px;">
+<label class="btn btn-gradient" for="customBgFileInput" style="flex: 1; text-align: center; justify-content: center; padding: 8px 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; margin: 0;">
+<span>📁</span> Choose Media
+                </label>
+<input accept="image/*,video/*,.gif,.mp4,.mov,.webp,.heic" id="customBgFileInput" onchange="handleCustomBackgroundUpload(event)" style="display: none;" type="file"/>
+<button class="prompt-chip" onclick="resetCustomBackground()" style="padding: 8px 12px; font-size: 0.82rem; font-weight: 700; border-color: rgba(239, 68, 68, 0.5); color: #F87171; border-radius: 10px; cursor: pointer;" title="Reset to default ambient videos">↺ Reset</button>
+</div>
+<div id="customBgStatusText" style="font-size: 0.75rem; color: #34D399; font-weight: 600; margin-top: 8px; display: none;">✓ Using custom background</div>
+
+<div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+<span style="font-size: 0.75rem; color: #CBD5E1; font-weight: 600; display: block; margin-bottom: 8px;">Apply Background To:</span>
+<div style="display: flex; gap: 12px; flex-direction: column;">
+<label style="font-size: 0.8rem; color: #F8FAFC; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="bgScope" onchange="window.handleBgScopeChange(this.value)" style="cursor: pointer; accent-color: #00F2FE;" type="radio" value="both"/> Both Home &amp; Dashboard
+                    </label>
+<label style="font-size: 0.8rem; color: #F8FAFC; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="bgScope" onchange="window.handleBgScopeChange(this.value)" style="cursor: pointer; accent-color: #00F2FE;" type="radio" value="home"/> Home Screen Only
+                    </label>
+<label style="font-size: 0.8rem; color: #F8FAFC; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="bgScope" onchange="window.handleBgScopeChange(this.value)" style="cursor: pointer; accent-color: #00F2FE;" type="radio" value="dashboard"/> Dashboard Only
+                    </label>
+</div>
+</div>
+</div>
+
+
+<!-- Quick Presets -->
+
+</div>
+<section class="view-screen" id="appDashboardScreen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
+<!-- Top Navigation Controls (Brand Name strictly centered on top center across screen without icon) -->
+<header class="navbar-top-controls" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 6px !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important; position: relative !important; z-index: 5 !important;">
+<!-- Center: Brand Name & Title on TOP CENTER exact across any screen width -->
+<div class="top-center-wrapper" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; width: 100% !important; margin: 0 auto !important;">
+<div class="nav-brand top-center-brand" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 4px !important; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important; width: 100% !important; text-align: center !important; margin: 0 auto !important;">
+<div class="brand-text" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; text-align: center !important; margin: 0 auto !important;">
+<h1 class="font-serif-italic top-center-title" style="letter-spacing: -0.5px; margin: 0 auto !important; font-weight: 800;  text-align: center !important; width: 100% !important;">NeuroSense AI</h1>
+</div>
+<span class="badge badge-ai" style="margin: 0 auto !important; text-align: center !important; display: inline-block !important;">Multimodal Check-in Dashboard</span>
+</div>
+</div>
+</header>
+<!-- Main Dashboard Container -->
+<main class="dashboard-container" style="padding: 0;">
+<!-- STUDENT PORTAL VIEW -->
+<section class="role-view active" id="studentPortal">
+<!-- Sliding Glassmorphism Dock Navigation separating Voice, Text, CBT/GPT into different faces -->
+<nav class="magic-dock" id="bottomGlassDock">
+<div class="dock-icon" id="dockBtnVoice" data-label="Narrative &amp; Speech" onclick="switchDashboardView('checkin')" style=""><svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22">
+<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+<line x1="9" x2="9" y1="10" y2="14"></line>
+<line x1="12" x2="12" y1="8" y2="16"></line>
+<line x1="15" x2="15" y1="10" y2="14"></line>
+</svg></div>
+<div class="dock-icon" id="dockBtnCBT" data-label="CBT Assistant" onclick="switchDashboardView('cbt')">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 8V4H8"></path><rect height="12" rx="2" width="16" x="4" y="8"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
+</div>
+<div class="dock-icon" id="dockBtnPressure" data-label="Pressure &amp; Survey" onclick="switchDashboardView('pressure')">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+</div>
+<div class="dock-icon" id="dockBtnWhatIf" data-label="What-If &amp; XAI" onclick="switchDashboardView('whatif')">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><line x1="4" x2="4" y1="21" y2="14"></line><line x1="4" x2="4" y1="10" y2="3"></line><line x1="12" x2="12" y1="21" y2="12"></line><line x1="12" x2="12" y1="8" y2="3"></line><line x1="20" x2="20" y1="21" y2="16"></line><line x1="20" x2="20" y1="12" y2="3"></line><line x1="1" x2="7" y1="14" y2="14"></line><line x1="9" x2="15" y1="8" y2="8"></line><line x1="17" x2="23" y1="16" y2="16"></line></svg>
+</div>
+<div class="dock-icon" id="dockBtnLifestyle" data-label="Lifestyle" onclick="switchDashboardView('lifestyle')">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+</div>
+</nav>
+<!-- VIEW 1: VOICE & SPEECH ACOUSTIC CHECK-IN FACE -->
+<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland">
+<div class="card-header">
+<h3>📝 Narrative Journal Entry</h3>
+<span class="word-counter" id="wordCountText">0 words</span>
+</div>
+<p class="card-desc">Type your thoughts or test linguistic cognitive stress patterns.</p>
+<div class="glass-pill narrative-tips-pill" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
+<div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-purple); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+<span>🌟</span> Reflection Prompts for Check-in:
+                                    </div>
+<p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
+                                        Describe what tasks, exams, or personal events are weighing on you today. Our NLP engine uses LIME to highlight exact positive and negative stress-triggering words.
+                                    </p>
+</div>
+<textarea id="journalTextarea" oninput="updateWordCount()" placeholder="e.g., 'I have three university exams coming up next week and the assignment deadlines for coursework are making me feel overwhelmed completely...'" rows="6"></textarea>
+<div class="quick-prompts">
+<span>Quick Load:</span>
+<button class="prompt-chip" onclick="loadPrompt('academic')">📚 Academic Overload</button>
+<button class="prompt-chip" onclick="loadPrompt('personal')">💔 Personal / Family Stress</button>
+<button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful &amp; Calm</button>
+</div>
+<div class="analyze-footer">
+<button class="btn btn-gradient btn-large" id="btnRunTextAnalysis" onclick="runSingleModalityAnalysis('text')">
+<span>⚡</span> Run Narrative Text Check-in Analysis
+                                    </button>
+</div>
+</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland">
+<div class="card-header">
+<h3>🎙️ Voice &amp; Speech Acoustic Check-in</h3>
+<span class="status-indicator ready" id="micStatusText">Ready to record</span>
+</div>
+<p class="card-desc">Record your voice directly or upload an audio file to test acoustic stress attribution.</p>
+<div class="glass-pill voice-tips-pill" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
+<div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+<span>💡</span> How to Check Your Vocal Biomarkers:
+                                    </div>
+<p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
+                                        Press <strong>Start Voice Recording</strong> and speak clearly for 5–10 seconds about your day or studies. Our AI analyzes pitch fluctuations, micro-tremors, and MFCC vocal tract stability to calculate real-time stress severity.
+                                    </p>
+</div>
+<div class="audio-visualizer-container">
+<canvas height="100" id="waveformCanvas" width="400"></canvas>
+<div class="timer-display" id="recordingTimer">Ready to analyze</div>
+</div>
+<div class="audio-actions">
+<input accept="audio/*" id="audioFileInput" onchange="handleAudioFileUpload(event)" style="display: none;" type="file"/>
+<button class="btn btn-secondary" id="btnRecord" onclick="toggleRecording()">
+<span id="recordBtnIcon">🔴</span> <span id="recordBtnText">Start Voice Recording</span>
+</button>
+<button class="btn btn-secondary" id="btnUploadAudio" onclick="document.getElementById('audioFileInput').click()">
+<span>📁</span> Upload Audio File
+                                    </button>
+<button class="btn btn-gradient btn-large" id="btnRunAudioAnalysis" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
+<span>⚡</span> Run Voice Check-in Analysis
+                                    </button>
+</div>
+</div></div></div><div style="width: 100%; display: flex; justify-content: center; margin-top: 32px; margin-bottom: 60px;"><button class="btn btn-primary" onclick="runMultimodalAnalysis()" style="padding: 14px 28px; font-size: 1.1rem; font-weight: 800; border-radius: 999px; background: linear-gradient(135deg, #8B5CF6, #3B82F6); color: white; border: none; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); cursor: pointer;"><span>⚡</span> Run Combined Dual-Modality Check-in Analysis</button></div><div class="dual-modality-columns" style="display: flex; flex-direction: column; gap: 24px; width: 100%;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="glass-card" id="textAssessmentIsland" style="display: none !important; padding: 22px; border-radius: 24px; display: flex; flex-direction: column; gap: 18px;">
+<!-- NeuroSense AI Narrative Assessment -->
+<div id="textGeminiReportWrapper" style="padding: 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(236, 72, 153, 0.08)); border: 1px solid rgba(168, 85, 247, 0.38); display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 10px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 1.5rem;">🧠</span>
+<div>
+<h4 style="font-size: 1.15rem; font-weight: 800; color: #C084FC; margin: 0;">NeuroSense AI Narrative Clinical Assessment</h4>
+<div id="textGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Dual-Modality Engine (Gemini / Llama 3.3)</div>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span id="textGeminiStressTierBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(168, 85, 247, 0.25); border: 1px solid #C084FC; color: #fff; font-size: 0.85rem; font-weight: 800;">Baseline Calm</span>
+<span id="textGeminiStressIndexText" style="font-size: 1.15rem; font-weight: 800; color: #C084FC;">Index: 22/100</span>
+</div>
+</div>
+<div>
+<div style="font-size: 0.82rem; font-weight: 700; color: #CBD5E1; text-transform: uppercase; margin-bottom: 8px;">Detected Psychological Symptoms:</div>
+<div id="textGeminiSymptomsBox" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">Cognitive Load</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+<div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+<div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Empathetic Clinical Diagnosis</div>
+<p id="textGeminiSummaryText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Narrative evaluation shows healthy emotional regulation and cognitive clarity.</p>
+</div>
+<div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+<div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Recommended Grounding Intervention</div>
+<p id="textGeminiInterventionText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Perform 4-4-4-4 Box Breathing immediately and break tasks into 15-minute intervals.</p>
+</div>
+</div>
+</div>
+</div><div class="results-section glass-card hidden" id="textAnalysisResults">
+<div class="results-header">
+<h2>🧠 Linguistic &amp; Semantic Stress Breakdown</h2>
+<span class="badge badge-dual" style="background: rgba(192,132,252,0.25); border-color: #c084fc; color: #c084fc;">Text Modality Active</span>
+</div>
+<div class="results-grid" style="grid-template-columns: 1fr; gap: 20px;">
+<!-- Text Stress Score & Tier -->
+<div class="result-box gauge-box">
+<h4>Linguistic Cognitive Stress Score</h4>
+<div class="stress-gauge-wrapper">
+<div class="gauge-circle">
+<span class="gauge-number" id="textStressScoreNumber">0%</span>
+<span class="gauge-tier" id="textRiskTierText">Minimal / Normal</span>
+</div>
+</div>
+<div class="primary-origin" style="margin-top: 12px;">
+<span>Detected Semantic Category:</span>
+<strong id="textStressCategoryText">Calm / Normal</strong>
+</div>
+</div>
+<!-- LIME Word Attribution Explainer -->
+<div class="result-box xai-text-box" id="limeBoxWrapper" style="display: none !important;">
+<div class="xai-header">
+<h4>🔍 Word-Level Attribution Weights (LIME)</h4>
+<span class="xai-legend">
+<span class="legend-dot dot-red"></span> High Stress
+                                                <span class="legend-dot dot-yellow"></span> Mild Stress
+                                                <span class="legend-dot dot-green"></span> Calm
+                                            </span>
+</div>
+<p class="xai-subtext">See exact positive/negative contributions of individual words to the final risk classification:</p>
+<div class="lime-token-box" id="limeHighlightedText" style="min-height: 120px; font-size: 1.05rem;">
+                                            No text analyzed yet. Run narrative analysis on the left to generate explainable word attributions.
+                                        </div>
+</div>
+<!-- NEW FEATURE: Cognitive Distortion Scanner & Interactive Reframing Engine -->
+<div class="glass-card" id="distortionScannerWrapper" style="padding: 20px; border-radius: 20px; background: rgba(236, 72, 153, 0.08); border: 1px solid rgba(236, 72, 153, 0.3); display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="font-size: 1.3rem;">🧠</span>
+<h4 style="font-size: 1.1rem; font-weight: 800; color: #EC4899; margin: 0;">Cognitive Distortion Scanner &amp; Instant Reframing</h4>
+</div>
+<span id="distortionCountBadge" style="padding: 4px 12px; border-radius: 999px; background: rgba(236, 72, 153, 0.2); border: 1px solid #EC4899; color: #fff; font-size: 0.82rem; font-weight: 700;">Scanning Active</span>
+</div>
+<p style="font-size: 0.88rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.5;">
+                                            Identifies psychological distortions (such as <strong>Catastrophizing</strong> or <strong>All-or-Nothing Thinking</strong>) and offers interactive CBT reframing prompts.
+                                        </p>
+<div id="distortionItemsList" style="display: flex; flex-direction: column; gap: 10px;">
+<div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+<div>
+<div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed completely", "awful")</div>
+<div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
+</div>
+<button class="btn" onclick="applyTextReframing('catastrophizing')" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+</div>
+</div>
+</div>
+<!-- NEW FEATURE: Semantic Sentiment Valence & Emotional Velocity Dial -->
+<div class="glass-card" id="semanticVelocityWrapper" style="padding: 20px; border-radius: 20px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+<div>
+<h4 style="font-size: 1.05rem; font-weight: 800; color: #818CF8; margin: 0 0 4px 0;">📊 Semantic Valence &amp; Emotional Velocity</h4>
+<p style="font-size: 0.86rem; color: rgba(255,255,255,0.75); margin: 0;">Measures psychological polarity and the rate of emotional escalation across journal entries.</p>
+</div>
+<div style="display: flex; gap: 14px;">
+<div style="text-align: center; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+<div id="valenceScoreText" style="font-size: 1.25rem; font-weight: 800; color: #34D399;">-0.42</div>
+<div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Valence Polarity</div>
+</div>
+<div style="text-align: center; background: rgba(0,0,0,0.3); padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);">
+<div id="velocityScoreText" style="font-size: 1.25rem; font-weight: 800; color: #F59E0B;">Moderate ↑</div>
+<div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Escalation Velocity</div>
+</div>
+</div>
+</div>
+</div>
+</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="glass-card" id="voiceAssessmentIsland" style="display: none !important; padding: 22px; border-radius: 24px; display: flex; flex-direction: column; gap: 18px;">
+<!-- NeuroSense AI Voice Clinical Assessment -->
+<div id="voiceGeminiReportWrapper" style="padding: 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(16, 185, 129, 0.38); display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 10px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 1.5rem;">🧠</span>
+<div>
+<h4 style="font-size: 1.15rem; font-weight: 800; color: #34D399; margin: 0;">NeuroSense AI Voice Clinical Assessment</h4>
+<div id="voiceGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Dual-Modality Engine (Gemini / Llama 3.3)</div>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span id="voiceGeminiStressTierBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.25); border: 1px solid #34D399; color: #fff; font-size: 0.85rem; font-weight: 800;">Baseline Calm</span>
+<span id="voiceGeminiStressIndexText" style="font-size: 1.15rem; font-weight: 800; color: #34D399;">Index: 22/100</span>
+</div>
+</div>
+<div>
+<div style="font-size: 0.82rem; font-weight: 700; color: #CBD5E1; text-transform: uppercase; margin-bottom: 8px;">Detected Psychological &amp; Acoustic Symptoms:</div>
+<div id="voiceGeminiSymptomsBox" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">Cognitive Load</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+<div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+<div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Empathetic Clinical Diagnosis</div>
+<p id="voiceGeminiSummaryText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Voice reflection indicates baseline emotional calmness with minimal acoustic tension.</p>
+</div>
+<div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+<div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Recommended Grounding Intervention</div>
+<p id="voiceGeminiInterventionText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Maintain positive pacing and utilize gentle diaphragmatic breathing during high-demand study sessions.</p>
+</div>
+</div>
+</div>
+</div><div class="results-section glass-card hidden" id="audioAnalysisResults">
+<div class="results-header">
+<h2>🎵 Speech Acoustic Biomarker Breakdown</h2>
+<span class="badge badge-dual" style="background: rgba(56,189,248,0.25); border-color: #38bdf8; color: #38bdf8;">Voice Modality Active</span>
+</div>
+<div class="results-grid" style="grid-template-columns: 1fr; gap: 20px;">
+<!-- Voice Stress Score & Tier -->
+<div class="result-box gauge-box">
+<h4>Acoustic Vocal Stress Severity Score</h4>
+<div class="stress-gauge-wrapper">
+<div class="gauge-circle">
+<span class="gauge-number" id="audioStressScoreNumber">0%</span>
+<span class="gauge-tier" id="audioRiskTierText">Minimal / Normal</span>
+</div>
+</div>
+<div class="primary-origin" style="margin-top: 12px;">
+<span>Detected Acoustic State:</span>
+<strong id="audioStressCategoryText">Calm / Baseline</strong>
+</div>
+</div>
+<!-- SHAP Acoustic Feature Attribution Chart -->
+<div class="result-box xai-audio-box" id="shapBoxWrapper" style="display: none !important;">
+<h4>🔊 Top Acoustic Features Driving vocal prediction (SHAP)</h4>
+<p class="xai-subtext" id="shapSummaryText">Explainable AI feature importance (e.g. MFCC Vocal Tract Shape, Spectral Contrast, Micro-Tremor):</p>
+<div class="chart-container-small" style="height: 220px;">
+<canvas id="voiceShapChartCanvas"></canvas>
+</div>
+</div>
+<!-- NEW FEATURE: Pure Vocal Tone vs Extracted Spoken Words Breakdown -->
+<div class="glass-card" style="padding: 20px; border-radius: 20px; background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="font-size: 1.3rem;">🎙️</span>
+<h4 style="font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin: 0;">Dual Vocal Biomarker vs Lexical Speech Separation</h4>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+<!-- Box A: Tone of Voice alone -->
+<div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
+<div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">1. Pure Vocal Tone &amp; Acoustic Prosody (Re)</div>
+<div id="vocalToneStatusText" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Acoustic Tremor &amp; Pitch: Moderate Stress (64%)</div>
+<p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.4;">Analyzed entirely from physical sound waves (MFCCs, spectral contrast, vocal tension) without depending on words.</p>
+</div>
+<!-- Box B: Extracted Spoken Words -->
+<div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
+<div style="font-size: 0.8rem; font-weight: 700; color: #A855F7; text-transform: uppercase; margin-bottom: 6px;">2. Extracted Spoken Words (ASR Transcription)</div>
+<div id="vocalTranscribedText" style="font-size: 0.95rem; font-weight: 600; color: #fff; font-style: italic; margin-bottom: 6px;">"I am feeling quite pressured about my upcoming final semester presentations..."</div>
+<p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.4;">Whisper ASR extracted text analyzed via LIME lexical sentiment models to cross-verify vocal tone findings.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
+<div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
+<h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🎧</span> Acoustic Training Datasets &amp; Validation</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Extracts 195 vocal biomarkers via OpenSmile &amp; Librosa, validated across RAVDESS &amp; IEMOCAP clinical datasets to detect pitch shimmer &amp; MFCC energy shifts.</p>
+</div>
+<div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
+<h4 style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>⚡</span> Late Fusion &amp; SHAP Explainability Engine</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Processes frequency features through a rank-based Random Forest &amp; SVM ensemble to output real-time Shapley Additive Explanations (SHAP).</p>
+</div>
+<div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
+<h4 style="color: #34d399; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🔒</span> Edge-AI Privacy &amp; Real-time Synthesis</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Voice samples are processed strictly in-memory during edge extraction and synthesized with dual AI engines without permanent server storage.</p>
+</div>
+</div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
+<div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
+<h4 style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>📚</span> Linguistic Training Corpus &amp; Validation</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Fine-tuned on 150,000+ validated student reflections and C-SSRS transcripts to detect subtle cognitive overload and academic burnout.</p>
+</div>
+<div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
+<h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🔍</span> Token Attribution &amp; LIME Explainability</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Employs Local Interpretable Model-agnostic Explanations to perturb individual words and calculate exact stress contributions.</p>
+</div>
+<div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
+<h4 style="color: #facc15; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🌱</span> Cognitive Behavioral Reframing Link</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing) and routes them directly to the CBT Assistant for immediate reframing.</p>
+</div>
+</div></div>
+<!-- VIEW 2: TEXT & NARRATIVE JOURNAL FACE -->
+<!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Single Full-Screen Assistant Island where entire area is Chat) -->
+<div class="modality-view" id="viewCBT" style="display: none !important; padding: 4px 14px 14px 14px; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box;">
+<!-- ONE Single Unified Full-Screen Glass Island - iOS glassmorphism, fills viewport -->
+<div class="cbt-card glass-card" id="cbtCompanionIsland" style="padding: 18px 22px !important; display: flex; flex-direction: column; height: calc(100vh - 180px); max-height: none !important; min-height: 460px; width: 100%; max-width: 100% !important; box-sizing: border-box; justify-content: space-between; border-radius: 28px; overflow: hidden !important;">
+<!-- Sleek Minimal Header explaining AI name & capabilities -->
+<div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.14); flex-shrink: 0; flex-wrap: wrap; gap: 8px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<span style="font-size: 1.6rem;">🤖</span>
+<div>
+<h3 id="cbtGreetingText" style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #fff;">NeuroSense GPT &amp; CBT Assistant</h3>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span class="badge badge-ai" style="margin: 0; font-size: 0.8rem; padding: 4px 12px;">Gemini &amp; Llama 3.3 AI Engine</span>
+</div>
+</div>
+<!-- Direct Full-Island Chat Messages Area -->
+<div class="chat-messages-box" id="cbtChatMessages" style="flex: 1 1 auto; min-height: 0; max-height: none !important; overflow-y: auto; overflow-x: hidden; padding: 10px 6px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; background: transparent !important; border: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%;">
+<div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
+<div class="chat-msg bot-msg" style="max-width: 82%; font-size: 0.96rem; padding: 14px 18px; border-radius: 16px; line-height: 1.6;">
+<strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
+                            </div>
+</div>
+<!-- Input bar: input + Send only (no Reset button) -->
+<div class="chat-input-bar" style="display: flex; flex-wrap: nowrap; gap: 8px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0; background: rgba(0,0,0,0.30); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 6px 10px; overflow: hidden;">
+<input id="cbtChatInput" onkeypress="handleChatKeyPress(event)" placeholder="Message NeuroSense GPT about stress or emotions..." style="flex: 1 1 0; min-width: 0; padding: 10px 14px; border-radius: 14px; border: none; font-size: 0.92rem; box-sizing: border-box; outline: none;" type="text"/>
+<button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 14px; padding: 8px 20px; font-weight: 700; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 4px 14px rgba(56,189,248,0.35); cursor: pointer;">Send 🚀</button>
+</div>
+</div>
+</div>
+<!-- VIEW 4: LIFESTYLE INSIGHTS (Exact Fig 3 Replica from NeuroScan PDF) -->
+<div class="modality-view" id="viewLifestyle" style="display: none !important; padding-top: 60px;">
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+<!-- Header with Title & Refresh button -->
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+<h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -0.02em;">Mental Lifestyle Insights</h2>
+<button class="round-glass-btn" onclick="updateLifestyleSimulation(true)" style="position: relative !important; top: 0 !important; right: 0 !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: rgba(255,255,255,0.1) !important; border: 1px solid rgba(255,255,255,0.3) !important; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: all 0.3s;" title="Refresh &amp; Simulate Usage Telemetry">↻</button>
+</div>
+<!-- Card 1: Behavioral Risk Banner -->
+<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.4);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+<span style="font-size: 1.4rem;">🛡️</span>
+<h3 id="lifestyleRiskTitle" style="font-size: 1.35rem; font-weight: 800; color: #F59E0B;">Behavioral Risk: 54%</h3>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden; margin-bottom: 14px; position: relative;">
+<div id="lifestyleRiskBar" style="width: 54%; height: 100%; background: linear-gradient(90deg, #F59E0B, #EA580C); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+</div>
+<p style="font-size: 0.94rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin: 0;">This score reflects digital behavior patterns from recent usage history.</p>
+</div>
+<!-- Section 2: Behavior Snapshot -->
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="color: #6366F1; font-size: 1.2rem;">∷</span>
+<h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Behavior Snapshot</h3>
+</div>
+<!-- 6-Card Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px;">
+<div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div id="snapUnlockVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">65</div>
+<div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Daily Unlock</div>
+</div>
+<div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div id="snapSessionVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">71.0s</div>
+<div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Avg Session</div>
+</div>
+<div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div id="snapNightVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">25%</div>
+<div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Night Usage</div>
+</div>
+<div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div id="snapSleepVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">0.80</div>
+<div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Sleep Consistency</div>
+</div>
+<div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div id="snapActivityVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">0.51</div>
+<div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Activity Consistency</div>
+</div>
+<div class="glass-card" style="padding: 18px; border-radius: 18px; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div id="snapDayEveVal" style="font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 4px;">50% / 25%</div>
+<div style="font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Day / Evening</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Usage Pattern -->
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="color: #6366F1; font-size: 1.2rem;">⚡</span>
+<h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Usage Pattern</h3>
+</div>
+<div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); display: flex; flex-direction: column; gap: 16px;">
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;">
+<span style="color: #fff;">Daytime (06:00 - 18:00)</span>
+<span id="patDayTxt" style="color: rgba(255,255,255,0.7);">50%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="patDayBar" style="width: 50%; height: 100%; background: #6366F1; border-radius: 999px;"></div>
+</div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;">
+<span style="color: #fff;">Evening (18:00 - 24:00)</span>
+<span id="patEveTxt" style="color: rgba(255,255,255,0.7);">25%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="patEveBar" style="width: 25%; height: 100%; background: #6366F1; border-radius: 999px;"></div>
+</div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem;">
+<span style="color: #fff;">Night (24:00 - 06:00)</span>
+<span id="patNightTxt" style="color: rgba(255,255,255,0.7);">25%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="patNightBar" style="width: 25%; height: 100%; background: #6366F1; border-radius: 999px;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Circadian & Digital Behavior Simulator Sliders -->
+<div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25); display: flex; flex-direction: column; gap: 16px;">
+<h4 style="font-size: 1.1rem; font-weight: 700; color: #10B981; margin: 0;">🎛️ Calibrate &amp; Simulate Behavioral Indicators (Rb)</h4>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+<div>
+<label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
+<span>Daily Unlocks Frequency</span>
+<strong id="sliderUnlockLabel">65 unlocks</strong>
+</label>
+<input id="simUnlockRange" max="180" min="10" oninput="onLifestyleSliderChange()" style="width: 100%; accent-color: #F59E0B;" type="range" value="65"/>
+</div>
+<div>
+<label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
+<span>Late Night Usage Ratio</span>
+<strong id="sliderNightLabel">25%</strong>
+</label>
+<input id="simNightRange" max="80" min="0" oninput="onLifestyleSliderChange()" style="width: 100%; accent-color: #F59E0B;" type="range" value="25"/>
+</div>
+<div>
+<label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
+<span>Circadian Sleep Consistency</span>
+<strong id="sliderSleepLabel">0.80</strong>
+</label>
+<input id="simSleepRange" max="100" min="0" oninput="onLifestyleSliderChange()" style="width: 100%; accent-color: #10B981;" type="range" value="80"/>
+</div>
+</div>
+</div>
+<!-- Section 5: Interpretation -->
+<div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="color: #6366F1; font-size: 1.2rem;">💡</span>
+<h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Interpretation</h3>
+</div>
+<div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<p id="lifestyleInterpretationText" style="font-size: 0.95rem; color: rgba(255,255,255,0.85); line-height: 1.6; margin: 0;">
+                                    Late-night digital device usage (25%) coupled with moderate unlock frequency indicates mild circadian disruption. Research demonstrates that reducing nighttime screen engagement by 15% directly correlates with improved sleep architecture and reduced daytime cognitive anxiety.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- VIEW 5: PRESSURE SNAPSHOT & CLINICAL QUESTIONNAIRES (Exact Fig 4 Replica + Rr Latency) -->
+<div class="modality-view" id="viewPressure" style="display: none !important; padding-top: 60px;">
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+<!-- Card 1: Mental Wellness Overview -->
+<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 16px 40px rgba(0,0,0,0.4);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 1.5rem;">🧠</span>
+<h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Mental Wellness Overview</h3>
+</div>
+<span id="wellnessOverviewDate" style="font-size: 0.88rem; font-weight: 600; color: rgba(255,255,255,0.65);">Mon, 16 Mar</span>
+</div>
+<p id="wellnessOverviewDesc" style="font-size: 0.96rem; color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 18px;">
+                                Questionnaire severity suggests Moderately Severe Depression. Response-time signal is active and synchronized across all four assessment modalities.
+                            </p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<span id="pillOverall" style="padding: 6px 14px; border-radius: 999px; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); font-weight: 700; font-size: 0.84rem; color: #F59E0B;">Overall 45%</span>
+<span id="pillBehavior" style="padding: 6px 14px; border-radius: 999px; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.5); font-weight: 700; font-size: 0.84rem; color: #818CF8;">Behavior 54%</span>
+<span id="pillEmotion" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); font-weight: 700; font-size: 0.84rem; color: #34D399;">Emotion Neutral</span>
+</div>
+</div>
+<!-- Section 2: Pressure Snapshot (Unified M = wq*Rq + we*Re + wr*Rr + wb*Rb) -->
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="color: #6366F1; font-size: 1.2rem;">📊</span>
+<div>
+<h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">Pressure Snapshot</h3>
+<div style="font-size: 0.85rem; color: rgba(255,255,255,0.65);">Unified score from questionnaire, emotion, response and behavior</div>
+</div>
+</div>
+<!-- Big Mental Pressure Banner -->
+<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 1.4rem;">📈</span>
+<span style="font-size: 1.25rem; font-weight: 800; color: #fff;">Mental Pressure</span>
+</div>
+<span id="pressureTierBadge" style="padding: 6px 16px; border-radius: 12px; background: rgba(245, 158, 11, 0.25); border: 1px solid #F59E0B; color: #F59E0B; font-weight: 800; font-size: 0.9rem;">Moderate</span>
+</div>
+<div>
+<div id="pressureCombinedScore" style="font-size: 3.2rem; font-weight: 900; color: #fff; line-height: 1;">45%</div>
+<div style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 4px;">Combined risk from all four signals</div>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden;">
+<div id="pressureCombinedBar" style="width: 45%; height: 100%; background: linear-gradient(90deg, #F59E0B, #EA580C); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+</div>
+</div>
+<!-- 4-Signal Breakdown Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+<!-- 1. Questionnaire (Rq) -->
+<div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+<span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">📋 Questionnaire</span>
+<span id="sigRqVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">53%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="sigRqBar" style="width: 53%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
+</div>
+</div>
+<!-- 2. Emotion (Re) -->
+<div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+<span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">😊 Emotion / Audio</span>
+<span id="sigReVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">13%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="sigReBar" style="width: 13%; height: 100%; background: #10B981; border-radius: 999px;"></div>
+</div>
+</div>
+<!-- 3. Response Time (Rr) -->
+<div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+<span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">⏱️ Response Time</span>
+<span id="sigRrVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">46%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="sigRrBar" style="width: 46%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
+</div>
+</div>
+<!-- 4. Behavioral (Rb) -->
+<div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+<span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">🛡️ Behavioral</span>
+<span id="sigRbVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">54%</span>
+</div>
+<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
+<div id="sigRbBar" style="width: 54%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
+</div>
+</div>
+</div>
+<!-- Bottom Buttons -->
+<div style="display: flex; gap: 14px; margin-top: 8px;">
+<button class="btn btn-gradient" onclick="refreshUnifiedPressure()" style="flex: 1; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 0.96rem; display: flex; align-items: center; justify-content: center; gap: 8px;">↻ Refresh Data</button>
+<button class="btn" onclick="switchDashboardView('cbt')" style="flex: 1; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 0.96rem; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px;">🏥 Find Help</button>
+</div>
+</div>
+<!-- Section 3: Standardized Questionnaires with Cognitive Response-Time (ms/q) Tracking -->
+<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.18); margin-top: 14px; margin-bottom: 40px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+<div>
+<h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">Clinical Self-Reporting Questionnaires</h3>
+<div style="font-size: 0.85rem; color: rgba(255,255,255,0.65);">Includes automated cognitive response-time tracking (ms/question) per NeuroScan methodology</div>
+</div>
+<div style="display: flex; gap: 6px;">
+<button class="btn active" id="btnSurveyPHQ9" onclick="switchQuestionnaire('phq9')" style="padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: #6366F1; color: #fff; border: none;">PHQ-9 (Depression)</button>
+<button class="btn" id="btnSurveyGAD7" onclick="switchQuestionnaire('gad7')" style="padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: rgba(255,255,255,0.1); color: #fff; border: none;">GAD-7 (Anxiety)</button>
+<button class="btn" id="btnSurveyPSS" onclick="switchQuestionnaire('pss')" style="padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; background: rgba(255,255,255,0.1); color: #fff; border: none;">PSS (Stress)</button>
+</div>
+</div>
+<div id="questionnaireContainer" style="display: flex; flex-direction: column; gap: 16px;">
+<!-- Questions injected dynamically via JS -->
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); flex-wrap: wrap; gap: 12px;">
+<div id="questionnaireScoreSummary" style="font-size: 1rem; font-weight: 700; color: #34D399;">PHQ-9 Total: 0/27 (Minimal) | Avg Response Latency: 0 ms</div>
+<button class="btn btn-gradient" onclick="submitQuestionnaireSession()" style="padding: 10px 24px; border-radius: 999px; font-weight: 800;">Save &amp; Synchronize Risk Signals 🚀</button>
+</div>
+</div>
+</div>
+</div>
+<!-- VIEW 6: WHAT-IF XAI & LONGITUDINAL TRAJECTORY (Unique features from 15 reference papers) -->
+<div class="modality-view" id="viewWhatIf" style="display: none !important; padding-top: 60px;">
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
+<div style="padding: 0 4px;">
+<h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: -0.02em;">Explainable AI &amp; Counterfactual What-If Analysis</h2>
+<p style="color: rgba(255,255,255,0.7); font-size: 0.94rem;">Simulate lifestyle interventions and feature masking to see how your multi-modal risk profile responds.</p>
+</div>
+<!-- Card 1: Feature Masking & Counterfactual Simulator -->
+<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(236, 72, 153, 0.35);">
+<h3 style="font-size: 1.25rem; font-weight: 800; color: #EC4899; margin-bottom: 14px;">🛠️ Multi-Modal Signal Masking &amp; Robustness Test</h3>
+<p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Toggle diagnostic modalities on/off to evaluate how each sensor signal contributes to the unified risk prediction.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+<label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+<input checked="" id="maskRq" onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;" type="checkbox"/>
+<span>Questionnaire (Rq)</span>
+</label>
+<label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+<input checked="" id="maskRe" onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;" type="checkbox"/>
+<span>Vocal Acoustic (Re)</span>
+</label>
+<label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+<input checked="" id="maskRr" onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;" type="checkbox"/>
+<span>Response Latency (Rr)</span>
+</label>
+<label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+<input checked="" id="maskRb" onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;" type="checkbox"/>
+<span>Digital Behavioral (Rb)</span>
+</label>
+</div>
+<div style="background: rgba(0,0,0,0.3); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+<div>
+<div style="font-size: 0.85rem; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.05em;">Simulated Counterfactual Risk</div>
+<div id="whatIfResultText" style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-top: 4px;">45% (Moderate Risk)</div>
+</div>
+<span id="whatIfDeltaBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: #10B981; font-weight: 700; font-size: 0.85rem;">Calibrated to Baseline</span>
+</div>
+</div>
+<!-- Card 2: 14-Day Longitudinal Mood & Circadian Trajectory Tracker -->
+<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+<h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">📅 14-Day Longitudinal Risk Trajectory</h3>
+<span class="badge" style="background: rgba(99, 102, 241, 0.25); color: #818CF8; border: 1px solid #818CF8;">Learning Vector Quantization Active</span>
+</div>
+<div style="height: 260px; width: 100%;">
+<canvas id="longitudinalChartCanvas"></canvas>
+</div>
+</div>
+<!-- Card 3: Offline Privacy Guard -->
+<div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; align-items: center; gap: 14px; max-width: 620px;">
+<span style="font-size: 2.2rem;">🔒</span>
+<div>
+<h4 style="font-size: 1.15rem; font-weight: 800; color: #38BDF8; margin: 0 0 4px 0;">MINDGUARD Offline Privacy &amp; Local Processing Mode</h4>
+<p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.4;">When enabled, all behavioral telemetries, response-time calculations, and clinical screening models run completely inside your device's browser sandbox without cloud network transmission.</p>
+</div>
+</div>
+<button class="btn" id="btnPrivacyGuardToggle" onclick="togglePrivacyGuard(this)" style="padding: 12px 24px; border-radius: 999px; font-weight: 800; background: rgba(56, 189, 248, 0.2); border: 1px solid #38BDF8; color: #38BDF8; white-space: nowrap;">⚡ Local Mode: OFF</button>
+</div>
+</div>
+</div>
+<!-- Longitudinal Heatmap Island removed per user request -->
+<div class="heatmap-section" style="display: none !important;"></div>
+</section>
+</main>
+<footer class="footer glass-card" style="display: none !important;">
+<p>⚡ <strong>NeuroSense AI</strong> — Final Year B.Tech Research Project | Built with FastAPI, scikit-learn Rank-Based Ensemble, LIME, SHAP, and OpenAI Whisper.</p>
+</footer>
+<!-- Scripts -->
+<script src="/static/js/charts.js?v=20260807_fix10"></script>
+<script src="/static/js/audio_recorder.js?v=20260807_fix10"></script>
+<script src="/static/js/main.js?v=20260807_fix10"></script>
+<script>
+        function toggleMobileHeroMenu() {
+            const menu = document.getElementById('heroMobileMenu');
+            const iconOpen = document.getElementById('heroMenuIconOpen');
+            const iconClose = document.getElementById('heroMenuIconClose');
+            if (!menu) return;
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                if (iconOpen) iconOpen.classList.add('hidden');
+                if (iconClose) iconClose.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+                if (iconOpen) iconOpen.classList.remove('hidden');
+                if (iconClose) iconClose.classList.add('hidden');
+            }
+        }
+    </script>
+</section>
+<script id="magic-dock-js">
+</script>
+<script id="wallpaper-tracker-js">
+    document.addEventListener('DOMContentLoaded', () => {
+        function checkWallpaperState() {
+            // Check if any background video is active and visible
+            const activeVideo = document.querySelector('.bg-video.active');
+            let hasWallpaper = false;
+            
+            if (activeVideo && getComputedStyle(activeVideo).opacity !== '0' && getComputedStyle(activeVideo).display !== 'none') {
+                hasWallpaper = true;
+            }
+            
+            // Check custom images/videos
+            const customImg = document.getElementById('bgCustomImage');
+            const customVid = document.getElementById('bgCustomVideo');
+            
+            if (customImg && customImg.style.display !== 'none' && customImg.src) {
+                hasWallpaper = true;
+            }
+            if (customVid && customVid.style.display !== 'none' && !customVid.paused) {
+                hasWallpaper = true;
+            }
+            
+            if (hasWallpaper) {
+                document.body.classList.add('has-wallpaper');
+            } else {
+                document.body.classList.remove('has-wallpaper');
+            }
+        }
+        
+        // Run periodically to catch any background changes
+        setInterval(checkWallpaperState, 300);
+        checkWallpaperState();
+    });
+    </script>
+
+<script id="bg-scope-logic-js">
+    window.handleBgScopeChange = function(scope) {
+        localStorage.setItem('neurosense_bg_scope', scope);
+        const screenName = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home';
+        if (typeof applyBackgroundState === 'function') {
+            applyBackgroundState(screenName);
+        }
+    };
+    
+    // Set initial radio state on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const scope = localStorage.getItem('neurosense_bg_scope') || 'both';
+        const radios = document.querySelectorAll('input[name="bgScope"]');
+        radios.forEach(r => {
+            if (r.value === scope) r.checked = true;
+        });
+    });
+    </script>
+</body>
+</html>
