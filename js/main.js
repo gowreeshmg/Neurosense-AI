@@ -1121,7 +1121,6 @@ function displayAnalysisResults(res) {
         const textRes = document.getElementById('textAnalysisResults');
         const limeBox = document.getElementById('limeBoxWrapper');
         const shapBox = document.getElementById('shapBoxWrapper');
-        const text = document.getElementById('journalTextarea').value.trim();
         const audioBtn = document.getElementById('btnRunAudioAnalysis');
         const textBtn = document.getElementById('btnRunTextAnalysis');
         
@@ -1391,7 +1390,6 @@ function displayAnalysisResults(res) {
             }
         }, 120);
     }
-}
 
 /**
  * Instant CBT sentence reframing for detected cognitive distortions inside Text Check-in
