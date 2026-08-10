@@ -979,18 +979,17 @@ async function runMultimodalAnalysis(mode = 'combined') {
 
         if (audioBlob) {
             const base64Audio = await blobToBase64(audioBlob);
-            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_audio', {
+            const res = await fetch('/api/transcribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [{ "name": "audio.wav", "data": base64Audio }] })
+                body: JSON.stringify({ data: base64Audio })
             });
             
             if (res.ok) {
-                const gradioData = await res.json();
-                const data = gradioData.data[0];
-                result = data.fusion_result;
-                if (data.transcription && data.transcription.text && !text) {
-                    document.getElementById('journalTextarea').value = data.transcription.text;
+                const data = await res.json();
+                if (data.text) {
+                    text = data.text; // Use transcriber text for the text endpoint!
+                    document.getElementById('journalTextarea').value = text;
                     updateWordCount();
                 }
             }
