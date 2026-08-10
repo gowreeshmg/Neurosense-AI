@@ -12,13 +12,15 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: "API key is missing. Please add GEMINI_API_KEY or GROQ_API_KEY in Vercel environment variables." });
         }
 
-        const { message, current_stress_category, history } = req.body;
+        const { message, current_stress_category, history, is_reframe } = req.body;
 
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        const systemPrompt = `You are NeuroSense GPT, an empathetic AI Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to actively help them manage their stress. First, provide a warm, empathetic acknowledgment of their feelings. Then, ALWAYS provide specific, actionable ways to help solve or manage their stress (such as a CBT reframing exercise, a grounding technique, or a practical coping strategy). Keep your responses structured, highly actionable, and extremely helpful. Do not give medical advice. Provide a moderately detailed response (3 to 5 sentences).`;
+        const systemPrompt = is_reframe 
+            ? `You are a clinical psychologist AI. Reframe the following sentence into a healthier, grounded cognitive perspective, resolving any cognitive distortions. Return ONLY the reframed sentence. No conversational intro, no quotes, just the sentence.`
+            : `You are NeuroSense GPT, an empathetic AI Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to actively help them manage their stress. First, provide a warm, empathetic acknowledgment of their feelings. Then, ALWAYS provide specific, actionable ways to help solve or manage their stress (such as a CBT reframing exercise, a grounding technique, or a practical coping strategy). Keep your responses structured, highly actionable, and extremely helpful. Do not give medical advice. Provide a moderately detailed response (3 to 5 sentences).`;
 
         let reply = "I'm sorry, I couldn't generate a response at this time.";
         let geminiSuccess = false;

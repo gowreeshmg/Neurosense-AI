@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     vidEl.style.setProperty('opacity', '1', 'important');
                     vidEl.style.setProperty('z-index', '30', 'important');
                     vidEl.classList.add('active');
+                    document.body.classList.add('has-custom-bg');
                     vidEl.load();
                     vidEl.play().catch(() => {});
                 } else if (imgEl) {
@@ -187,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     imgEl.style.setProperty('opacity', '1', 'important');
                     imgEl.style.setProperty('z-index', '30', 'important');
                     imgEl.classList.add('active');
+                    document.body.classList.add('has-custom-bg');
                 }
                 const currentScreen = document.body.classList.contains('on-dashboard') ? 'dashboard' : 'home'; applyBackgroundState(currentScreen);
     if (statusEl) {
@@ -1389,14 +1391,42 @@ function displayAnalysisResults(res) {
 /**
  * Instant CBT sentence reframing for detected cognitive distortions inside Text Check-in
  */
-function applyTextReframing(distortionType) {
+async function applyTextReframing(distortionType) {
     const textarea = document.getElementById('journalTextarea');
-    if (!textarea) return;
-    if (distortionType === 'catastrophizing') {
-        textarea.value = "I have three university exams coming up next week. While it is a busy schedule, I have prepared step-by-step and will focus on completing one task at a time rather than feeling overwhelmed.";
-    } else if (distortionType === 'all_or_nothing') {
-        textarea.value = "I am working through my coursework deadlines. Even if I don't get everything perfect instantly, each hour of focused study is valuable progress.";
+    if (!textarea || !textarea.value.trim()) return;
+
+    // Show loading state on button
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `?? Reframing...`;
+    btn.style.opacity = '0.7';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/chat/cbt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: `Please reframe this sentence to resolve ${distortionType.replace('_', ' ')} cognitive distortions: "${textarea.value}"`,
+                current_stress_category: 'Reframe Request',
+                history: [],
+                is_reframe: true
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.reply) {
+            textarea.value = data.reply.trim();
+        }
+    } catch (err) {
+        console.error("Reframing error:", err);
     }
+
+    btn.innerHTML = originalText;
+    btn.style.opacity = '1';
+    btn.disabled = false;
+    
     updateWordCount();
     runSingleModalityAnalysis('text');
 }
