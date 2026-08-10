@@ -1561,14 +1561,15 @@ async function sendCBTChat() {
                 if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> Re-establishing connection with clinical AI engine... ⌛`;
                 await new Promise(r => setTimeout(r, 400));
             } else {
-                if (err && err.message && err.message.includes("API key")) {
-                    replyText = "⚠️ AI Configuration Error: " + err.message + " Please add it to your Vercel project settings.";
-                    success = false;
-                    break;
+                let errorDetails = (err && err.message) ? err.message : "Unknown connection error.";
+                
+                if (errorDetails.includes("API key")) {
+                    replyText = "⚠️ AI Configuration Error: " + errorDetails + " Please add it to your Vercel project settings.";
+                } else {
+                    replyText = "⚠️ AI Connection Error: Unable to reach Gemini or Llama API. Server reported: " + errorDetails;
                 }
-                // FALLBACK: Simulate a response if the backend is not deployed yet
-                replyText = `I hear you. Dealing with ${currentAnalysisResult ? currentAnalysisResult.final_stress_category.toLowerCase() : "stress"} can be incredibly overwhelming. A great CBT technique for this is 'Cognitive Reframing'. Can we try to identify one small, positive action you can take right now to regain a sense of control?`;
-                success = true;
+                
+                success = false;
                 break;
             }
         }
