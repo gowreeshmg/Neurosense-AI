@@ -40,7 +40,7 @@ export default async function handler(req, res) {
                 );
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
                 const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
                     method: 'POST',
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
                 groqHistory.push({ role: "user", content: message });
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
                 const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "llama3-8b-8192", // Standard fast Groq Llama model
+                        model: "llama-3.3-70b-versatile", // Use active Llama 3.3 model
                         messages: groqHistory,
                         temperature: 0.7,
                         max_tokens: 250
