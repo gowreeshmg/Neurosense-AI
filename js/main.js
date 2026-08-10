@@ -1002,8 +1002,10 @@ async function runMultimodalAnalysis() {
         return;
     }
     
-    btn.disabled = true;
-    btn.innerHTML = '<span>⚡</span> Analyzing Multimodal Biomarkers (Running LIME & SHAP)...';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⚡</span> Analyzing Multimodal Biomarkers (Running LIME & SHAP)...';
+    }
     
     try {
         let result = null;
@@ -1062,21 +1064,21 @@ async function runMultimodalAnalysis() {
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = '<span>⚡</span> Run Combined Dual-Modality Check-in Analysis';
-
-            // REVEAL ISLANDS
-            const textIsland = document.getElementById('textAssessmentIsland');
-            const voiceIsland = document.getElementById('voiceAssessmentIsland');
-            const combinedIsland = document.getElementById('combinedAssessmentIsland');
-            if (textIsland) textIsland.classList.add('show-result');
-            if (voiceIsland) voiceIsland.classList.add('show-result');
-            if (combinedIsland) combinedIsland.classList.add('show-result');
-            
-            // SCROLL
-            setTimeout(() => {
-                if (combinedIsland) combinedIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                else if (textIsland) textIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
         }
+
+        // REVEAL ISLANDS (Unconditionally)
+        const textIsland = document.getElementById('textAssessmentIsland');
+        const voiceIsland = document.getElementById('voiceAssessmentIsland');
+        const combinedIsland = document.getElementById('combinedAssessmentIsland');
+        if (textIsland) textIsland.classList.add('show-result');
+        if (voiceIsland) voiceIsland.classList.add('show-result');
+        if (combinedIsland) combinedIsland.classList.add('show-result');
+        
+        // SCROLL
+        setTimeout(() => {
+            if (combinedIsland) combinedIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            else if (textIsland) textIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     }
 }
 
