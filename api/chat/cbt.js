@@ -104,7 +104,12 @@ export default async function handler(req, res) {
                 if (!groqRes.ok) {
                     const errData = await groqRes.text();
                     console.error("Groq API Error:", errData);
-                    return res.status(502).json({ error: "Failed to fetch response from Groq Llama AI." });
+                    let parsedErr = "Failed to fetch response from Groq Llama AI.";
+                    try {
+                        const j = JSON.parse(errData);
+                        if (j.error && j.error.message) parsedErr = "Groq: " + j.error.message;
+                    } catch(e) { parsedErr = "Groq: " + errData; }
+                    return res.status(502).json({ error: parsedErr });
                 }
 
                 const data = await groqRes.json();
