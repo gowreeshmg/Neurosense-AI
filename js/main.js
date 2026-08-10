@@ -1526,6 +1526,11 @@ async function sendCBTChat() {
                 const typingEl = document.getElementById(typingId);
                 if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> Re-establishing connection with clinical AI engine... ⌛`;
                 await new Promise(r => setTimeout(r, 400));
+            } else {
+                // FALLBACK: Simulate a response if the backend is not deployed yet
+                replyText = `I hear you. Dealing with ${currentAnalysisResult ? currentAnalysisResult.final_stress_category.toLowerCase() : "stress"} can be incredibly overwhelming. A great CBT technique for this is 'Cognitive Reframing'. Can we try to identify one small, positive action you can take right now to regain a sense of control?`;
+                success = true;
+                break;
             }
         }
     }

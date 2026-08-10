@@ -4353,6 +4353,7 @@ body[data-theme="light"] #appDashboardScreen::before {
 }
 
 body.has-custom-bg.on-dashboard { background: transparent !important; }
+body.has-custom-bg.on-dashboard #appDashboardScreen::before { display: none !important; }
 
 body #appDashboardScreen #v0InputWrapper > div:not(#v0Pills), body #appDashboardScreen .v0-input-wrapper > div { max-width: 1400px !important; width: 100% !important; }
 
@@ -4364,9 +4365,10 @@ body[data-theme="light"] .card-desc {
     color: #1e293b !important;
 }
 
-/* Ensure lifestyle dock button only visible on mobile */
+/* Ensure lifestyle and whatif dock buttons only visible on mobile */
 @media (min-width: 769px) {
-    #dockBtnLifestyle {
+    #dockBtnLifestyle,
+    #dockBtnWhatIf {
         display: none !important;
     }
 }
