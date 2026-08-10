@@ -3883,8 +3883,11 @@ body[data-theme="light"] #viewWhatIf #whatIfResultText { color: #1e293b !importa
 /* Light mode survey buttons */
 body[data-theme="light"] .survey-option-btn { color: #1e293b !important; -webkit-text-fill-color: #1e293b !important; }
 body[data-theme="light"] .survey-option-btn.active { color: #fff !important; -webkit-text-fill-color: #fff !important; }
-body[data-theme="light"] #btnSurveyPHQ9, body[data-theme="light"] #btnSurveyGAD7, body[data-theme="light"] #btnSurveyPSS {
+body[data-theme="light"] #btnSurveyPHQ9.active, body[data-theme="light"] #btnSurveyGAD7.active, body[data-theme="light"] #btnSurveyPSS.active {
     color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+body[data-theme="light"] #btnSurveyPHQ9:not(.active), body[data-theme="light"] #btnSurveyGAD7:not(.active), body[data-theme="light"] #btnSurveyPSS:not(.active) {
+    color: #374151 !important; -webkit-text-fill-color: #374151 !important; background: rgba(0, 0, 0, 0.08) !important;
 }
 
 /* =====================================================================

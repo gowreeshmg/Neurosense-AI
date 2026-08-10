@@ -98,6 +98,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('neurosense_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.body.setAttribute('data-theme', savedTheme);
+
+    // Load local storage signal state if available
+    const savedSignalStr = localStorage.getItem('neuro_pressure_state');
+    if (savedSignalStr) {
+        try {
+            const parsed = JSON.parse(savedSignalStr);
+            if (parsed && typeof parsed.Rq !== 'undefined') {
+                window.neuroSignalState = parsed;
+                setTimeout(() => {
+                    if (typeof refreshUnifiedPressure === 'function') refreshUnifiedPressure();
+                }, 500);
+            }
+        } catch(e) {}
+    }
     updateThemeIconUI(savedTheme);
 
     // Check saved dashboard blur setting
@@ -2244,51 +2258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scopeRadio = document.querySelector(`input[name="bgScope"][value="${savedScope}"]`);
     if (scopeRadio) scopeRadio.checked = true;
 
-    const dock = document.getElementById('sidebarDock');
-    if (!dock || !dock.classList.contains('magic-dock')) return;
-    
-    const icons = dock.querySelectorAll('.dock-btn');
-    const baseSize = 48;
-    const maxSize = 64; // 1.33x scale
-    const distanceThreshold = 150;
-
-    dock.addEventListener('mousemove', (e) => {
-        icons.forEach(icon => {
-            const rect = icon.getBoundingClientRect();
-            const iconCenterX = rect.left + rect.width / 2;
-            const distance = Math.abs(e.clientX - iconCenterX);
-            
-            let size = baseSize;
-            if (distance < distanceThreshold) {
-                // Cosine interpolation for smooth curve
-                const val = (Math.cos((distance / distanceThreshold) * Math.PI) + 1) / 2;
-                size = baseSize + (maxSize - baseSize) * val;
-            }
-            icon.style.setProperty('width', `${size}px`, 'important');
-            icon.style.setProperty('height', `${size}px`, 'important');
-            
-            // Scale the inner SVG slightly less but proportionally
-            const svg = icon.querySelector('svg');
-            if (svg) {
-                const svgSize = (size / baseSize) * 24;
-                svg.style.setProperty('width', `${svgSize}px`, 'important');
-                svg.style.setProperty('height', `${svgSize}px`, 'important');
-            }
-        });
-    });
-
-    dock.addEventListener('mouseleave', () => {
-        icons.forEach(icon => {
-            icon.style.setProperty('width', `${baseSize}px`, 'important');
-            icon.style.setProperty('height', `${baseSize}px`, 'important');
-            
-            const svg = icon.querySelector('svg');
-            if (svg) {
-                svg.style.setProperty('width', `24px`, 'important');
-                svg.style.setProperty('height', `24px`, 'important');
-            }
-        });
-    });
+    // Dock resizing logic removed for static UI consistency
 });
 
 
