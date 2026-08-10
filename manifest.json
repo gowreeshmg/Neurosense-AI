@@ -15,7 +15,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/static/img/neurosense-logo.png",
+      "src": "/img/neurosense-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

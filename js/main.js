@@ -1,3 +1,6 @@
+// --- HUGGINGFACE ZERO-GPU WAKE-UP PING ---
+fetch('https://[YOUR_BACKEND_SPACE].hf.space').catch(() => {});
+
 /* ==========================================================================
    NeuroSense AI — Main Application Controller (UI Engine & API Bridge)
    ========================================================================== */
@@ -2339,3 +2342,4 @@ function showAndScrollToResults() {
         bottomRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 300);
 }
+
