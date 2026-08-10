@@ -752,35 +752,43 @@
 
         @media (max-width: 768px) {
             .magic-dock {
-                width: 92vw !important;
-                max-width: 400px !important;
-                gap: 4px !important;
+                width: 95vw !important;
+                max-width: none !important;
+                gap: 8px !important;
                 padding: 10px !important;
-                justify-content: space-around !important;
+                justify-content: flex-start !important;
+                overflow-x: auto !important;
+                border-radius: 24px !important;
             }
             .dock-icon {
-                width: 44px !important;
-                height: 44px !important;
+                width: 48px !important;
+                height: 48px !important;
                 margin: 0 !important;
+                flex: 0 0 48px !important;
+                border-radius: 50% !important; /* Make it perfectly round */
             }
             .dock-icon:hover::before {
                 opacity: 0 !important;
-                transform: translateX(-50%) scale(0.9) !important;
             }
             .dock-icon.clicked-tooltip::before {
                 opacity: 1 !important;
                 transform: translateX(-50%) scale(1) !important;
-                top: -32px !important;
+                top: auto !important;
+                bottom: 100% !important;
+                margin-bottom: 12px !important;
             }
             .quick-prompts {
                 display: none !important;
+            }
+            #btnUploadAudio {
+                display: inline-flex !important;
             }
             #viewCBT {
                 padding-left: 0 !important;
                 padding-right: 0 !important;
             }
             #cbtCompanionIsland {
-                height: calc(100svh - 160px) !important;
+                height: calc(100svh - 110px) !important; /* Bring send button up */
                 min-height: 0 !important;
                 border-radius: 0 !important;
                 padding-left: 10px !important;
@@ -1285,6 +1293,7 @@
 </div>
 </div>
 </div>
+</div>
 </div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="glass-card" id="voiceAssessmentIsland" style="display: none !important; padding: 22px; border-radius: 24px; display: flex; flex-direction: column; gap: 18px;">
 <!-- NeuroSense AI Voice Clinical Assessment -->
 <div id="voiceGeminiReportWrapper" style="padding: 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(16, 185, 129, 0.38); display: flex; flex-direction: column; gap: 14px;">
@@ -1368,6 +1377,7 @@
 </div>
 </div>
 </div>
+</div>
 </div></div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
 <h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🎧</span> Acoustic Training Datasets &amp; Validation</h4>
@@ -1399,7 +1409,7 @@
 <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Single Full-Screen Assistant Island where entire area is Chat) -->
 <div class="modality-view" id="viewCBT" style="display: none !important; padding: 4px 14px 14px 14px; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box;">
 <!-- ONE Single Unified Full-Screen Glass Island - iOS glassmorphism, fills viewport -->
-<div class="cbt-card glass-card" id="cbtCompanionIsland" style="padding: 18px 22px !important; display: flex; flex-direction: column; height: calc(100vh - 180px); max-height: none !important; min-height: 460px; width: 100%; max-width: 100% !important; box-sizing: border-box; justify-content: space-between; border-radius: 28px; overflow: hidden !important;">
+<div class="cbt-card glass-card" id="cbtCompanionIsland" style="padding: 18px 22px !important; display: flex; flex-direction: column; height: calc(100svh - 120px); max-height: none !important; min-height: 400px; width: 100%; max-width: 100% !important; box-sizing: border-box; justify-content: space-between; border-radius: 28px; overflow: hidden !important;">
 <!-- Sleek Minimal Header explaining AI name & capabilities -->
 <div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.14); flex-shrink: 0; flex-wrap: wrap; gap: 8px;">
 <div style="display: flex; align-items: center; gap: 12px;">
@@ -1775,9 +1785,12 @@
     // Add temporary tooltip logic for mobile dock icons
     document.querySelectorAll('.dock-icon').forEach(icon => {
         icon.addEventListener('click', function() {
-            document.querySelectorAll('.dock-icon').forEach(i => i.classList.remove('clicked-tooltip'));
+            document.querySelectorAll('.dock-icon').forEach(i => {
+                i.classList.remove('clicked-tooltip');
+                if(i._ttimer) clearTimeout(i._ttimer);
+            });
             this.classList.add('clicked-tooltip');
-            setTimeout(() => {
+            this._ttimer = setTimeout(() => {
                 this.classList.remove('clicked-tooltip');
             }, 1500); // Tooltip vanishes after 1.5 seconds
         });
@@ -1788,7 +1801,7 @@
         function checkWallpaperState() {
             // Check if any background video is active and visible
             const activeVideo = document.querySelector('.bg-video.active');
-            let hasWallpaper = false;
+            let hasWallpaper = localStorage.getItem('neurosense_wallpaper') || false;
             
             if (activeVideo && getComputedStyle(activeVideo).opacity !== '0' && getComputedStyle(activeVideo).display !== 'none') {
                 hasWallpaper = true;
@@ -1805,6 +1818,12 @@
                 hasWallpaper = true;
             }
             
+            if (hasWallpaper && hasWallpaper !== 'none') {
+                document.body.classList.remove('show-grid');
+            } else {
+                document.body.classList.add('show-grid');
+            }
+
             if (hasWallpaper) {
                 document.body.classList.add('has-wallpaper');
             } else {
