@@ -1798,8 +1798,11 @@ textarea:focus {
     #appDashboardScreen {
         padding: 10px 14px !important;
     }
+    #btnReturnHomeFixed, #btnThemeToggle {
+        top: max(46px, calc(env(safe-area-inset-top, 40px) + 8px)) !important;
+    }
     .dashboard-container {
-        padding: max(20px, env(safe-area-inset-top, 45px)) 10px 30px 10px !important;
+        padding: max(60px, env(safe-area-inset-top, 50px)) 10px 30px 10px !important;
     }
     .results-grid, .grid-2, .grid-3, .counselor-grid {
         grid-template-columns: 1fr !important;
