@@ -1687,23 +1687,33 @@ function generateFallbackResult(text, audioVector) {
     let tier = "Anxiety";
     let color = "orange";
     
-    if (text && (text.toLowerCase().includes("overwhelm") || text.toLowerCase().includes("deadline") || text.toLowerCase().includes("exam"))) {
-        score = 78.5;
-        cat = "Depression";
-        tier = "Depression";
-        color = "orange";
-    } else if (text && (text.toLowerCase().includes("lonely") || text.toLowerCase().includes("depress") || text.toLowerCase().includes("family"))) {
-        score = 82.0;
+    if (text && (text.toLowerCase().includes("lonely") || text.toLowerCase().includes("depress") || text.toLowerCase().includes("family") || text.toLowerCase().includes("hopeless"))) {
+        score = 85.0;
         cat = "Emotional Distress";
         tier = "Emotional Distress";
         color = "red";
+    } else if (text && (text.toLowerCase().includes("overwhelm") || text.toLowerCase().includes("deadline") || text.toLowerCase().includes("exam"))) {
+        score = 75.0;
+        cat = "Depression";
+        tier = "Depression";
+        color = "orange";
+    } else if (text && (text.toLowerCase().includes("nervous") || text.toLowerCase().includes("worry") || text.toLowerCase().includes("panic"))) {
+        score = 55.0;
+        cat = "Anxiety";
+        tier = "Anxiety";
+        color = "orange";
+    } else if (text && (text.toLowerCase().includes("busy") || text.toLowerCase().includes("tired") || text.toLowerCase().includes("work"))) {
+        score = 35.0;
+        cat = "Stress";
+        tier = "Stress";
+        color = "blue";
     } else if (text && (text.toLowerCase().includes("calm") || text.toLowerCase().includes("relax") || text.toLowerCase().includes("completed"))) {
-        score = 18.0;
+        score = 15.0;
         cat = "Normal";
         tier = "Normal";
         color = "green";
     } else if (audioVector) {
-        score = 74.2;
+        score = 55.0;
         cat = "Anxiety";
         tier = "Anxiety";
         color = "orange";
