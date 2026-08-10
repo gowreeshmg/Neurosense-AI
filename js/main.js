@@ -1084,279 +1084,313 @@ async function runMultimodalAnalysis() {
  * Single-Modality Analysis Trigger (Voice or Text exactly one at a time)
  */
 async function runSingleModalityAnalysis(modality) {
-    const audioRes = document.getElementById('audioAnalysisResults');
-    const textRes = document.getElementById('textAnalysisResults');
-    const limeBox = document.getElementById('limeBoxWrapper');
-    const shapBox = document.getElementById('shapBoxWrapper');
-    const text = document.getElementById('journalTextarea').value.trim();
-    const audioBtn = document.getElementById('btnRunAudioAnalysis');
-    const textBtn = document.getElementById('btnRunTextAnalysis');
+    const textElem = document.getElementById('journalTextarea');
     
-    if (modality === 'audio') {
-        if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
-        if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
-        if (audioRes) {
-            audioRes.classList.remove('hidden');
-            audioRes.classList.add('visible');
-            audioRes.style.setProperty('display', 'flex', 'important');
-        }
-        if (textRes) {
-            textRes.style.setProperty('display', 'none', 'important');
-        }
-        const voiceAssess = document.getElementById('voiceAssessmentIsland');
-        if (voiceAssess && window.innerWidth < 1024) {
-            voiceAssess.style.removeProperty('display');
-            voiceAssess.style.display = 'flex';
-        }
-        if (audioRes) {
-            setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
-        }
-        const aNum = document.getElementById('audioStressScoreNumber');
-        const aTier = document.getElementById('audioRiskTierText');
-        const aCat = document.getElementById('audioStressCategoryText');
-        if (aNum) aNum.innerText = `${scoreNum}%`;
-        if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
-        if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
-        const badge = document.getElementById('resultModalityBadge');
-        if (badge) badge.innerText = "🎙️ Voice Acoustic Analysis Active";
-    } else if (modality === 'text') {
-        if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
-        if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
-        if (textRes) {
-            textRes.classList.remove('hidden');
-            textRes.classList.add('visible');
-            textRes.style.setProperty('display', 'flex', 'important');
-        }
-        if (audioRes) {
-            audioRes.style.setProperty('display', 'none', 'important');
-        }
-        const textAssess = document.getElementById('textAssessmentIsland');
-        if (textAssess && window.innerWidth < 1024) {
-            textAssess.style.removeProperty('display');
-            textAssess.style.display = 'flex';
-        }
-        if (textRes) {
-            setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
-        }
-        const tNum = document.getElementById('textStressScoreNumber');
-        const tTier = document.getElementById('textRiskTierText');
-        const tCat = document.getElementById('textStressCategoryText');
-        if (tNum) tNum.innerText = `${scoreNum}%`;
-        if (tTier) tTier.innerText = res.risk_tier || "Minimal / Normal";
-        if (tCat) tCat.innerText = res.final_stress_category || "Calm / Baseline";
-        const badge = document.getElementById('resultModalityBadge');
-        if (badge) badge.innerText = "📝 Narrative Text Analysis Active";
-    } else {
-        if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
-        if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
-        if (audioRes) { audioRes.classList.add('visible'); audioRes.style.setProperty('display', 'block', 'important'); }
-        if (textRes) { textRes.classList.add('visible'); textRes.style.setProperty('display', 'block', 'important'); }
-        const badge = document.getElementById('resultModalityBadge');
-        if (badge) badge.innerText = res.modality_status || "Dual-Modality Active";
+    if (modality === 'text') {
+        const tempAudio = window.audioBlob;
+        window.audioBlob = null; 
+        const tempSim = window.simulatedAudioVector;
+        window.simulatedAudioVector = null;
+        
+        await runMultimodalAnalysis();
+        
+        window.audioBlob = tempAudio; 
+        window.simulatedAudioVector = tempSim;
+    } else if (modality === 'audio') {
+        const tempText = textElem.value;
+        textElem.value = ""; 
+        
+        await runMultimodalAnalysis();
+        
+        textElem.value = tempText; 
     }
-    
-    // 1. Update Modality Badge & Stress Score
-    const numElem = document.getElementById('stressScoreNumber');
-    if (numElem) numElem.innerText = `${scoreNum}%`;
-    
-    const tierText = document.getElementById('riskTierText');
-    if (tierText) tierText.innerText = res.risk_tier || "Minimal / Normal";
-    
-    // Update Gauge Color
-    const circle = document.querySelector('.gauge-circle');
-    if (circle && tierText) {
-        if (res.color_code === 'red') {
-            circle.style.borderColor = '#f43f5e';
-            circle.style.boxShadow = '0 0 30px rgba(244, 63, 94, 0.4)';
-            tierText.style.color = '#f43f5e';
-        } else if (res.color_code === 'orange') {
-            circle.style.borderColor = '#fb923c';
-            circle.style.boxShadow = '0 0 30px rgba(251, 146, 60, 0.4)';
-            tierText.style.color = '#fb923c';
-        } else if (res.color_code === 'blue') {
-            circle.style.borderColor = '#38bdf8';
-            circle.style.boxShadow = '0 0 30px rgba(56, 189, 248, 0.4)';
-            tierText.style.color = '#38bdf8';
-        } else {
-            circle.style.borderColor = '#34d399';
-            circle.style.boxShadow = '0 0 30px rgba(52, 211, 153, 0.4)';
-            tierText.style.color = '#34d399';
-        }
-    }
-    
-    // Category
-    const catElem = document.getElementById('stressCategoryText');
-    if (catElem) catElem.innerText = res.final_stress_category || "Calm / Normal";
-    
-    // 2. Update Fusion Weight Bars based on modality
-    const tBar = document.getElementById('textWeightBar');
-    const aBar = document.getElementById('audioWeightBar');
-    if (modality === 'audio') {
-        if (tBar) { tBar.style.width = '0%'; tBar.innerText = ''; }
-        if (aBar) { aBar.style.width = '100%'; aBar.innerText = 'Speech (100%)'; }
-    } else if (modality === 'text') {
-        if (tBar) { tBar.style.width = '100%'; tBar.innerText = 'Text (100%)'; }
-        if (aBar) { aBar.style.width = '0%'; aBar.innerText = ''; }
-    } else {
-        const weights = res.fusion_weights || { text_weight: 0.5, audio_weight: 0.5 };
-        const tPerc = Math.round(weights.text_weight * 100);
-        const aPerc = Math.round(weights.audio_weight * 100);
-        if (tBar) { tBar.style.width = `${tPerc}%`; tBar.innerText = `Text (${tPerc}%)`; }
-        if (aBar) { aBar.style.width = `${aPerc}%`; aBar.innerText = `Speech (${aPerc}%)`; }
-    }
-    
-    // 3. Update LIME Token XAI & Cognitive Distortion Scanner
-    const limeContainer = document.getElementById('limeHighlightedText');
-    if (limeContainer) {
-        if (res.text_xai && res.text_xai.html_highlighted) {
-            limeContainer.innerHTML = res.text_xai.html_highlighted;
-        } else if (res.text_analysis && res.text_analysis.metadata) {
-            limeContainer.innerHTML = `<p>Analyzed ${res.text_analysis.metadata.word_count} words. Pronoun ratio: ${res.text_analysis.metadata.first_person_ratio}.</p>`;
-        } else {
-            limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
-        }
-    }
+}
 
-    // Update new Text features: Cognitive Distortions & Semantic Valence
-    const distList = document.getElementById('distortionItemsList');
-    const valElem = document.getElementById('valenceScoreText');
-    const velElem = document.getElementById('velocityScoreText');
-    if (distList && (modality === 'text' || modality === 'both')) {
-        const textVal = document.getElementById('journalTextarea')?.value || "";
-        let distortionsHTML = "";
-        let valence = -0.42;
-        if (textVal.toLowerCase().includes("overwhelmed") || textVal.toLowerCase().includes("awful") || textVal.toLowerCase().includes("terrible") || scoreNum > 60) {
-            distortionsHTML += `
-                <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed", "awful")</div>
-                        <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
-                    </div>
-                    <button onclick="applyTextReframing('catastrophizing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
-                </div>`;
-            valence = -0.68;
-            if (velElem) velElem.innerText = "High Escalation ↑";
-            if (velElem) velElem.style.color = "#F43F5E";
-        }
-        if (textVal.toLowerCase().includes("always") || textVal.toLowerCase().includes("never") || textVal.toLowerCase().includes("completely") || textVal.toLowerCase().includes("impossible")) {
-            distortionsHTML += `
-                <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ All-or-Nothing Thinking ("completely", "never")</div>
-                        <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Viewing situations in extreme black-and-white terms without acknowledging moderate progress.</div>
-                    </div>
-                    <button onclick="applyTextReframing('all_or_nothing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
-                </div>`;
-            valence = Math.min(valence, -0.75);
-        }
-        if (!distortionsHTML) {
-            distortionsHTML = `
-                <div style="padding: 12px 16px; border-radius: 14px; background: rgba(52, 211, 153, 0.15); border: 1px solid #34D399; color: #fff;">
-                    <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">🌟 Healthy & Grounded Cognitive Framing</div>
-                    <div style="font-size: 0.84rem; color: rgba(255,255,255,0.8);">No severe cognitive distortions (catastrophizing or extreme all-or-nothing terms) detected in this entry!</div>
-                </div>`;
-            valence = 0.55;
-            if (velElem) velElem.innerText = "Stable / Calm →";
-            if (velElem) velElem.style.color = "#34D399";
-        }
-        distList.innerHTML = distortionsHTML;
-        if (valElem) {
-            valElem.innerText = valence > 0 ? `+${valence}` : `${valence}`;
-            valElem.style.color = valence > 0 ? "#34D399" : "#FBBF24";
-        }
-    }
+function displayAnalysisResults(res) {
+    if (!res) return;
     
-    // 4. Update SHAP Audio Drivers Bar Chart & Pure Vocal vs Lexical Separation
-    if (modality === 'audio' || modality === 'both') {
-        const shapSummary = document.getElementById('shapSummaryText');
-        if (res.audio_xai && res.audio_xai.top_acoustic_drivers) {
-            if (shapSummary) shapSummary.innerText = res.audio_xai.summary || "Top acoustic biomarkers driving vocal emotion prediction:";
-            if (typeof renderSHAPChart === 'function') renderSHAPChart(res.audio_xai.top_acoustic_drivers);
-        } else if (typeof simulatedAudioVector !== 'undefined' && simulatedAudioVector) {
-            if (typeof renderSHAPChart === 'function') renderSHAPChart([
-                { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
-                { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
-                { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
-                { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
-            ]);
+    const textElem = document.getElementById('journalTextarea');
+    const text = textElem ? textElem.value.trim() : "";
+    let modality = 'both';
+    if (text && !window.audioBlob && !window.simulatedAudioVector) modality = 'text';
+    if (!text && (window.audioBlob || window.simulatedAudioVector)) modality = 'audio';
+    
+    const scoreNum = Math.round((res.stress_score || 0) * 100);
+
+        const audioRes = document.getElementById('audioAnalysisResults');
+        const textRes = document.getElementById('textAnalysisResults');
+        const limeBox = document.getElementById('limeBoxWrapper');
+        const shapBox = document.getElementById('shapBoxWrapper');
+        const text = document.getElementById('journalTextarea').value.trim();
+        const audioBtn = document.getElementById('btnRunAudioAnalysis');
+        const textBtn = document.getElementById('btnRunTextAnalysis');
+        
+        if (modality === 'audio') {
+            if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
+            if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
+            if (audioRes) {
+                audioRes.classList.remove('hidden');
+                audioRes.classList.add('visible');
+                audioRes.style.setProperty('display', 'flex', 'important');
+            }
+            if (textRes) {
+                textRes.style.setProperty('display', 'none', 'important');
+            }
+            const voiceAssess = document.getElementById('voiceAssessmentIsland');
+            if (voiceAssess && window.innerWidth < 1024) {
+                voiceAssess.style.removeProperty('display');
+                voiceAssess.style.display = 'flex';
+            }
+            if (audioRes) {
+                setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
+            }
+            const aNum = document.getElementById('audioStressScoreNumber');
+            const aTier = document.getElementById('audioRiskTierText');
+            const aCat = document.getElementById('audioStressCategoryText');
+            if (aNum) aNum.innerText = `${scoreNum}%`;
+            if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
+            if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
+            const badge = document.getElementById('resultModalityBadge');
+            if (badge) badge.innerText = "🎙️ Voice Acoustic Analysis Active";
+        } else if (modality === 'text') {
+            if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
+            if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
+            if (textRes) {
+                textRes.classList.remove('hidden');
+                textRes.classList.add('visible');
+                textRes.style.setProperty('display', 'flex', 'important');
+            }
+            if (audioRes) {
+                audioRes.style.setProperty('display', 'none', 'important');
+            }
+            const textAssess = document.getElementById('textAssessmentIsland');
+            if (textAssess && window.innerWidth < 1024) {
+                textAssess.style.removeProperty('display');
+                textAssess.style.display = 'flex';
+            }
+            if (textRes) {
+                setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
+            }
+            const tNum = document.getElementById('textStressScoreNumber');
+            const tTier = document.getElementById('textRiskTierText');
+            const tCat = document.getElementById('textStressCategoryText');
+            if (tNum) tNum.innerText = `${scoreNum}%`;
+            if (tTier) tTier.innerText = res.risk_tier || "Minimal / Normal";
+            if (tCat) tCat.innerText = res.final_stress_category || "Calm / Baseline";
+            const badge = document.getElementById('resultModalityBadge');
+            if (badge) badge.innerText = "📝 Narrative Text Analysis Active";
         } else {
-            if (shapSummary) shapSummary.innerText = "No acoustic recording provided for SHAP evaluation.";
-            if (typeof renderSHAPChart === 'function') renderSHAPChart([]);
+            if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
+            if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
+            if (audioRes) { audioRes.classList.add('visible'); audioRes.style.setProperty('display', 'block', 'important'); }
+            if (textRes) { textRes.classList.add('visible'); textRes.style.setProperty('display', 'block', 'important'); }
+            const badge = document.getElementById('resultModalityBadge');
+            if (badge) badge.innerText = res.modality_status || "Dual-Modality Active";
         }
-    }
-
-    // Update Pure Vocal Tone vs Extracted Spoken Words separation panel
-    if (modality === 'audio' || modality === 'both') {
-        const vToneElem = document.getElementById('vocalToneStatusText');
-        const vTransElem = document.getElementById('vocalTranscribedText');
-        if (vToneElem) {
-            vToneElem.innerText = `Acoustic Tremor & Frequency Pitch: ${res.final_stress_category || "Moderate Stress"} (${scoreNum}%)`;
-        }
-        if (vTransElem) {
-            const trans = res.audio_analysis?.transcription || res.transcription || "Extracted words via Whisper ASR: I have been feeling quite tense and worried about my workload and deadlines...";
-            vTransElem.innerText = `"${trans}"`;
-        }
-    }
-    
-    // 5. Update CBT Empathy & Intervention
-    if (res.cbt_intervention) {
-        const cbt = res.cbt_intervention;
-        const gText = document.getElementById('cbtGreetingText');
-        const vText = document.getElementById('cbtValidationText');
-        const eTitle = document.getElementById('cbtExerciseTitle');
-        const eDet = document.getElementById('cbtExerciseDetails');
-        const cText = document.getElementById('cbtCopingText');
-        if (gText) gText.innerText = cbt.greeting || "NeuroSense CBT Empathy Assistant";
-        if (vText) vText.innerText = cbt.empathetic_validation || "Personalized psychological support generated based on your analysis.";
-        if (eTitle) eTitle.innerText = cbt.recommended_exercise || "Recommended Grounding Exercise";
-        if (eDet) eDet.innerText = cbt.exercise_details || "Practice deep slow breathing for 2 minutes.";
-        if (cText) cText.innerText = cbt.coping_strategy || "Take one small actionable step at a time.";
-    }
-    
-    // 6. Update Gemini Clinical Evaluation UI Cards (Voice / Text)
-    if (res.gemini_evaluation) {
-        const gem = res.gemini_evaluation;
-        const prefix = (modality === 'audio') ? 'voiceGemini' : 'textGemini';
-        const prov = document.getElementById(`${prefix}ProviderText`);
-        const tier = document.getElementById(`${prefix}StressTierBadge`);
-        const idx = document.getElementById(`${prefix}StressIndexText`);
-        const symBox = document.getElementById(`${prefix}SymptomsBox`);
-        const sum = document.getElementById(`${prefix}SummaryText`);
-        const interv = document.getElementById(`${prefix}InterventionText`);
-
-        if (prov) prov.innerText = `${gem.ai_provider || "Google Gemini (Free Tier)"} Engine`;
-        if (tier) {
-            tier.innerText = gem.clinical_risk_tier || "Baseline Calm";
-            if ((gem.stress_level_index || 0) >= 70) {
-                tier.style.borderColor = "#F43F5E";
-                tier.style.background = "rgba(244, 63, 94, 0.25)";
-            } else if ((gem.stress_level_index || 0) >= 45) {
-                tier.style.borderColor = "#F59E0B";
-                tier.style.background = "rgba(245, 158, 11, 0.25)";
+        
+        // 1. Update Modality Badge & Stress Score
+        const numElem = document.getElementById('stressScoreNumber');
+        if (numElem) numElem.innerText = `${scoreNum}%`;
+        
+        const tierText = document.getElementById('riskTierText');
+        if (tierText) tierText.innerText = res.risk_tier || "Minimal / Normal";
+        
+        // Update Gauge Color
+        const circle = document.querySelector('.gauge-circle');
+        if (circle && tierText) {
+            if (res.color_code === 'red') {
+                circle.style.borderColor = '#f43f5e';
+                circle.style.boxShadow = '0 0 30px rgba(244, 63, 94, 0.4)';
+                tierText.style.color = '#f43f5e';
+            } else if (res.color_code === 'orange') {
+                circle.style.borderColor = '#fb923c';
+                circle.style.boxShadow = '0 0 30px rgba(251, 146, 60, 0.4)';
+                tierText.style.color = '#fb923c';
+            } else if (res.color_code === 'blue') {
+                circle.style.borderColor = '#38bdf8';
+                circle.style.boxShadow = '0 0 30px rgba(56, 189, 248, 0.4)';
+                tierText.style.color = '#38bdf8';
             } else {
-                tier.style.borderColor = "#34D399";
-                tier.style.background = "rgba(16, 185, 129, 0.25)";
+                circle.style.borderColor = '#34d399';
+                circle.style.boxShadow = '0 0 30px rgba(52, 211, 153, 0.4)';
+                tierText.style.color = '#34d399';
             }
         }
-        if (idx) idx.innerText = `Index: ${gem.stress_level_index || 22}/100`;
-        if (symBox && gem.detected_symptoms && Array.isArray(gem.detected_symptoms)) {
-            symBox.innerHTML = gem.detected_symptoms.map(s => `<span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">${s}</span>`).join('');
-        }
-        if (sum) sum.innerText = gem.empathetic_clinical_summary || "Healthy emotional regulation observed.";
-        if (interv) interv.innerText = gem.recommended_intervention || "Practice structured cognitive reframing and organize your immediate tasks into manageable intervals.";
-    }
-
-    // Scroll smoothly down to results after browser calculates new layout height
-    setTimeout(() => {
-        if (window.innerWidth < 1024) {
-            const targetRes = modality === 'audio' ? document.getElementById('audioAnalysisResults') : modality === 'text' ? document.getElementById('textAnalysisResults') : section;
-            if (targetRes) {
-                targetRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+        
+        // Category
+        const catElem = document.getElementById('stressCategoryText');
+        if (catElem) catElem.innerText = res.final_stress_category || "Calm / Normal";
+        
+        // 2. Update Fusion Weight Bars based on modality
+        const tBar = document.getElementById('textWeightBar');
+        const aBar = document.getElementById('audioWeightBar');
+        if (modality === 'audio') {
+            if (tBar) { tBar.style.width = '0%'; tBar.innerText = ''; }
+            if (aBar) { aBar.style.width = '100%'; aBar.innerText = 'Speech (100%)'; }
+        } else if (modality === 'text') {
+            if (tBar) { tBar.style.width = '100%'; tBar.innerText = 'Text (100%)'; }
+            if (aBar) { aBar.style.width = '0%'; aBar.innerText = ''; }
         } else {
-            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const weights = res.fusion_weights || { text_weight: 0.5, audio_weight: 0.5 };
+            const tPerc = Math.round(weights.text_weight * 100);
+            const aPerc = Math.round(weights.audio_weight * 100);
+            if (tBar) { tBar.style.width = `${tPerc}%`; tBar.innerText = `Text (${tPerc}%)`; }
+            if (aBar) { aBar.style.width = `${aPerc}%`; aBar.innerText = `Speech (${aPerc}%)`; }
         }
-    }, 120);
+        
+        // 3. Update LIME Token XAI & Cognitive Distortion Scanner
+        const limeContainer = document.getElementById('limeHighlightedText');
+        if (limeContainer) {
+            if (res.text_xai && res.text_xai.html_highlighted) {
+                limeContainer.innerHTML = res.text_xai.html_highlighted;
+            } else if (res.text_analysis && res.text_analysis.metadata) {
+                limeContainer.innerHTML = `<p>Analyzed ${res.text_analysis.metadata.word_count} words. Pronoun ratio: ${res.text_analysis.metadata.first_person_ratio}.</p>`;
+            } else {
+                limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
+            }
+        }
+    
+        // Update new Text features: Cognitive Distortions & Semantic Valence
+        const distList = document.getElementById('distortionItemsList');
+        const valElem = document.getElementById('valenceScoreText');
+        const velElem = document.getElementById('velocityScoreText');
+        if (distList && (modality === 'text' || modality === 'both')) {
+            const textVal = document.getElementById('journalTextarea')?.value || "";
+            let distortionsHTML = "";
+            let valence = -0.42;
+            if (textVal.toLowerCase().includes("overwhelmed") || textVal.toLowerCase().includes("awful") || textVal.toLowerCase().includes("terrible") || scoreNum > 60) {
+                distortionsHTML += `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed", "awful")</div>
+                            <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
+                        </div>
+                        <button onclick="applyTextReframing('catastrophizing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                    </div>`;
+                valence = -0.68;
+                if (velElem) velElem.innerText = "High Escalation ↑";
+                if (velElem) velElem.style.color = "#F43F5E";
+            }
+            if (textVal.toLowerCase().includes("always") || textVal.toLowerCase().includes("never") || textVal.toLowerCase().includes("completely") || textVal.toLowerCase().includes("impossible")) {
+                distortionsHTML += `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ All-or-Nothing Thinking ("completely", "never")</div>
+                            <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Viewing situations in extreme black-and-white terms without acknowledging moderate progress.</div>
+                        </div>
+                        <button onclick="applyTextReframing('all_or_nothing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                    </div>`;
+                valence = Math.min(valence, -0.75);
+            }
+            if (!distortionsHTML) {
+                distortionsHTML = `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(52, 211, 153, 0.15); border: 1px solid #34D399; color: #fff;">
+                        <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">🌟 Healthy & Grounded Cognitive Framing</div>
+                        <div style="font-size: 0.84rem; color: rgba(255,255,255,0.8);">No severe cognitive distortions (catastrophizing or extreme all-or-nothing terms) detected in this entry!</div>
+                    </div>`;
+                valence = 0.55;
+                if (velElem) velElem.innerText = "Stable / Calm →";
+                if (velElem) velElem.style.color = "#34D399";
+            }
+            distList.innerHTML = distortionsHTML;
+            if (valElem) {
+                valElem.innerText = valence > 0 ? `+${valence}` : `${valence}`;
+                valElem.style.color = valence > 0 ? "#34D399" : "#FBBF24";
+            }
+        }
+        
+        // 4. Update SHAP Audio Drivers Bar Chart & Pure Vocal vs Lexical Separation
+        if (modality === 'audio' || modality === 'both') {
+            const shapSummary = document.getElementById('shapSummaryText');
+            if (res.audio_xai && res.audio_xai.top_acoustic_drivers) {
+                if (shapSummary) shapSummary.innerText = res.audio_xai.summary || "Top acoustic biomarkers driving vocal emotion prediction:";
+                if (typeof renderSHAPChart === 'function') renderSHAPChart(res.audio_xai.top_acoustic_drivers);
+            } else if (typeof simulatedAudioVector !== 'undefined' && simulatedAudioVector) {
+                if (typeof renderSHAPChart === 'function') renderSHAPChart([
+                    { feature_name: "MFCC Mean Coeff #10 (Vocal Tract Shape)", impact_percentage: 42.5, direction: "stress" },
+                    { feature_name: "Spectral Contrast Variance Band #1", impact_percentage: 28.1, direction: "stress" },
+                    { feature_name: "Chromagram Pitch Mean (D#)", impact_percentage: 16.4, direction: "stress" },
+                    { feature_name: "RMS Vocal Amplitude Energy / Micro-Tremor", impact_percentage: 13.0, direction: "calm" }
+                ]);
+            } else {
+                if (shapSummary) shapSummary.innerText = "No acoustic recording provided for SHAP evaluation.";
+                if (typeof renderSHAPChart === 'function') renderSHAPChart([]);
+            }
+        }
+    
+        // Update Pure Vocal Tone vs Extracted Spoken Words separation panel
+        if (modality === 'audio' || modality === 'both') {
+            const vToneElem = document.getElementById('vocalToneStatusText');
+            const vTransElem = document.getElementById('vocalTranscribedText');
+            if (vToneElem) {
+                vToneElem.innerText = `Acoustic Tremor & Frequency Pitch: ${res.final_stress_category || "Moderate Stress"} (${scoreNum}%)`;
+            }
+            if (vTransElem) {
+                const trans = res.audio_analysis?.transcription || res.transcription || "Extracted words via Whisper ASR: I have been feeling quite tense and worried about my workload and deadlines...";
+                vTransElem.innerText = `"${trans}"`;
+            }
+        }
+        
+        // 5. Update CBT Empathy & Intervention
+        if (res.cbt_intervention) {
+            const cbt = res.cbt_intervention;
+            const gText = document.getElementById('cbtGreetingText');
+            const vText = document.getElementById('cbtValidationText');
+            const eTitle = document.getElementById('cbtExerciseTitle');
+            const eDet = document.getElementById('cbtExerciseDetails');
+            const cText = document.getElementById('cbtCopingText');
+            if (gText) gText.innerText = cbt.greeting || "NeuroSense CBT Empathy Assistant";
+            if (vText) vText.innerText = cbt.empathetic_validation || "Personalized psychological support generated based on your analysis.";
+            if (eTitle) eTitle.innerText = cbt.recommended_exercise || "Recommended Grounding Exercise";
+            if (eDet) eDet.innerText = cbt.exercise_details || "Practice deep slow breathing for 2 minutes.";
+            if (cText) cText.innerText = cbt.coping_strategy || "Take one small actionable step at a time.";
+        }
+        
+        // 6. Update Gemini Clinical Evaluation UI Cards (Voice / Text)
+        if (res.gemini_evaluation) {
+            const gem = res.gemini_evaluation;
+            const prefix = (modality === 'audio') ? 'voiceGemini' : 'textGemini';
+            const prov = document.getElementById(`${prefix}ProviderText`);
+            const tier = document.getElementById(`${prefix}StressTierBadge`);
+            const idx = document.getElementById(`${prefix}StressIndexText`);
+            const symBox = document.getElementById(`${prefix}SymptomsBox`);
+            const sum = document.getElementById(`${prefix}SummaryText`);
+            const interv = document.getElementById(`${prefix}InterventionText`);
+    
+            if (prov) prov.innerText = `${gem.ai_provider || "Google Gemini (Free Tier)"} Engine`;
+            if (tier) {
+                tier.innerText = gem.clinical_risk_tier || "Baseline Calm";
+                if ((gem.stress_level_index || 0) >= 70) {
+                    tier.style.borderColor = "#F43F5E";
+                    tier.style.background = "rgba(244, 63, 94, 0.25)";
+                } else if ((gem.stress_level_index || 0) >= 45) {
+                    tier.style.borderColor = "#F59E0B";
+                    tier.style.background = "rgba(245, 158, 11, 0.25)";
+                } else {
+                    tier.style.borderColor = "#34D399";
+                    tier.style.background = "rgba(16, 185, 129, 0.25)";
+                }
+            }
+            if (idx) idx.innerText = `Index: ${gem.stress_level_index || 22}/100`;
+            if (symBox && gem.detected_symptoms && Array.isArray(gem.detected_symptoms)) {
+                symBox.innerHTML = gem.detected_symptoms.map(s => `<span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">${s}</span>`).join('');
+            }
+            if (sum) sum.innerText = gem.empathetic_clinical_summary || "Healthy emotional regulation observed.";
+            if (interv) interv.innerText = gem.recommended_intervention || "Practice structured cognitive reframing and organize your immediate tasks into manageable intervals.";
+        }
+    
+        // Scroll smoothly down to results after browser calculates new layout height
+        setTimeout(() => {
+            if (window.innerWidth < 1024) {
+                const targetRes = modality === 'audio' ? document.getElementById('audioAnalysisResults') : modality === 'text' ? document.getElementById('textAnalysisResults') : section;
+                if (targetRes) {
+                    targetRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            } else {
+                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 120);
+    }
 }
 
 /**
