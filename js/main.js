@@ -518,60 +518,7 @@ function setupLiquidDockBehavior() {
     const dock = document.getElementById('bottomGlassDock');
     if (!dock) return;
     
-    let isDraggingDock = false;
-    let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
-    
-    dock.addEventListener('mousedown', (e) => {
-        if (e.target.tagName.toLowerCase() === 'button') return;
-        isDraggingDock = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        const rect = dock.getBoundingClientRect();
-        initialLeft = rect.left + rect.width / 2;
-        initialTop = rect.top;
-        dock.style.cursor = 'grabbing';
-    });
-    
-    window.addEventListener('mousemove', (e) => {
-        if (!isDraggingDock) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        dock.style.transform = 'none';
-        dock.style.left = `${Math.max(120, Math.min(window.innerWidth - 120, initialLeft + dx))}px`;
-        dock.style.top = `${Math.max(15, Math.min(window.innerHeight - 80, initialTop + dy))}px`;
-    });
-    
-    window.addEventListener('mouseup', () => {
-        if (isDraggingDock) {
-            isDraggingDock = false;
-            dock.style.cursor = 'grab';
-        }
-    });
-    
-    dock.addEventListener('touchstart', (e) => {
-        if (e.target.tagName.toLowerCase() === 'button') return;
-        const touch = e.touches[0];
-        isDraggingDock = true;
-        startX = touch.clientX;
-        startY = touch.clientY;
-        const rect = dock.getBoundingClientRect();
-        initialLeft = rect.left + rect.width / 2;
-        initialTop = rect.top;
-    }, { passive: true });
-    
-    window.addEventListener('touchmove', (e) => {
-        if (!isDraggingDock) return;
-        const touch = e.touches[0];
-        const dx = touch.clientX - startX;
-        const dy = touch.clientY - startY;
-        dock.style.transform = 'none';
-        dock.style.left = `${Math.max(120, Math.min(window.innerWidth - 120, initialLeft + dx))}px`;
-        dock.style.top = `${Math.max(15, Math.min(window.innerHeight - 80, initialTop + dy))}px`;
-    }, { passive: true });
-    
-    window.addEventListener('touchend', () => {
-        isDraggingDock = false;
-    });
+    // Removed draggable functionality per user request (dock should be permanently fixed)
 
     window.addEventListener('resize', () => {
         const activeBtn = dock.querySelector('.dock-btn.active');
@@ -1168,7 +1115,7 @@ function displayAnalysisResults(res) {
                 voiceAssess.style.display = 'flex';
             }
             if (audioRes) {
-                setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
+                setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
             }
             const aNum = document.getElementById('audioStressScoreNumber');
             const aTier = document.getElementById('audioRiskTierText');
@@ -1195,7 +1142,7 @@ function displayAnalysisResults(res) {
                 textAssess.style.display = 'flex';
             }
             if (textRes) {
-                setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300);
+                setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
             }
             const tNum = document.getElementById('textStressScoreNumber');
             const tTier = document.getElementById('textRiskTierText');
