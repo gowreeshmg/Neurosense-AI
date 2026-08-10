@@ -973,31 +973,52 @@ async function runMultimodalAnalysis(mode = 'combined') {
         
         if (audioBlob) {
             try {
+                // STEP 1: Use Groq Whisper (via Vercel API) for accurate transcription
+                // HuggingFace's local openai-whisper hallucinates wrong text due to audio format issues
+                let grooqTranscription = null;
+                try {
+                    const base64Audio = await blobToBase64(audioBlob);
+                    const transcribeRes = await fetch('/api/transcribe', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ audio: base64Audio, mimeType: audioBlob.type || 'audio/webm' })
+                    });
+                    if (transcribeRes.ok) {
+                        const tData = await transcribeRes.json();
+                        grooqTranscription = tData.text || tData.transcription || null;
+                        console.log('[Audio] Groq Whisper transcription:', grooqTranscription);
+                    }
+                } catch (tErr) {
+                    console.warn('[Audio] Groq transcription failed, will use HuggingFace fallback:', tErr);
+                }
+
+                // STEP 2: Send the correctly-transcribed text to HuggingFace for classification
+                // This uses YOUR trained dataset models for the final stress prediction
+                const textForAnalysis = grooqTranscription || text || '';
+                
+                if (grooqTranscription) {
+                    // Fill the textarea with the correct transcription so user can see it
+                    audioTranscriptionText = grooqTranscription;
+                    document.getElementById('journalTextarea').value = grooqTranscription;
+                    updateWordCount();
+                }
+
                 const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
                 const app = await client("https://webapp1-neurosense-ai.hf.space/");
                 
-                // Note: @gradio/client automatically handles Blobs for audio upload!
-                const res = await app.predict("/analyze_audio", [ audioBlob ]);
+                // Send to analyze_text with the Groq-transcribed text (accurate)
+                const res = await app.predict("/analyze_text", [ textForAnalysis ]);
                 
                 if (res && res.data && res.data[0]) {
-                    const data = res.data[0];
-                    result = data.fusion_result;
-                    // Save transcription for the display panel
-                    if (data.transcription && data.transcription.text) {
-                        audioTranscriptionText = data.transcription.text;
-                        if (!text) {
-                            document.getElementById('journalTextarea').value = audioTranscriptionText;
-                            updateWordCount();
-                        }
-                    }
+                    result = res.data[0];
                 }
             } catch (err) {
-                console.error("Gradio audio analysis failed:", err);
+                console.error("Audio analysis failed:", err);
             }
         }
         
-        // If no blob or fallback needed, send JSON directly to multimodal endpoint
-        if (!result) {
+        // Fallback: if audio path failed entirely, try text-only
+        if (!result && text) {
             try {
                 const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
                 const app = await client("https://webapp1-neurosense-ai.hf.space/");
@@ -1013,6 +1034,10 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 // Standalone fallback calculation if server offline during local testing
                 result = generateFallbackResult(text, simulatedAudioVector);
             }
+        }
+        
+        if (!result) {
+            result = generateFallbackResult(text, simulatedAudioVector);
         }
         
         currentAnalysisResult = result;
