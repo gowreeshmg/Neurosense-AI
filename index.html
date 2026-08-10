@@ -752,14 +752,16 @@
 
         @media (max-width: 768px) {
             .magic-dock {
-                max-width: 95vw !important;
-                overflow-x: auto !important;
-                white-space: nowrap !important;
-                justify-content: flex-start !important;
-                -webkit-overflow-scrolling: touch !important;
+                width: 92vw !important;
+                max-width: 400px !important;
+                gap: 4px !important;
+                padding: 10px !important;
+                justify-content: space-around !important;
             }
             .dock-icon {
-                flex-shrink: 0 !important;
+                width: 44px !important;
+                height: 44px !important;
+                margin: 0 !important;
             }
             .dock-icon:hover::before {
                 opacity: 0 !important;
@@ -768,8 +770,16 @@
             .dock-icon.clicked-tooltip::before {
                 opacity: 1 !important;
                 transform: translateX(-50%) scale(1) !important;
+                top: -32px !important;
             }
             .quick-prompts {
+                display: none !important;
+            }
+            #cbtCompanionIsland {
+                height: calc(100vh - 120px) !important;
+                min-height: 0 !important;
+            }
+            .cbt-header {
                 display: none !important;
             }
         }
