@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>NeuroSense AI — Dual-Modality Mental Health Detection &amp; Explainable CBT System</title>
 <!-- PWA & Mobile Home Screen App Icons -->
 <link href="/manifest.json" rel="manifest"/>
@@ -775,9 +775,16 @@
             .quick-prompts {
                 display: none !important;
             }
+            #viewCBT {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
             #cbtCompanionIsland {
-                height: calc(100vh - 120px) !important;
+                height: calc(100svh - 160px) !important;
                 min-height: 0 !important;
+                border-radius: 0 !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
             }
             .cbt-header {
                 display: none !important;
@@ -1768,6 +1775,7 @@
     // Add temporary tooltip logic for mobile dock icons
     document.querySelectorAll('.dock-icon').forEach(icon => {
         icon.addEventListener('click', function() {
+            document.querySelectorAll('.dock-icon').forEach(i => i.classList.remove('clicked-tooltip'));
             this.classList.add('clicked-tooltip');
             setTimeout(() => {
                 this.classList.remove('clicked-tooltip');
