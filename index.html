@@ -745,9 +745,11 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1) !important;
         }
 
-        .dock-icon:hover::before {
-            opacity: 1 !important;
-            transform: translateX(-50%) scale(1) !important;
+        @media (hover: hover) {
+            .dock-icon:hover::before {
+                opacity: 1 !important;
+                transform: translateX(-50%) scale(1) !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1365,13 +1367,13 @@
 <!-- Box A: Tone of Voice alone -->
 <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
 <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">1. Pure Vocal Tone &amp; Acoustic Prosody (Re)</div>
-<div id="vocalToneStatusText" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Acoustic Tremor &amp; Pitch: Moderate Stress (64%)</div>
+<div id="vocalToneStatusText" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Acoustic Analysis Pending...</div>
 <p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.4;">Analyzed entirely from physical sound waves (MFCCs, spectral contrast, vocal tension) without depending on words.</p>
 </div>
 <!-- Box B: Extracted Spoken Words -->
 <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
 <div style="font-size: 0.8rem; font-weight: 700; color: #A855F7; text-transform: uppercase; margin-bottom: 6px;">2. Extracted Spoken Words (ASR Transcription)</div>
-<div id="vocalTranscribedText" style="font-size: 0.95rem; font-weight: 600; color: #fff; font-style: italic; margin-bottom: 6px;">"I am feeling quite pressured about my upcoming final semester presentations..."</div>
+<div id="vocalTranscribedText" style="font-size: 0.95rem; font-weight: 600; color: #fff; font-style: italic; margin-bottom: 6px;">"Transcription pending..."</div>
 <p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); margin: 0; line-height: 1.4;">Whisper ASR extracted text analyzed via LIME lexical sentiment models to cross-verify vocal tone findings.</p>
 </div>
 </div>
@@ -1696,7 +1698,7 @@
 <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(236, 72, 153, 0.35);">
 <h3 style="font-size: 1.25rem; font-weight: 800; color: #EC4899; margin-bottom: 14px;">🛠️ Multi-Modal Signal Masking &amp; Robustness Test</h3>
 <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Toggle diagnostic modalities on/off to evaluate how each sensor signal contributes to the unified risk prediction.</p>
-<div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+<div class="masking-checkboxes" style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
 <label style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
 <input checked="" id="maskRq" onchange="runWhatIfSimulation()" style="accent-color: #EC4899; width: 18px; height: 18px;" type="checkbox"/>
 <span>Questionnaire (Rq)</span>

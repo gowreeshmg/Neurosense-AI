@@ -1006,11 +1006,17 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
                 const app = await client("https://webapp1-neurosense-ai.hf.space/");
                 
-                // Send to analyze_text with the Groq-transcribed text (accurate)
-                const res = await app.predict("/analyze_text", [ textForAnalysis ]);
+                // Send to analyze_audio with the audioBlob AND the Groq-transcribed text
+                // This triggers the acoustic model AND uses accurate transcription
+                const res = await app.predict("/analyze_audio", [ audioBlob, textForAnalysis ]);
                 
                 if (res && res.data && res.data[0]) {
-                    result = res.data[0];
+                    // Extract fusion_result from the response dict
+                    result = res.data[0].fusion_result || res.data[0];
+                    if (res.data[0].transcription && res.data[0].transcription.text) {
+                        // Use HuggingFace's transcription if Groq failed and it fell back to Whisper
+                        audioTranscriptionText = res.data[0].transcription.text;
+                    }
                 }
             } catch (err) {
                 console.error("Audio analysis failed:", err);
@@ -1785,7 +1791,7 @@ function generateFallbackResult(text, audioVector) {
         action_summary: `Detected symptoms of ${cat.toLowerCase()}. Recommended: structured CBT reframing and grounding techniques.`,
         fusion_weights: { text_weight: text ? 0.6 : 0.0, audio_weight: audioVector ? 0.4 : (text ? 0.4 : 1.0) },
         text_analysis: text ? { predicted_category: cat, linguistic_stress_score: score, metadata: { word_count: text.split(' ').length, first_person_ratio: 0.12 } } : null,
-        audio_analysis: audioVector ? { predicted_emotion: "Angry", acoustic_stress_score: score } : null,
+        audio_analysis: audioVector ? { predicted_emotion: "Angry", acoustic_stress_score: score, transcription: text || "No transcription available." } : null,
         text_xai: text ? {
             predicted_category: cat,
             html_highlighted: text.split(' ').map(w => ['exam','exams','deadline','deadlines','overwhelmed','lonely','depressed'].includes(w.toLowerCase().replace(/[^a-z]/g,'')) ? `<span class="xai-word xai-high-stress">${w}</span>` : `<span>${w}</span>`).join(' ')

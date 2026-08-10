@@ -1799,7 +1799,7 @@ textarea:focus {
         padding: 10px 14px !important;
     }
     .dashboard-container {
-        padding: 0 10px 30px 10px !important;
+        padding: max(20px, env(safe-area-inset-top, 45px)) 10px 30px 10px !important;
     }
     .results-grid, .grid-2, .grid-3, .counselor-grid {
         grid-template-columns: 1fr !important;
@@ -1993,7 +1993,7 @@ textarea:focus {
         padding: 10px 14px !important;
     }
     .dashboard-container {
-        padding: 0 10px 30px 10px !important;
+        padding: max(20px, env(safe-area-inset-top, 45px)) 10px 30px 10px !important;
     }
     .results-grid, .grid-2, .grid-3, .counselor-grid {
         grid-template-columns: 1fr !important;
@@ -2573,6 +2573,60 @@ header.navbar-top-controls .top-center-title {
         padding: 12px 14px !important;
         line-height: 1.45 !important;
         max-width: 92% !important;
+    }
+    
+    /* Fix CBT Chat bubbles for mobile - User right, AI left */
+    #viewCBT {
+        padding: max(10px, env(safe-area-inset-top, 40px)) 0px 14px 0px !important;
+    }
+    #cbtCompanionIsland {
+        border-radius: 0px !important;
+        padding: 18px 10px !important;
+    }
+    .chat-msg.user-msg {
+        align-self: flex-end !important;
+        margin-left: auto !important;
+        border-bottom-right-radius: 4px !important;
+        border-bottom-left-radius: 14px !important;
+        margin-right: 0px !important;
+    }
+    .chat-msg.bot-msg {
+        align-self: flex-start !important;
+        margin-right: auto !important;
+        border-bottom-left-radius: 4px !important;
+        border-bottom-right-radius: 14px !important;
+        margin-left: 0px !important;
+    }
+    
+    /* VART-XAI checkboxes and islands side-by-side on mobile */
+    .bottom-small-islands-grid, .grid-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+    .bottom-small-islands-grid > div {
+        padding: 12px !important;
+    }
+    .bottom-small-islands-grid h4 {
+        font-size: 0.8rem !important;
+    }
+    .bottom-small-islands-grid p {
+        font-size: 0.75rem !important;
+        line-height: 1.3 !important;
+    }
+    .masking-checkboxes {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+    .masking-checkboxes label {
+        padding: 8px 10px !important;
+        font-size: 0.75rem !important;
+        justify-content: center;
+    }
+    .masking-checkboxes label span {
+        white-space: normal;
+        text-align: center;
+        line-height: 1.1;
     }
     .chat-input-bar {
         display: flex !important;
