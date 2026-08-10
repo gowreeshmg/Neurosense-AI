@@ -1669,10 +1669,10 @@ function generateFallbackResult(text, audioVector) {
 
 // Global state variables for 4-Signal Unified Pressure Model (wq*Rq + we*Re + wr*Rr + wb*Rb)
 window.neuroSignalState = {
-    Rq: 53.0, // Questionnaire Severity (%)
-    Re: 13.0, // Emotion / Audio Acoustic Stress (%)
-    Rr: 46.0, // Response Latency Cognitive Stress (%)
-    Rb: 54.0, // Behavioral / Lifestyle Risk (%)
+    Rq: 0.0, // Questionnaire Severity (%)
+    Re: 0.0, // Emotion / Audio Acoustic Stress (%)
+    Rr: 0.0, // Response Latency Cognitive Stress (%)
+    Rb: 0.0, // Behavioral / Lifestyle Risk (%)
     weights: { wq: 0.35, we: 0.25, wr: 0.15, wb: 0.25 }
 };
 
@@ -2011,6 +2011,12 @@ function refreshUnifiedPressure() {
         tierBg = "rgba(251, 191, 36, 0.25)";
     }
     
+    if (combinedScore === 0) {
+        tier = "Awaiting Analysis";
+        tierColor = "#9CA3AF"; // Gray
+        tierBg = "rgba(156, 163, 175, 0.2)";
+    }
+    
     if (document.getElementById('pressureTierBadge')) {
         document.getElementById('pressureTierBadge').textContent = tier;
         document.getElementById('pressureTierBadge').style.color = tierColor;
@@ -2113,8 +2119,23 @@ function initLongitudinalChart() {
     }
     
     const days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Today'];
-    const unifiedTrend = [52, 48, 55, 62, 58, 49, 44, 40, 46, 51, 48, 45, 43, Math.round(window.neuroSignalState.Rb || 45)];
-    const vocalTrend = [60, 54, 50, 68, 65, 52, 48, 41, 44, 49, 45, 38, 35, Math.round(window.neuroSignalState.Re || 13)];
+    
+    let unifiedTrend = [];
+    let vocalTrend = [];
+    
+    // Check if we have real data (at least one signal is non-zero)
+    const hasData = (window.neuroSignalState.Rq > 0 || window.neuroSignalState.Re > 0);
+    
+    if (hasData) {
+        // Show simulated history leading up to today's real score
+        const todayRb = Math.round(window.neuroSignalState.Rb || 0);
+        const todayRe = Math.round(window.neuroSignalState.Re || 0);
+        unifiedTrend = [52, 48, 55, 62, 58, 49, 44, 40, 46, 51, 48, 45, 43, todayRb];
+        vocalTrend = [60, 54, 50, 68, 65, 52, 48, 41, 44, 49, 45, 38, 35, todayRe];
+    } else {
+        unifiedTrend = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        vocalTrend = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
     
     longitudinalChartInstance = new Chart(canvas, {
         type: 'line',
