@@ -979,7 +979,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
 
         if (audioBlob) {
             const base64Audio = await blobToBase64(audioBlob);
-            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_audio', {
+            const res = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data: [{ "name": "audio.wav", "data": base64Audio }] })
@@ -998,7 +998,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
         
         // If no blob or fallback needed, send JSON directly to multimodal endpoint
         if (!result) {
-            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_text', {
+            const res = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data: [text || ""] })
