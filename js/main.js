@@ -947,7 +947,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
     const btn = document.getElementById('btnRunAnalysis');
     
     const hasText = !!text;
-    const hasAudio = !!(window.audioBlob || window.simulatedAudioVector);
+    const hasAudio = !!(audioBlob || simulatedAudioVector);
     
     if (mode === 'combined') {
         if (!hasText && !hasAudio) {
@@ -1048,22 +1048,22 @@ async function runMultimodalAnalysis(mode = 'combined') {
 async function runSingleModalityAnalysis(modality) {
     const textElem = document.getElementById('journalTextarea');
     const text = textElem.value.trim();
-    const hasAudio = !!(window.audioBlob || window.simulatedAudioVector);
+    const hasAudio = !!(audioBlob || simulatedAudioVector);
     
     if (modality === 'text') {
         if (!text) {
             alert("You haven't input the text.");
             return;
         }
-        const tempAudio = window.audioBlob;
-        window.audioBlob = null; 
-        const tempSim = window.simulatedAudioVector;
-        window.simulatedAudioVector = null;
+        const tempAudio = audioBlob;
+        audioBlob = null; 
+        const tempSim = simulatedAudioVector;
+        simulatedAudioVector = null;
         
         await runMultimodalAnalysis('text');
         
-        window.audioBlob = tempAudio; 
-        window.simulatedAudioVector = tempSim;
+        audioBlob = tempAudio; 
+        simulatedAudioVector = tempSim;
     } else if (modality === 'audio') {
         if (!hasAudio) {
             alert("You haven't input the audio.");
@@ -1084,8 +1084,8 @@ function displayAnalysisResults(res) {
     const textElem = document.getElementById('journalTextarea');
     const text = textElem ? textElem.value.trim() : "";
     let modality = 'both';
-    if (text && !window.audioBlob && !window.simulatedAudioVector) modality = 'text';
-    if (!text && (window.audioBlob || window.simulatedAudioVector)) modality = 'audio';
+    if (text && !audioBlob && !simulatedAudioVector) modality = 'text';
+    if (!text && (audioBlob || simulatedAudioVector)) modality = 'audio';
     
     const rawScore = res.combined_stress_score !== undefined ? res.combined_stress_score : (res.stress_score || 0);
     let scoreNum = Math.round(rawScore);
