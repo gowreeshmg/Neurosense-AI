@@ -970,44 +970,41 @@ async function runMultimodalAnalysis(mode = 'combined') {
     try {
         let result = null;
         
-        // Convert Blob to Base64
-        const blobToBase64 = (blob) => new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = () => resolve(reader.result);
-        });
-
         if (audioBlob) {
-            const base64Audio = await blobToBase64(audioBlob);
-            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_audio', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [{ "name": "audio.wav", "data": base64Audio }] })
-            });
-            
-            if (res.ok) {
-                const gradioData = await res.json();
-                const data = gradioData.data[0];
-                result = data.fusion_result;
-                if (data.transcription && data.transcription.text && !text) {
-                    document.getElementById('journalTextarea').value = data.transcription.text;
-                    updateWordCount();
+            try {
+                const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
+                const app = await client("https://webapp1-neurosense-ai.hf.space/");
+                
+                // Note: @gradio/client automatically handles Blobs for audio upload!
+                const res = await app.predict("/analyze_audio", [ audioBlob ]);
+                
+                if (res && res.data && res.data[0]) {
+                    const data = res.data[0];
+                    result = data.fusion_result;
+                    if (data.transcription && data.transcription.text && !text) {
+                        document.getElementById('journalTextarea').value = data.transcription.text;
+                        updateWordCount();
+                    }
                 }
+            } catch (err) {
+                console.error("Gradio audio analysis failed:", err);
             }
         }
         
         // If no blob or fallback needed, send JSON directly to multimodal endpoint
         if (!result) {
-            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_text', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: [text || ""] })
-            });
-            
-            if (res.ok) {
-                const gradioData = await res.json();
-                result = gradioData.data[0];
-            } else {
+            try {
+                const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
+                const app = await client("https://webapp1-neurosense-ai.hf.space/");
+                const res = await app.predict("/analyze_text", [ text || "" ]);
+                
+                if (res && res.data && res.data[0]) {
+                    result = res.data[0];
+                } else {
+                    throw new Error("Invalid response format from Gradio");
+                }
+            } catch (err) {
+                console.error("Gradio text analysis failed:", err);
                 // Standalone fallback calculation if server offline during local testing
                 result = generateFallbackResult(text, simulatedAudioVector);
             }
