@@ -1,5 +1,5 @@
 // --- HUGGINGFACE ZERO-GPU WAKE-UP PING ---
-fetch('https://[YOUR_BACKEND_SPACE].hf.space').catch(() => {});
+fetch('https://webapp1-neurosense-ai.hf.space').catch(() => {});
 
 /* ==========================================================================
    NeuroSense AI — Main Application Controller (UI Engine & API Bridge)
@@ -1017,7 +1017,7 @@ async function runMultimodalAnalysis() {
 
         if (audioBlob) {
             const base64Audio = await blobToBase64(audioBlob);
-            const res = await fetch('https://[YOUR_BACKEND_SPACE].hf.space/run/analyze_audio', {
+            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_audio', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data: [{ "name": "audio.wav", "data": base64Audio }] })
@@ -1036,7 +1036,7 @@ async function runMultimodalAnalysis() {
         
         // If no blob or fallback needed, send JSON directly to multimodal endpoint
         if (!result) {
-            const res = await fetch('https://[YOUR_BACKEND_SPACE].hf.space/run/analyze_text', {
+            const res = await fetch('https://webapp1-neurosense-ai.hf.space/run/analyze_text', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data: [text || ""] })
