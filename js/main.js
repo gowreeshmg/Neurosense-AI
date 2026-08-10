@@ -1683,29 +1683,29 @@ NeuroSense AI System Verified & Compliant with HIPAA/FERPA Edge Privacy Standard
  */
 function generateFallbackResult(text, audioVector) {
     let score = 42.0;
-    let cat = "Academic Stress";
-    let tier = "Mild Stress";
-    let color = "blue";
+    let cat = "Anxiety";
+    let tier = "Anxiety";
+    let color = "orange";
     
     if (text && (text.toLowerCase().includes("overwhelm") || text.toLowerCase().includes("deadline") || text.toLowerCase().includes("exam"))) {
         score = 78.5;
-        cat = "Academic Stress";
-        tier = "Moderate / High Stress";
+        cat = "Depression";
+        tier = "Depression";
         color = "orange";
     } else if (text && (text.toLowerCase().includes("lonely") || text.toLowerCase().includes("depress") || text.toLowerCase().includes("family"))) {
         score = 82.0;
-        cat = "Non-Academic Stress";
-        tier = "Severe Emotional Distress / Risk";
+        cat = "Emotional Distress";
+        tier = "Emotional Distress";
         color = "red";
     } else if (text && (text.toLowerCase().includes("calm") || text.toLowerCase().includes("relax") || text.toLowerCase().includes("completed"))) {
         score = 18.0;
-        cat = "Calm / Normal";
-        tier = "Minimal / Normal";
+        cat = "Normal";
+        tier = "Normal";
         color = "green";
     } else if (audioVector) {
         score = 74.2;
-        cat = "Non-Academic / Vocal Stress";
-        tier = "Moderate / High Stress";
+        cat = "Anxiety";
+        tier = "Anxiety";
         color = "orange";
     }
     
