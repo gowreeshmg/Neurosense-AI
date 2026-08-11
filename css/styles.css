@@ -1802,7 +1802,7 @@ textarea:focus {
         padding: max(75px, calc(env(safe-area-inset-top, 40px) + 30px)) 14px 10px 14px !important;
     }
     #btnReturnHomeFixed, #btnThemeToggle {
-        top: max(16px, env(safe-area-inset-top, 20px)) !important;
+        top: max(65px, calc(env(safe-area-inset-top, 40px) + 20px)) !important;
     }
     #viewCBT {
         padding-bottom: 95px !important;
@@ -3499,6 +3499,7 @@ body[data-theme="light"] .magic-dock .dock-tooltip {
 .dock-icon.clicked-tooltip::before {
     opacity: 1 !important;
     visibility: visible !important;
+    display: block !important;
     transform: translateX(-50%) scale(1) !important;
 }
 
