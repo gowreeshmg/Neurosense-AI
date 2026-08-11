@@ -19,7 +19,7 @@ NeuroSense AI is trained to accurately categorize user distress into one of the 
 
 ## 🛠️ Architecture
 - **Frontend (Vercel):** Vanilla HTML, CSS (Glassmorphism UI), and JavaScript. Uses an invisible "Wake-Up Ping" to ensure the HuggingFace backend is awake.
-- **Backend (HuggingFace):** Pure Gradio API running on ZeroGPU. Powered by a PyTorch Ensembled CNN (for audio) and a RoBERTa Transformer (for text).
+- **Backend (HuggingFace):** Pure Gradio API running on ZeroGPU. Powered by a PyTorch Ensembled CNN(for audio) and a RoBERTa Transformer(for text).
 
 ## 🚀 How to Use
 1. Allow microphone permissions when prompted.
