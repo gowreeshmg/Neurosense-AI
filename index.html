@@ -115,11 +115,9 @@
         /* Round Top Right Theme Toggle Glassmorphism Island */
         #btnThemeToggle.round-glass-btn {
             position: fixed !important;
-            top: 22px !important;
-            right: 26px !important;
             z-index: 1000 !important;
-            width: 50px !important;
-            height: 50px !important;
+            width: 44px !important;
+            height: 44px !important;
             border-radius: 50% !important;
             background: transparent !important;
             backdrop-filter: none !important;
@@ -135,9 +133,8 @@
             padding: 0 !important;
         }
         #btnThemeToggle.round-glass-btn:hover {
-            transform: scale(1.1) rotate(15deg) !important;
-            background: rgba(255, 255, 255, 0.15) !important;
-            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
+            transform: scale(1.08) !important;
+            background: rgba(255, 255, 255, 0.22) !important;
         }
 
         /* =========================================================================
@@ -407,45 +404,10 @@
             color: #059669 !important;
         }
 
-        /* Small Theme Toggle Button & Responsive Layout Overrides */
-        #btnThemeToggle.round-glass-btn {
-            position: fixed !important;
-            top: 16px !important;
-            right: 20px !important;
-            z-index: 1000 !important;
-            width: 38px !important;
-            height: 38px !important;
-            border-radius: 50% !important;
-            background: rgba(255, 255, 255, 0.14) !important;
-            backdrop-filter: blur(28px) saturate(210%) !important;
-            -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.55) !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            font-size: 1.15rem !important;
-            cursor: pointer !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            padding: 0 !important;
-        }
-
-        #btnThemeToggle.round-glass-btn:hover {
-            transform: scale(1.08) !important;
-            background: rgba(255, 255, 255, 0.22) !important;
-        }
-
         @media (max-width: 900px) {
-            /* 1. Theme Toggle on Top Right Corner */
+            /* Removed overriding top positions to allow global sync */
             #btnThemeToggle.round-glass-btn {
                 position: fixed !important;
-                top: 10px !important;
-                right: 12px !important;
-                width: 34px !important;
-                height: 34px !important;
-                font-size: 1.05rem !important;
-                z-index: 1000 !important;
-            }
 
             /* 2. Return to Home on Top Left Corner */
             header.navbar-top-controls > div:first-child {
@@ -1027,12 +989,12 @@
 <video autoplay="" class="w-full h-full object-cover" loop="" muted="" playsinline="" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: none !important; opacity: 1 !important;"></video>
 <div class="dashboard-video-tint" style="display: none !important; background: transparent !important;"></div>
 </div>
-<!-- Top Left Round Glassmorphism Return Home Island Button (hidden on home screen by default, shown on dashboard) --><button class="round-glass-btn liquid-glass" id="btnReturnHomeFixed" onclick="switchScreen('home')" style="display: none !important; position: fixed; top: 16px; left: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Return to Home Screen">
+<!-- Top Left Round Glassmorphism Return Home Island Button (hidden on home screen by default, shown on dashboard) --><button class="round-glass-btn liquid-glass" id="btnReturnHomeFixed" onclick="switchScreen('home')" style="display: none !important; position: fixed; top: 24px !important; left: 18px !important; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Return to Home Screen">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
 </button>
 
 <!-- Fixed Header Controls (Right) -->
-<button class="round-glass-btn liquid-glass" id="btnThemeToggle" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" style="display: inline-flex !important; position: fixed; top: 16px; right: 18px; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Click: Switch Theme | Double-Click: Blur &amp; Atmosphere Controls">
+<button class="round-glass-btn liquid-glass" id="btnThemeToggle" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" style="display: inline-flex !important; position: fixed; top: 24px !important; right: 18px !important; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Click: Switch Theme | Double-Click: Blur &amp; Atmosphere Controls">
 <span id="themeIcon" style="display: inline-flex; align-items: center; justify-content: center;">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.45)); color: #00F2FE;" viewbox="0 0 24 24" width="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
 </span>
@@ -1092,9 +1054,9 @@
 </div>
 <section class="view-screen" id="appDashboardScreen" style="display: none; position: relative; z-index: 2; padding: 16px 24px; max-width: 1440px; margin: 0 auto;">
 <!-- Top Navigation Controls (Brand Name strictly centered on top center across screen without icon) -->
-<header class="navbar-top-controls" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 6px !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 65px 0 0 0 !important; text-align: center !important; position: relative !important; z-index: 5 !important;">
+<header class="navbar-top-controls" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 6px !important; width: 100% !important; background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; text-align: center !important; position: relative !important; z-index: 5 !important;">
 <!-- Center: Brand Name & Title on TOP CENTER exact across any screen width -->
-<div class="top-center-wrapper" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; width: 100% !important; margin: 20px auto 0 auto !important; position: relative !important; top: 0 !important; left: 0 !important; transform: none !important;">
+<div class="top-center-wrapper" style="display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; width: 100% !important; margin: 40px auto 0 auto !important; position: relative !important; top: 0 !important; left: 0 !important; transform: none !important;">
 <div class="nav-brand top-center-brand" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 4px !important; background: transparent !important; border: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; box-shadow: none !important; width: 100% !important; text-align: center !important; margin: 0 auto !important;">
 <div class="brand-text" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; text-align: center !important; margin: 0 auto !important;">
 <h1 class="font-serif-italic top-center-title" style="letter-spacing: -0.5px; margin: 0 auto !important; font-weight: 800;  text-align: center !important; width: 100% !important;">NeuroSense AI</h1>
@@ -1407,9 +1369,9 @@
 </div></div>
 <!-- VIEW 2: TEXT & NARRATIVE JOURNAL FACE -->
 <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Single Full-Screen Assistant Island where entire area is Chat) -->
-<div class="modality-view" id="viewCBT" style="display: none !important; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box; position: relative;">
+<div class="modality-view" id="viewCBT" style="display: none !important; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box; padding: 10px 14px 10px 14px !important;">
 <!-- ONE Single Unified Full-Screen Glass Island - iOS glassmorphism, fills viewport -->
-<div class="cbt-card glass-card" id="cbtCompanionIsland" style="position: absolute !important; top: 20px !important; bottom: 120px !important; left: 14px !important; right: 14px !important; height: auto !important; max-height: none !important; min-height: 0 !important; padding: 18px 22px !important; display: flex; flex-direction: column; width: auto !important; box-sizing: border-box; justify-content: space-between; border-radius: 28px; overflow: hidden !important;">
+<div class="cbt-card glass-card" id="cbtCompanionIsland" style="position: relative !important; height: calc(100svh - 105px) !important; max-height: none !important; min-height: 400px; padding: 18px 22px !important; display: flex; flex-direction: column; width: 100% !important; box-sizing: border-box; justify-content: space-between; border-radius: 28px; overflow: hidden !important;">
 <!-- Sleek Minimal Header explaining AI name & capabilities -->
 <div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.14); flex-shrink: 0; flex-wrap: wrap; gap: 8px;">
 <div style="display: flex; align-items: center; gap: 12px;">
@@ -1755,15 +1717,15 @@
 <!-- Scripts -->
 <script src="/js/charts.js?v=20260807_fix10"></script>
 <script src="/js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="/js/main.js?v=20260807_fix10_v4"></script>
-<div id="cache-version" style="position: fixed; bottom: 2px; left: 2px; font-size: 10px; color: rgba(255,255,255,0.4); z-index: 999999; pointer-events: none;">v1.5</div>
+<script src="/js/main.js?v=20260807_fix10_v6"></script>
 <style>
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
-.dock-icon.clicked-tooltip::before {
+.dock-btn.clicked-tooltip .dock-tooltip {
     opacity: 1 !important;
     visibility: visible !important;
     display: block !important;
     transform: translateX(-50%) scale(1) !important;
+    z-index: 99999 !important;
 }
 @media (max-width: 900px) {
     header.navbar-top-controls > div.top-center-wrapper {
@@ -1771,7 +1733,10 @@
         top: 0 !important;
         left: 0 !important;
         transform: none !important;
-        margin-top: 20px !important;
+        margin-top: 40px !important;
+    }
+    .sidebar-dock.magic-dock {
+        overflow: visible !important;
     }
 }
 </style>
