@@ -3492,11 +3492,13 @@ body[data-theme="light"] .magic-dock .dock-tooltip {
 @media (hover: hover) {
     .dock-icon:hover::before {
         opacity: 1 !important;
+        visibility: visible !important;
         transform: translateX(-50%) scale(1) !important;
     }
 }
 .dock-icon.clicked-tooltip::before {
     opacity: 1 !important;
+    visibility: visible !important;
     transform: translateX(-50%) scale(1) !important;
 }
 
