@@ -1795,11 +1795,28 @@ textarea:focus {
     .mobile-only {
         display: inline-flex !important;
     }
+    #lumoraHomeScreen {
+        padding-top: max(32px, env(safe-area-inset-top, 40px)) !important;
+    }
     #appDashboardScreen {
-        padding: max(100px, env(safe-area-inset-top, 80px)) 14px 10px 14px !important;
+        padding: max(75px, calc(env(safe-area-inset-top, 40px) + 30px)) 14px 10px 14px !important;
     }
     #btnReturnHomeFixed, #btnThemeToggle {
-        top: max(60px, calc(env(safe-area-inset-top, 40px) + 20px)) !important;
+        top: max(16px, env(safe-area-inset-top, 20px)) !important;
+    }
+    #viewCBT {
+        padding-bottom: 95px !important;
+    }
+    .behavior-snapshot-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px !important;
+    }
+    .behavior-snapshot-grid .glass-card {
+        padding: 12px !important;
+    }
+    .behavior-snapshot-grid .glass-card div:first-child {
+        font-size: 1.2rem !important;
     }
     .dashboard-container {
         padding: 10px 10px 30px 10px !important;
@@ -3470,6 +3487,17 @@ body[data-theme="light"] .magic-dock .dock-tooltip {
 .magic-dock .dock-btn:hover .dock-tooltip {
     opacity: 1;
     transform: translateX(-50%) scale(1);
+}
+
+@media (hover: hover) {
+    .dock-icon:hover::before {
+        opacity: 1 !important;
+        transform: translateX(-50%) scale(1) !important;
+    }
+}
+.dock-icon.clicked-tooltip::before {
+    opacity: 1 !important;
+    transform: translateX(-50%) scale(1) !important;
 }
 
 /* Hide old labels if they accidentally render */

@@ -1183,11 +1183,6 @@ function displayAnalysisResults(res, forcedModality) {
             if (textRes) {
                 textRes.style.setProperty('display', 'none', 'important');
             }
-            const voiceAssess = document.getElementById('voiceAssessmentIsland');
-            if (voiceAssess && window.innerWidth < 1024) {
-                voiceAssess.style.removeProperty('display');
-                voiceAssess.style.display = 'flex';
-            }
             if (audioRes) {
                 setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
             }
@@ -1209,11 +1204,6 @@ function displayAnalysisResults(res, forcedModality) {
             }
             if (audioRes) {
                 audioRes.style.setProperty('display', 'none', 'important');
-            }
-            const textAssess = document.getElementById('textAssessmentIsland');
-            if (textAssess && window.innerWidth < 1024) {
-                textAssess.style.removeProperty('display');
-                textAssess.style.display = 'flex';
             }
             if (textRes) {
                 setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
