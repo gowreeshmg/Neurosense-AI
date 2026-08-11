@@ -493,7 +493,7 @@ function switchDashboardView(viewName) {
         if (!globalTooltip) {
             globalTooltip = document.createElement('div');
             globalTooltip.id = 'globalDockTooltip';
-            globalTooltip.style.cssText = 'position: fixed; display: none; background: rgba(15, 23, 42, 0.95); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; z-index: 2147483647; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transform: translateX(-50%); text-align: center;';
+            globalTooltip.style.cssText = 'position: fixed; display: none; background: transparent; font-size: 0.85rem; font-weight: 700; white-space: nowrap; z-index: 2147483647; pointer-events: none; transform: translateX(-50%); text-align: center;';
             document.body.appendChild(globalTooltip);
         }
         
@@ -501,8 +501,17 @@ function switchDashboardView(viewName) {
         if (label) {
             const rect = btns[viewName].getBoundingClientRect();
             globalTooltip.innerHTML = label;
+            
+            if (document.body.getAttribute('data-theme') === 'light') {
+                globalTooltip.style.color = '#1e293b';
+                globalTooltip.style.textShadow = '0px 2px 10px rgba(255,255,255,0.9)';
+            } else {
+                globalTooltip.style.color = '#ffffff';
+                globalTooltip.style.textShadow = '0px 2px 10px rgba(0,0,0,0.9)';
+            }
+            
             globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
-            globalTooltip.style.top = (rect.top - 40) + 'px';
+            globalTooltip.style.top = (rect.top - 25) + 'px';
             globalTooltip.style.setProperty('display', 'block', 'important');
             
             if (window._globalTooltipTimer) clearTimeout(window._globalTooltipTimer);
