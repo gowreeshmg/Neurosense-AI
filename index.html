@@ -1729,15 +1729,21 @@
     bottom: calc(100% + 14px) !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: rgba(15, 23, 42, 0.95) !important;
-    color: white !important;
+    background: transparent !important;
     padding: 6px 12px !important;
     border-radius: 8px !important;
     font-size: 0.85rem !important;
+    font-weight: 600 !important;
     white-space: nowrap !important;
     z-index: 99999 !important;
     pointer-events: none !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    box-shadow: none !important;
+}
+body[data-theme="dark"] .dock-tooltip {
+    color: white !important;
+}
+body[data-theme="light"] .dock-tooltip {
+    color: black !important;
 }
 .dock-icon.clicked-tooltip .dock-tooltip {
     display: block !important;
