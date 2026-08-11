@@ -1179,25 +1179,22 @@ function displayAnalysisResults(res, forcedModality) {
     let scoreNum = Math.round(rawScore);
     if (rawScore > 0 && rawScore <= 1.0) scoreNum = Math.round(rawScore * 100);
 
-    // Override Categories per User Specification
+    res.final_stress_category = res.predicted_category || res.final_stress_category || "Normal";
+    
+    // Assign generic tiers and colors based on score, but NEVER overwrite the category
     if (scoreNum < 20) {
-        res.final_stress_category = "Normal";
         res.risk_tier = "Normal";
         res.color_code = "green";
     } else if (scoreNum < 40) {
-        res.final_stress_category = "Stress";
         res.risk_tier = "Stress";
         res.color_code = "blue";
     } else if (scoreNum < 60) {
-        res.final_stress_category = "Anxiety";
         res.risk_tier = "Anxiety";
         res.color_code = "orange";
     } else if (scoreNum < 80) {
-        res.final_stress_category = "Depression";
         res.risk_tier = "Depression";
         res.color_code = "orange";
     } else {
-        res.final_stress_category = "Emotional Distress";
         res.risk_tier = "Emotional Distress";
         res.color_code = "red";
     }
