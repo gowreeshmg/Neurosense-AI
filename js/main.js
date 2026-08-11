@@ -478,11 +478,39 @@ function switchDashboardView(viewName) {
     });
     
     // Remove active from all buttons
-    Object.values(btns).forEach(b => {
-        if (b) b.classList.remove('active');
+    Object.values(btns).forEach(btn => {
+        if (btn) btn.classList.remove('active');
     });
-
-    // Show selected - CSS .active class handles display:block
+    
+    // Set active and show view
+    if (views[viewName]) views[viewName].classList.add('active');
+    
+    if (btns[viewName]) {
+        btns[viewName].classList.add('active');
+        
+        // Bulletproof Global Tooltip System
+        let globalTooltip = document.getElementById('globalDockTooltip');
+        if (!globalTooltip) {
+            globalTooltip = document.createElement('div');
+            globalTooltip.id = 'globalDockTooltip';
+            globalTooltip.style.cssText = 'position: fixed; display: none; background: rgba(15, 23, 42, 0.95); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; z-index: 2147483647; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transform: translateX(-50%); text-align: center;';
+            document.body.appendChild(globalTooltip);
+        }
+        
+        const label = btns[viewName].getAttribute('data-label');
+        if (label) {
+            const rect = btns[viewName].getBoundingClientRect();
+            globalTooltip.innerHTML = label;
+            globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
+            globalTooltip.style.top = (rect.top - 40) + 'px';
+            globalTooltip.style.setProperty('display', 'block', 'important');
+            
+            if (window._globalTooltipTimer) clearTimeout(window._globalTooltipTimer);
+            window._globalTooltipTimer = setTimeout(() => {
+                globalTooltip.style.setProperty('display', 'none', 'important');
+            }, 1800);
+        }
+    }// Show selected - CSS .active class handles display:block
     const activeView = views[viewName];
     if (activeView) {
         activeView.classList.add('active');
