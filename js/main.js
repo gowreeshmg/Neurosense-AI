@@ -1781,8 +1781,8 @@ function generateFallbackResult(text, audioVector) {
         color = "red";
     } else if (text && (text.toLowerCase().includes("overwhelm") || text.toLowerCase().includes("deadline") || text.toLowerCase().includes("exam"))) {
         score = 75.0;
-        cat = "Depression";
-        tier = "Depression";
+        cat = "Academic Stress";
+        tier = "Moderate / High Stress";
         color = "orange";
     } else if (text && (text.toLowerCase().includes("nervous") || text.toLowerCase().includes("worry") || text.toLowerCase().includes("panic"))) {
         score = 55.0;
