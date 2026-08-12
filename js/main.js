@@ -1074,13 +1074,14 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 }
             } catch (err) {
                 console.error("Gradio text analysis failed:", err);
-                // Standalone fallback calculation if server offline during local testing
-                result = generateFallbackResult(text, simulatedAudioVector);
+                alert("The AI model backend is currently starting up (this usually takes 1-2 minutes on Hugging Face). Please wait a moment and try again.");
+                return;
             }
         }
         
         if (!result) {
-            result = generateFallbackResult(text, simulatedAudioVector);
+            alert("Analysis failed. The AI model might still be starting. Please wait a moment and try again.");
+            return;
         }
         
         currentAnalysisResult = result;
@@ -1091,28 +1092,28 @@ async function runMultimodalAnalysis(mode = 'combined') {
         
     } catch (err) {
         console.error("Analysis error:", err);
-        const fallback = generateFallbackResult(text, simulatedAudioVector);
-        const displayMode = mode === 'audio' ? 'audio' : (mode === 'text' ? 'text' : null);
-        displayAnalysisResults(fallback, displayMode);
+        alert("The AI backend is currently unavailable or waking up (this usually takes 1-2 minutes). Please try again shortly.");
     } finally {
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = '<span>⚡</span> Run Combined Dual-Modality Check-in Analysis';
         }
 
-        // REVEAL ISLANDS (Unconditionally)
-        const textIsland = document.getElementById('textAssessmentIsland');
-        const voiceIsland = document.getElementById('voiceAssessmentIsland');
-        const combinedIsland = document.getElementById('combinedAssessmentIsland');
-        if (textIsland) textIsland.classList.add('show-result');
-        if (voiceIsland) voiceIsland.classList.add('show-result');
-        if (combinedIsland) combinedIsland.classList.add('show-result');
-        
-        // SCROLL
-        setTimeout(() => {
-            if (combinedIsland) combinedIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            else if (textIsland) textIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+        // Only reveal islands if we got a result
+        if (currentAnalysisResult) {
+            const textIsland = document.getElementById('textAssessmentIsland');
+            const voiceIsland = document.getElementById('voiceAssessmentIsland');
+            const combinedIsland = document.getElementById('combinedAssessmentIsland');
+            if (textIsland) textIsland.classList.add('show-result');
+            if (voiceIsland) voiceIsland.classList.add('show-result');
+            if (combinedIsland) combinedIsland.classList.add('show-result');
+            
+            // SCROLL
+            setTimeout(() => {
+                if (combinedIsland) combinedIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (textIsland) textIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
     }
 }
 
