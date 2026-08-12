@@ -1776,8 +1776,13 @@ function generateFallbackResult(text, audioVector) {
     let tier = "Anxiety";
     let color = "orange";
     
-    if (text && (text.toLowerCase().includes("lonely") || text.toLowerCase().includes("depress") || text.toLowerCase().includes("family") || text.toLowerCase().includes("hopeless"))) {
+    if (text && (text.toLowerCase().includes("lonely") || text.toLowerCase().includes("depress") || text.toLowerCase().includes("hopeless") || text.toLowerCase().includes("empty") || text.toLowerCase().includes("sad") || text.toLowerCase().includes("worthless") || text.toLowerCase().includes("joy") || text.toLowerCase().includes("energy") || text.toLowerCase().includes("sleep"))) {
         score = 85.0;
+        cat = "Depression";
+        tier = "Depression";
+        color = "red";
+    } else if (text && (text.toLowerCase().includes("family") || text.toLowerCase().includes("trauma") || text.toLowerCase().includes("abuse"))) {
+        score = 88.0;
         cat = "Emotional Distress";
         tier = "Emotional Distress";
         color = "red";
