@@ -1040,12 +1040,12 @@ async function runMultimodalAnalysis(mode = 'combined') {
                     updateWordCount();
                 }
 
-                const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
+                const { client, handle_file } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
                 const app = await client("https://webapp1-neurosense-ai.hf.space/", { hf_token: "hf_ywsAKmo" + "BrHrDsxIMWxhATJmqjWnrrWZwpb" });
                 
                 // Send to analyze_audio with the audioBlob AND the Groq-transcribed text
                 // This triggers the acoustic model AND uses accurate transcription
-                const res = await app.predict("/analyze_audio", [ audioBlob, textForAnalysis ]);
+                const res = await app.predict("/analyze_audio", [ handle_file(audioBlob), textForAnalysis ]);
                 
                 if (res && res.data && res.data[0]) {
                     // Extract fusion_result from the response dict
@@ -1477,7 +1477,8 @@ function displayAnalysisResults(res, forcedModality) {
                     targetRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } else {
-                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const resultsSec = document.getElementById('analysisResultsSection');
+                if (resultsSec) resultsSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 120);
     }
