@@ -1182,21 +1182,23 @@ function displayAnalysisResults(res, forcedModality) {
     res.final_stress_category = res.predicted_category || res.final_stress_category || "Normal";
     
     // Assign generic tiers and colors based on score, but NEVER overwrite the category
-    if (scoreNum < 20) {
-        res.risk_tier = "Normal";
-        res.color_code = "green";
-    } else if (scoreNum < 40) {
-        res.risk_tier = "Stress";
-        res.color_code = "blue";
-    } else if (scoreNum < 60) {
-        res.risk_tier = "Anxiety";
-        res.color_code = "orange";
-    } else if (scoreNum < 80) {
-        res.risk_tier = "Depression";
-        res.color_code = "orange";
-    } else {
-        res.risk_tier = "Emotional Distress";
-        res.color_code = "red";
+    if (!res.risk_tier) {
+        if (scoreNum < 20) {
+            res.risk_tier = "Normal";
+            res.color_code = res.color_code || "green";
+        } else if (scoreNum < 40) {
+            res.risk_tier = "Stress";
+            res.color_code = res.color_code || "blue";
+        } else if (scoreNum < 60) {
+            res.risk_tier = "Anxiety";
+            res.color_code = res.color_code || "orange";
+        } else if (scoreNum < 80) {
+            res.risk_tier = "Depression";
+            res.color_code = res.color_code || "orange";
+        } else {
+            res.risk_tier = "Emotional Distress";
+            res.color_code = res.color_code || "red";
+        }
     }
 
         const audioRes = document.getElementById('audioAnalysisResults');
