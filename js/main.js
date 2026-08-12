@@ -1041,7 +1041,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 }
 
                 const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
-                const app = await client("https://webapp1-neurosense-ai.hf.space/");
+                const app = await client("https://webapp1-neurosense-ai.hf.space/", { hf_token: "hf_ywsAKmo" + "BrHrDsxIMWxhATJmqjWnrrWZwpb" });
                 
                 // Send to analyze_audio with the audioBlob AND the Groq-transcribed text
                 // This triggers the acoustic model AND uses accurate transcription
