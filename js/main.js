@@ -1006,7 +1006,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
     
     try {
         let result = null;
-        let audioTranscriptionText = null; // Store transcription separately for display
+        
         
         if (audioBlob) {
             try {
@@ -1035,7 +1035,6 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 
                 if (grooqTranscription) {
                     // Fill the textarea with the correct transcription so user can see it
-                    audioTranscriptionText = grooqTranscription;
                     document.getElementById('journalTextarea').value = grooqTranscription;
                     updateWordCount();
                 }
@@ -1052,7 +1051,10 @@ async function runMultimodalAnalysis(mode = 'combined') {
                     result = res.data[0].fusion_result || res.data[0];
                     if (res.data[0].transcription && res.data[0].transcription.text) {
                         // Use HuggingFace's transcription if Groq failed and it fell back to Whisper
-                        audioTranscriptionText = res.data[0].transcription.text;
+                        result.audio_transcription_text = res.data[0].transcription.text;
+                    }
+                    if (grooqTranscription) {
+                        result.audio_transcription_text = grooqTranscription;
                     }
                 }
             } catch (err) {
@@ -1416,7 +1418,7 @@ function displayAnalysisResults(res, forcedModality) {
             }
             if (vTransElem) {
                 // Use the real transcription from HuggingFace, or the journal text, never the hardcoded fallback
-                const trans = audioTranscriptionText || res.audio_analysis?.transcription || res.transcription || text || "No transcription available.";
+                const trans = res.audio_transcription_text || res.audio_analysis?.transcription || res.transcription || text || "No transcription available.";
                 vTransElem.innerText = `"${trans}"`;
             }
         }
