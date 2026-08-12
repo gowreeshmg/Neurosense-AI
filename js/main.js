@@ -1063,18 +1063,33 @@ async function runMultimodalAnalysis(mode = 'combined') {
         // Fallback: if audio path failed entirely, try text-only
         if (!result && text) {
             try {
-                const { client } = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
-                const app = await client("https://webapp1-neurosense-ai.hf.space/");
-                const res = await app.predict("/analyze_text", [ text || "" ]);
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: text || "" })
+                });
                 
-                if (res && res.data && res.data[0]) {
-                    result = res.data[0];
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || "Gradio analysis failed via Vercel API");
+                }
+                
+                const resData = await response.json();
+                
+                if (resData && (resData.risk_tier || resData.combined_stress_score)) {
+                    result = resData;
                 } else {
-                    throw new Error("Invalid response format from Gradio");
+                    throw new Error("Invalid response format from API");
                 }
             } catch (err) {
                 console.error("Gradio text analysis failed:", err);
-                alert("The AI model backend is currently starting up (this usually takes 1-2 minutes on Hugging Face). Please wait a moment and try again.");
+                if (err.message && (err.message.includes("quota") || err.message.includes("ZeroGPU"))) {
+                    alert("Hugging Face rate limit exceeded. Please ensure HF_TOKEN is configured in Vercel.");
+                } else {
+                    alert("The AI model backend is currently starting up (this usually takes 1-2 minutes on Hugging Face). Please wait a moment and try again.");
+                }
                 return;
             }
         }

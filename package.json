@@ -1,0 +1,24 @@
+{
+  "name": "vercel_github_repo",
+  "version": "1.0.0",
+  "description": "**NeuroSense AI** is an advanced, dual-modality mental health system designed to detect and analyze psychological stress through both voice (acoustic features) and text (linguistic features).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gowreeshmg/Neurosense-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gowreeshmg/Neurosense-AI/issues"
+  },
+  "homepage": "https://github.com/gowreeshmg/Neurosense-AI#readme",
+  "dependencies": {
+    "@gradio/client": "^2.4.0"
+  }
+}
