@@ -2915,7 +2915,7 @@ body.on-dashboard {
         #ffffff !important;
 }
 
-body.on-dashboard:not(.has-wallpaper) #globalAmbientBgContainer,
+body.on-dashboard:not(.has-custom-bg):not(.has-wallpaper) #globalAmbientBgContainer,
 body.on-dashboard #dashboardBgVideoContainer,
 body.on-dashboard .bg-video {
     display: none !important;
@@ -3923,7 +3923,8 @@ body[data-theme="light"].has-custom-bg #appDashboardScreen {
     background: transparent !important;
 }
 /* Ensure bg image is always behind content */
-#bgCustomImage {
+#bgCustomImage,
+#bgCustomVideo {
     z-index: 1 !important;
     position: fixed !important;
     inset: 0 !important;
