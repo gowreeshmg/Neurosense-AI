@@ -3910,12 +3910,44 @@ body[data-theme="light"]::before {
 /* ── POINT 7: Glassmorphism on cards when custom BG is active ── */
 body.has-custom-bg .pro-card,
 body.has-custom-bg .input-card,
-body.has-custom-bg .cbt-card {
+body.has-custom-bg .cbt-card,
+body.has-custom-bg .audio-visualizer-container,
+body.has-custom-bg .lime-token-box,
+body.has-custom-bg .result-box,
+body.has-custom-bg .xai-text-box,
+body.has-custom-bg .xai-audio-box,
+body.has-custom-bg .gauge-box,
+body.has-custom-bg .cbt-exercise-box,
+body.has-custom-bg .cbt-coping-box,
+body.has-custom-bg .cbt-chat-container,
+body.has-custom-bg .voice-tips-pill,
+body.has-custom-bg .narrative-tips-pill {
     background: rgba(10, 5, 30, 0.55) !important;
     backdrop-filter: blur(24px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
     border: 1px solid rgba(255, 255, 255, 0.22) !important;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+}
+
+body[data-theme="light"].has-custom-bg .pro-card,
+body[data-theme="light"].has-custom-bg .input-card,
+body[data-theme="light"].has-custom-bg .cbt-card,
+body[data-theme="light"].has-custom-bg .audio-visualizer-container,
+body[data-theme="light"].has-custom-bg .lime-token-box,
+body[data-theme="light"].has-custom-bg .result-box,
+body[data-theme="light"].has-custom-bg .xai-text-box,
+body[data-theme="light"].has-custom-bg .xai-audio-box,
+body[data-theme="light"].has-custom-bg .gauge-box,
+body[data-theme="light"].has-custom-bg .cbt-exercise-box,
+body[data-theme="light"].has-custom-bg .cbt-coping-box,
+body[data-theme="light"].has-custom-bg .cbt-chat-container,
+body[data-theme="light"].has-custom-bg .voice-tips-pill,
+body[data-theme="light"].has-custom-bg .narrative-tips-pill {
+    background: rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8) !important;
 }
 body.has-custom-bg .dashboard-content-area,
 body.has-custom-bg #appDashboardScreen,
