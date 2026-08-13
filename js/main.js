@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     vidEl.style.setProperty('display', 'block', 'important');
                 document.body.style.setProperty('background-color', 'transparent', 'important');
                     vidEl.style.setProperty('opacity', '1', 'important');
-                    vidEl.style.setProperty('z-index', '30', 'important');
+                    vidEl.style.setProperty('z-index', '0', 'important');
                     vidEl.classList.add('active');
                     document.body.classList.add('has-custom-bg');
                     vidEl.load();
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     imgEl.style.setProperty('display', 'block', 'important');
                 document.body.style.setProperty('background-color', 'transparent', 'important');
                     imgEl.style.setProperty('opacity', '1', 'important');
-                    imgEl.style.setProperty('z-index', '30', 'important');
+                    imgEl.style.setProperty('z-index', '0', 'important');
                     imgEl.classList.add('active');
                     document.body.classList.add('has-custom-bg');
                 }
@@ -850,7 +850,7 @@ function handleCustomBackgroundUpload(event) {
             vidEl.style.setProperty('display', 'block', 'important');
                 document.body.style.setProperty('background-color', 'transparent', 'important');
             vidEl.style.setProperty('opacity', '1', 'important');
-            vidEl.style.setProperty('z-index', '30', 'important');
+            vidEl.style.setProperty('z-index', '0', 'important');
             vidEl.classList.add('active');
             vidEl.load();
             vidEl.play().catch(err => {
@@ -870,7 +870,7 @@ function handleCustomBackgroundUpload(event) {
                 document.body.style.setProperty('background-color', 'transparent', 'important');
             imgEl.style.setProperty('position', 'fixed', 'important');
             imgEl.style.setProperty('inset', '0', 'important');
-            imgEl.style.setProperty('z-index', '30', 'important');
+            imgEl.style.setProperty('z-index', '0', 'important');
             imgEl.style.setProperty('width', '100%', 'important');
             imgEl.style.setProperty('height', '100%', 'important');
             imgEl.style.setProperty('object-fit', 'cover', 'important');

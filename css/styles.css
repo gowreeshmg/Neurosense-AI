@@ -3918,7 +3918,8 @@ body.has-custom-bg .cbt-card {
     box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
 }
 body.has-custom-bg .dashboard-content-area,
-body.has-custom-bg #appDashboardScreen {
+body.has-custom-bg #appDashboardScreen,
+body[data-theme="light"].has-custom-bg #appDashboardScreen {
     background: transparent !important;
 }
 /* Ensure bg image is always behind content */
@@ -4418,20 +4419,10 @@ body.on-dashboard #appDashboardScreen {
 
 /* --- Fix grid overlap at top of screen --- */
 #appDashboardScreen::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image:
-        linear-gradient(rgba(139, 92, 246, 0.12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 92, 246, 0.12) 1px, transparent 1px);
-    background-size: 44px 44px;
-    pointer-events: none !important;
-    z-index: 0;
+    display: none !important;
 }
 body[data-theme="light"] #appDashboardScreen::before {
-    background-image:
-        linear-gradient(rgba(100, 60, 220, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(100, 60, 220, 0.1) 1px, transparent 1px);
+    display: none !important;
 }
 
 /* Ensure content is above grid overlay */
