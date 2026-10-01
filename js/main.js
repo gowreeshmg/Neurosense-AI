@@ -452,7 +452,7 @@ function old_switchScreen(screenName) {
  * Switches active dashboard tab view between Voice, Text, and CBT/GPT Assistant
  */
 
-function switchDashboardView(viewName) {
+function old_switchDashboardView(viewName) {
     const views = {
         'checkin': document.getElementById('viewCheckin'),
         'cbt': document.getElementById('viewCBT'),

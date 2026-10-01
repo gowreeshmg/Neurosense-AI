@@ -618,7 +618,7 @@ body.on-dashboard .glass-card-accent,
 body.on-dashboard .glass-pill,
 body.on-dashboard .round-glass-btn,
 body.on-dashboard .role-selector {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(16, 24, 40, 0.92) !important;
+     
     backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(160%) contrast(102%) !important;
     border: 1px solid rgba(255, 255, 255, 0.35) !important;

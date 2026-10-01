@@ -23,7 +23,7 @@
 <!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="css/styles.css?v=1.2" rel="stylesheet"/>
+<link href="css/styles.css?v=20261001_final" rel="stylesheet"/>
 <style id="ios-dashboard-glass">
         @font-face {
             font-family: 'Helvetica Now Text';
@@ -997,6 +997,47 @@ document.addEventListener('DOMContentLoaded', function() {
     if (returnBtn) returnBtn.style.setProperty('display','none','important');
     if (dash) dash.style.setProperty('display','none','important');
 });
+
+window.switchDashboardView = function(viewName) {
+    console.log("Switching view to:", viewName);
+    const views = {
+        'checkin': document.getElementById('viewCheckin'),
+        'cbt': document.getElementById('viewCBT'),
+        'lifestyle': document.getElementById('viewLifestyle'),
+        'pressure': document.getElementById('viewPressure')
+    };
+    const btns = {
+        'checkin': document.getElementById('dockBtnVoice'),
+        'cbt': document.getElementById('dockBtnCBT'),
+        'lifestyle': document.getElementById('dockBtnLifestyle'),
+        'pressure': document.getElementById('dockBtnPressure')
+    };
+
+    // Hide all
+    for (let key in views) {
+        if (views[key]) {
+            views[key].style.setProperty('display', 'none', 'important');
+            views[key].classList.remove('active');
+        }
+    }
+    for (let key in btns) {
+        if (btns[key]) {
+            btns[key].classList.remove('active');
+        }
+    }
+
+    // Show active
+    if (views[viewName]) {
+        views[viewName].style.removeProperty('display');
+        views[viewName].style.display = 'block';
+        views[viewName].classList.add('active');
+    }
+    if (btns[viewName]) {
+        btns[viewName].classList.add('active');
+    }
+    window.scrollTo(0, 0);
+};
+
 </script>
 
 <!-- Ambient Background Orbs (ONLY for Dashboard Screen) -->
@@ -1162,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </nav>
 <!-- VIEW 1: VOICE & SPEECH ACOUSTIC CHECK-IN FACE -->
-<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland">
+<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland" style="background: rgba(16, 24, 40, 0.4) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255,255,255,0.2) !important;">
 <div class="card-header">
 <h3>📝 Narrative Journal Entry</h3>
 <span class="word-counter" id="wordCountText">0 words</span>
@@ -1184,11 +1225,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful &amp; Calm</button>
 </div>
 <div class="analyze-footer" style="display: flex; justify-content: center; width: 100%;">
-<button class="btn btn-gradient btn-large" id="btnRunTextAnalysis" onclick="runSingleModalityAnalysis('text')">
+<button class="btn btn-gradient btn-large" id="btnRunTextAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; border: none !important; width: 100% !important; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('text')">
 <span>⚡</span> Run Narrative Text Check-in Analysis
                                     </button>
 </div>
-</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland">
+</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland" style="background: rgba(16, 24, 40, 0.4) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255,255,255,0.2) !important;">
 <div class="card-header">
 <h3>🎙️ Voice &amp; Speech Acoustic Check-in</h3>
 <span class="status-indicator ready" id="micStatusText">Ready to record</span>
@@ -1214,7 +1255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button class="btn btn-secondary" id="btnUploadAudio" onclick="document.getElementById('audioFileInput').click()">
 <span>📁</span> Upload Audio File
                                     </button>
-<button class="btn btn-gradient btn-large" id="btnRunAudioAnalysis" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
+<button class="btn btn-gradient btn-large" id="btnRunAudioAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; border: none !important; margin-top: 6px; width: 100% !important; margin: 6px auto 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 700;" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
 <span>⚡</span> Run Voice Check-in Analysis
                                     </button>
 </div>
@@ -1881,7 +1922,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Scripts -->
 <script src="/js/charts.js?v=20260807_fix10"></script>
 <script src="/js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="/js/main.js?v=20260807_fix10_v8"></script>
+<script src="/js/main.js?v=20261001_final"></script>
 <style>
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
 .dock-icon {
