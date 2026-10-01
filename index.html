@@ -23,7 +23,7 @@
 <!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="css/styles.css?v=20261001_v4" rel="stylesheet"/>
+<link href="css/styles.css?v=20261001_v6" rel="stylesheet"/>
 <style id="ios-dashboard-glass">
         @font-face {
             font-family: 'Helvetica Now Text';
@@ -797,82 +797,6 @@
 
 </head>
 <body data-theme="dark">
-<script>
-// NeuroSense: Core Navigation Fix
-function switchScreen(name) {
-    var home = document.getElementById('lumoraHomeScreen');
-    var dash = document.getElementById('appDashboardScreen');
-    var themeBtn = document.getElementById('btnThemeToggle');
-    var returnBtn = document.getElementById('btnReturnHomeFixed');
-    var topBar = document.querySelector('header.navbar-top-controls');
-    var dock = document.getElementById('bottomGlassDock');
-    var ambientBg = document.getElementById('globalAmbientBgContainer');
-
-    if (name === 'dashboard') {
-        if (home) home.style.setProperty('display','none','important');
-        if (dash) dash.style.removeProperty('display');
-        if (themeBtn) themeBtn.style.setProperty('display','inline-flex','important');
-        if (returnBtn) returnBtn.style.setProperty('display','inline-flex','important');
-        if (topBar) topBar.style.setProperty('display','flex','important');
-        if (dock) dock.style.setProperty('display','inline-flex','important');
-        if (ambientBg) ambientBg.style.setProperty('display','none','important');
-        document.body.classList.add('on-dashboard');
-        window.scrollTo(0,0);
-    } else {
-        if (home) home.style.removeProperty('display');
-        if (dash) dash.style.setProperty('display','none','important');
-        if (themeBtn) themeBtn.style.setProperty('display','none','important');
-        if (returnBtn) returnBtn.style.setProperty('display','none','important');
-        if (topBar) topBar.style.setProperty('display','none','important');
-        if (dock) dock.style.setProperty('display','none','important');
-        if (ambientBg) ambientBg.style.removeProperty('display');
-        document.body.classList.remove('on-dashboard');
-        window.scrollTo(0,0);
-    }
-}
-
-function switchBgVideo(idx) {
-    for (var i = 0; i < 4; i++) {
-        var vid = document.getElementById('bgVideo' + i);
-        var btn = document.getElementById('videoBtn' + i);
-        if (vid) {
-            if (i === idx) {
-                vid.style.opacity = '1'; vid.style.zIndex = '2';
-                vid.classList.add('active');
-                vid.play && vid.play().catch(function(){});
-            } else {
-                vid.style.opacity = '0'; vid.style.zIndex = '1';
-                vid.classList.remove('active');
-            }
-        }
-        if (btn) {
-            if (i === idx) {
-                btn.style.opacity = '1'; btn.style.borderBottom = '2px solid rgba(255,255,255,0.9)';
-            } else {
-                btn.style.opacity = '0.4'; btn.style.borderBottom = 'none';
-            }
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var themeBtn = document.getElementById('btnThemeToggle');
-    var topBar = document.querySelector('header.navbar-top-controls');
-    var dock = document.getElementById('bottomGlassDock');
-    var returnBtn = document.getElementById('btnReturnHomeFixed');
-    var dash = document.getElementById('appDashboardScreen');
-
-    if (themeBtn) themeBtn.style.setProperty('display','none','important');
-    if (topBar) topBar.style.setProperty('display','none','important');
-    if (dock) dock.style.setProperty('display','none','important');
-    if (returnBtn) returnBtn.style.setProperty('display','none','important');
-    if (dash) dash.style.setProperty('display','none','important');
-});
-
-
-
-</script>
-
 <!-- Ambient Background Orbs (ONLY for Dashboard Screen) -->
 <div class="app-background" style="display: none;">
 <div class="glow-orb orb-1"></div>
@@ -922,10 +846,10 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 <!-- Video Switcher: Row of 4 interactive glass pill buttons -->
 <div class="flex flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 mt-5 sm:mt-6 max-w-full relative z-50">
-<button class="video-switch-btn active" id="videoBtn0" onclick="switchBgVideo(0)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.45); font-size: 0.86rem; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">Golden Hour</button>
-<button class="video-switch-btn" id="videoBtn1" onclick="switchBgVideo(1)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); font-size: 0.86rem; font-weight: 600;">Still Water</button>
-<button class="video-switch-btn" id="videoBtn2" onclick="switchBgVideo(2)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); font-size: 0.86rem; font-weight: 600;">Deep Woods</button>
-<button class="video-switch-btn" id="videoBtn3" onclick="switchBgVideo(3)" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.22); font-size: 0.86rem; font-weight: 600;">Quiet Dawn</button>
+<button class="video-switch-btn active" id="videoBtn0" onclick="switchBgVideo(0, 'light')" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; font-size: 0.86rem; font-weight: 600;">Golden Hour</button>
+<button class="video-switch-btn" id="videoBtn1" onclick="switchBgVideo(1, 'dark')" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; font-size: 0.86rem; font-weight: 600;">Still Water</button>
+<button class="video-switch-btn" id="videoBtn2" onclick="switchBgVideo(2, 'dark')" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; font-size: 0.86rem; font-weight: 600;">Deep Woods</button>
+<button class="video-switch-btn" id="videoBtn3" onclick="switchBgVideo(3, 'dark')" style="font-family: system-ui, sans-serif; pointer-events: auto; padding: 7px 16px; font-size: 0.86rem; font-weight: 600;">Quiet Dawn</button>
 </div>
 </div>
 </div>
@@ -1024,19 +948,21 @@ document.addEventListener('DOMContentLoaded', function() {
 <line x1="12" x2="12" y1="8" y2="16"></line>
 <line x1="15" x2="15" y1="10" y2="14"></line>
 </svg><span class="dock-tooltip">Narrative &amp; Speech</span></div>
-<div class="dock-icon" id="dockBtnCBT" data-label="AI Therapist" onclick="switchDashboardView('cbt')">
+<div class="dock-icon" id="dockBtnCBT" data-label="CBT Assistant" onclick="switchDashboardView('cbt')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 8V4H8"></path><rect height="12" rx="2" width="16" x="4" y="8"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
-<span class="dock-tooltip">AI Therapist</span></div>
+<span class="dock-tooltip">CBT Assistant</span></div>
 <div class="dock-icon" id="dockBtnPressure" data-label="Pressure &amp; Survey" onclick="switchDashboardView('pressure')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
 <span class="dock-tooltip">Pressure &amp; Survey</span></div>
 <div class="dock-icon" id="dockBtnLifestyle" data-label="Lifestyle" onclick="switchDashboardView('lifestyle')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
 <span class="dock-tooltip">Lifestyle</span></div>
-
+<div class="dock-icon" id="dockBtnWhatIf" data-label="What-If &amp; XAI" onclick="switchDashboardView('whatif')">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><line x1="4" x2="4" y1="21" y2="14"></line><line x1="4" x2="4" y1="10" y2="3"></line><line x1="12" x2="12" y1="21" y2="12"></line><line x1="12" x2="12" y1="8" y2="3"></line><line x1="20" x2="20" y1="21" y2="16"></line><line x1="20" x2="20" y1="12" y2="3"></line><line x1="1" x2="7" y1="14" y2="14"></line><line x1="9" x2="15" y1="8" y2="8"></line><line x1="17" x2="23" y1="16" y2="16"></line></svg>
+<span class="dock-tooltip">What-If &amp; XAI</span></div>
 </nav>
 <!-- VIEW 1: VOICE & SPEECH ACOUSTIC CHECK-IN FACE -->
-<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland" >
+<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland">
 <div class="card-header">
 <h3>Narrative Journal Entry</h3>
 <span class="word-counter" id="wordCountText">0 words</span>
@@ -1057,12 +983,12 @@ document.addEventListener('DOMContentLoaded', function() {
 <button class="prompt-chip" onclick="loadPrompt('personal')">💔 Personal / Family Stress</button>
 <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful &amp; Calm</button>
 </div>
-<div class="analyze-footer" style="display: flex; justify-content: center; width: 100%;">
-<button class="btn btn-gradient btn-large" id="btnRunTextAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; border: none !important; width: 100% !important; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('text')">
+<div class="analyze-footer">
+<button class="btn btn-gradient btn-large run-combined-btn" id="btnRunTextAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; font-weight: bold !important; border: none !important; width: 100% !important; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('text')">
 <span></span> Run Narrative Text Check-in Analysis
                                     </button>
 </div>
-</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland" >
+</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland">
 <div class="card-header">
 <h3>🎙️ Voice &amp; Speech Acoustic Check-in</h3>
 <span class="status-indicator ready" id="micStatusText">Ready to record</span>
@@ -1080,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <canvas height="100" id="waveformCanvas" width="400"></canvas>
 <div class="timer-display" id="recordingTimer">Ready to analyze</div>
 </div>
-<div class="audio-actions" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+<div class="audio-actions">
 <input accept="audio/*" id="audioFileInput" onchange="handleAudioFileUpload(event)" style="display: none;" type="file"/>
 <button class="btn btn-secondary" id="btnRecord" onclick="toggleRecording()">
 <span id="recordBtnIcon"></span> <span id="recordBtnText">Start Voice Recording</span>
@@ -1088,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button class="btn btn-secondary" id="btnUploadAudio" onclick="document.getElementById('audioFileInput').click()">
 <span></span> Upload Audio File
                                     </button>
-<button class="btn btn-gradient btn-large" id="btnRunAudioAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; border: none !important; margin-top: 6px; width: 100% !important; margin: 6px auto 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 700;" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
+<button class="btn btn-gradient btn-large run-combined-btn" id="btnRunAudioAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; font-weight: bold !important; border: none !important; margin-top: 6px; width: 100% !important; margin: 6px auto 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
 <span></span> Run Voice Check-in Analysis
                                     </button>
 </div>
@@ -1269,116 +1195,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </div>
 </div>
-</div><div class="modality-column" id="combinedModalityColumn" style="display: none !important; flex-direction: column; gap: 24px; overflow: visible !important;">
-<div class="glass-card" id="combinedAssessmentIsland" style="display: flex; flex-direction: column; gap: 18px; padding: 22px; border-radius: 24px;">
-    <!-- Combined Assessment -->
-    <div id="combinedGeminiReportWrapper" style="padding: 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(168, 85, 247, 0.08)); border: 1px solid rgba(236, 72, 153, 0.38); display: flex; flex-direction: column; gap: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5rem;">🌌</span>
-                <div>
-                    <h4 style="font-size: 1.15rem; font-weight: 800; color: #EC4899; margin: 0;">Dual-Modality Clinical Fusion Assessment</h4>
-                    <div id="combinedGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Fusion Engine (Gemini / Llama 3.3)</div>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span id="combinedGeminiStressTierBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(236, 72, 153, 0.25); border: 1px solid #EC4899; color: #fff; font-size: 0.85rem; font-weight: 800;">Baseline Calm</span>
-                <span id="combinedGeminiStressIndexText" style="font-size: 1.15rem; font-weight: 800; color: #EC4899;">Index: 22/100</span>
-            </div>
-        </div>
-        <div>
-            <div style="font-size: 0.82rem; font-weight: 700; color: #CBD5E1; text-transform: uppercase; margin-bottom: 8px;">Detected Combined Symptoms:</div>
-            <div id="combinedGeminiSymptomsBox" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                <span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">Cognitive Load</span>
-            </div>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
-            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Unified Clinical Diagnosis</div>
-                <p id="combinedGeminiSummaryText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Fusion evaluation indicates emotional regulation is intact across both modalities.</p>
-            </div>
-            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Recommended Intervention</div>
-                <p id="combinedGeminiInterventionText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Implement standard stress relief protocols over the next 24 hours.</p>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="results-section glass-card" id="combinedAnalysisResults">
-    <div class="results-header">
-        <h2>Dual-Modality Fusion Breakdown</h2>
-        <span class="badge badge-dual" style="background: rgba(236,72,153,0.25); border-color: #EC4899; color: #EC4899;">Fusion Engine Active</span>
-    </div>
-    <div class="results-grid">
-        <!-- Combined Stress Score & Tier -->
-        <div class="result-box gauge-box">
-            <h4>Unified Stress Severity Score</h4>
-            <div class="stress-gauge-wrapper">
-                <div class="gauge-circle">
-                    <span class="gauge-number" id="combinedStressScoreNumber">0%</span>
-                    <span class="gauge-tier" id="combinedRiskTierText">Minimal / Normal</span>
-                </div>
-            </div>
-            <div class="primary-origin" style="margin-top: 12px;">
-                <span>Detected Unified State:</span>
-                <strong id="combinedStressCategoryText" style="color: #1f2937 !important; font-weight: 800;">Calm / Baseline</strong>
-            </div>
-            
-            <div style="margin-top: 18px; width: 100%; text-align: left;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #CBD5E1; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">
-                    <span>Weight Distribution</span>
-                </div>
-                <div style="width: 100%; background: rgba(0,0,0,0.4); border-radius: 999px; height: 16px; display: flex; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                    <div id="combinedTextWeightBar" style="width: 50%; background: #a855f7; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #fff;">50% Text</div>
-                    <div id="combinedAudioWeightBar" style="width: 50%; background: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #111827;">50% Audio</div>
-                </div>
-            </div>
-            
-        </div>
-        <!-- Both XAI Boxes -->
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-             <!-- LIME Word Attribution Explainer -->
-             <div class="result-box xai-text-box" id="combinedLimeBoxWrapper">
-                 <div class="xai-header">
-                     <h4>🔍 Word-Level Attribution Weights (LIME)</h4>
-                     <span class="xai-legend">
-                         <span class="legend-dot dot-red"></span> High Stress
-                         <span class="legend-dot dot-yellow"></span> Mild Stress
-                         <span class="legend-dot dot-green"></span> Calm
-                     </span>
-                 </div>
-                 <div class="lime-token-box" id="combinedLimeHighlightedText" style="min-height: 120px; font-size: 1.05rem;">
-                     No text analyzed yet.
-                 </div>
-             </div>
-             <!-- SHAP Acoustic Feature Attribution Chart -->
-             <div class="result-box xai-audio-box" id="combinedShapBoxWrapper">
-                 <h4>🔊 Top Acoustic Features Driving vocal prediction (SHAP)</h4>
-                 <p class="xai-subtext" id="combinedShapSummaryText">Explainable AI feature importance:</p>
-                 <div class="chart-container-small" style="height: 220px;">
-                     <canvas id="combinedShapChartCanvas"></canvas>
-                 </div>
-             </div>
-        </div>
-        <!-- NEW FEATURE: Cognitive Distortion Scanner & Interactive Reframing Engine (Combined) -->
-        <div class="glass-card" id="combinedDistortionScannerWrapper" style="padding: 20px; border-radius: 20px; background: rgba(236, 72, 153, 0.08); border: 1px solid rgba(236, 72, 153, 0.3); display: flex; flex-direction: column; gap: 14px; grid-column: 1 / -1;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 1.3rem;"></span>
-                    <h4 style="font-size: 1.1rem; font-weight: 800; color: #EC4899; margin: 0;">Cognitive Distortion Scanner &amp; Instant Reframing</h4>
-                </div>
-                <span id="combinedDistortionCountBadge" style="padding: 4px 12px; border-radius: 999px; background: rgba(236, 72, 153, 0.2); border: 1px solid #EC4899; color: #fff; font-size: 0.82rem; font-weight: 700;">Scanning Active</span>
-            </div>
-            <p style="font-size: 0.88rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.5;">
-                Identifies psychological distortions (such as <strong>Catastrophizing</strong> or <strong>All-or-Nothing Thinking</strong>) and offers interactive CBT reframing prompts.
-            </p>
-            <div id="combinedDistortionItemsList" style="display: flex; flex-direction: column; gap: 10px;">
-                <!-- Injected via JS -->
-            </div>
-        </div>
-    </div>
-</div>
-</div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
+</div></div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
 <h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🎧</span> Acoustic Training Datasets &amp; Validation</h4>
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Extracts 195 vocal biomarkers via OpenSmile &amp; Librosa, validated across RAVDESS &amp; IEMOCAP clinical datasets to detect pitch shimmer &amp; MFCC energy shifts.</p>
@@ -1402,7 +1219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
 <h4 style="color: #facc15; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🌱</span> Cognitive Behavioral Reframing Link</h4>
-<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing) and routes them directly to the AI Therapist for immediate reframing.</p>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing) and routes them directly to the CBT Assistant for immediate reframing.</p>
 </div>
 </div></div>
 <!-- VIEW 2: TEXT & NARRATIVE JOURNAL FACE -->
@@ -1415,7 +1232,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div style="display: flex; align-items: center; gap: 12px;">
 <span style="font-size: 1.6rem;"></span>
 <div>
-<h3 id="cbtGreetingText" style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #fff;">AI Therapist &amp; AI Therapist</h3>
+<h3 id="cbtGreetingText" style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #fff;">NeuroSense GPT &amp; CBT Assistant</h3>
 </div>
 </div>
 <div style="display: flex; align-items: center; gap: 10px;">
@@ -1426,12 +1243,12 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="chat-messages-box" id="cbtChatMessages" style="flex: 1 1 auto; min-height: 0; max-height: none !important; overflow-y: auto; overflow-x: hidden; padding: 10px 6px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; background: transparent !important; border: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%;">
 <div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
 <div class="chat-msg bot-msg" style="max-width: 82%; font-size: 0.96rem; padding: 14px 18px; border-radius: 16px; line-height: 1.6;">
-<strong>AI Therapist:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
+<strong>NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
                             </div>
 </div>
 <!-- Input bar: input + Send only (no Reset button) -->
 <div class="chat-input-bar" style="display: flex; flex-wrap: nowrap; gap: 8px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0; background: rgba(0,0,0,0.30); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 6px 10px; overflow: hidden;">
-<input id="cbtChatInput" onkeypress="handleChatKeyPress(event)" placeholder="Message AI Therapist about stress or emotions..." style="flex: 1 1 0; min-width: 0; padding: 10px 14px; border-radius: 14px; border: none; font-size: 0.92rem; box-sizing: border-box; outline: none;" type="text"/>
+<input id="cbtChatInput" onkeypress="handleChatKeyPress(event)" placeholder="Message NeuroSense GPT about stress or emotions..." style="flex: 1 1 0; min-width: 0; padding: 10px 14px; border-radius: 14px; border: none; font-size: 0.92rem; box-sizing: border-box; outline: none;" type="text"/>
 <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 14px; padding: 8px 20px; font-weight: 700; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 4px 14px rgba(56,189,248,0.35); cursor: pointer;">Send </button>
 </div>
 </div>
@@ -1583,8 +1400,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             </p>
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
 <span id="pillOverall" style="padding: 6px 14px; border-radius: 999px; background: rgba(156, 163, 175, 0.2); border: 1px solid rgba(156, 163, 175, 0.5); font-weight: 700; font-size: 0.84rem; color: #9CA3AF;">Awaiting Analysis</span>
-<span id="pillBehavior" style="padding: 6px 14px; border-radius: 999px; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.5); font-weight: 700; font-size: 0.84rem; color: #818CF8;">Behavior 0%</span>
-<span id="pillEmotion" style="padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); font-weight: 700; font-size: 0.84rem; color: #34D399;">Emotion 0%</span>
+
+
 </div>
 </div>
 <!-- Section 2: Pressure Snapshot (Unified M = wq*Rq + we*Re + wr*Rr + wb*Rb) -->
@@ -1612,7 +1429,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden;">
 <div id="pressureCombinedBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #F59E0B, #EA580C); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
 </div>
-</div>
 <!-- 4-Signal Breakdown Grid -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
 <!-- 1. Questionnaire (Rq) -->
@@ -1625,15 +1441,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="sigRqBar" style="width: 0%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
 </div>
 </div>
-<!-- 2. Emotion (Re) -->
-<div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-<span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">😊 Emotion / Audio</span>
-<span id="sigReVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">0%</span>
-</div>
-<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
-<div id="sigReBar" style="width: 0%; height: 100%; background: #10B981; border-radius: 999px;"></div>
-</div>
+
 </div>
 <!-- 3. Response Time (Rr) -->
 <div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
@@ -1645,15 +1453,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="sigRrBar" style="width: 0%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
 </div>
 </div>
-<!-- 4. Behavioral (Rb) -->
-<div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-<span style="font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.85);">🛡️ Behavioral</span>
-<span id="sigRbVal" style="font-size: 1.1rem; font-weight: 800; color: #fff;">0%</span>
-</div>
-<div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
-<div id="sigRbBar" style="width: 0%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
-</div>
+
 </div>
 </div>
 <!-- Bottom Buttons -->
@@ -1755,7 +1555,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Scripts -->
 <script src="/js/charts.js?v=20260807_fix10"></script>
 <script src="/js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="/js/main.js?v=20261001_v4"></script>
+<script src="/js/main.js?v=20261001_v6"></script>
 <style>
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
 .dock-icon {
@@ -1848,7 +1648,6 @@ body[data-theme="light"] #bottomGlassDock {
 // Track active wallpaper choice
 // (Assuming implementation continues here...)
 </script>
-<script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         function checkWallpaperState() {

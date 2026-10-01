@@ -2521,3 +2521,49 @@ function showAndScrollToResults() {
     }, 300);
 }
 
+
+// NeuroSense: Core Navigation Fix
+window.switchScreen = function(name) {
+    var home = document.getElementById('lumoraHomeScreen');
+    var dash = document.getElementById('appDashboardScreen');
+    var themeBtn = document.getElementById('btnThemeToggle');
+    var returnBtn = document.getElementById('btnReturnHomeFixed');
+    var topBar = document.querySelector('header.navbar-top-controls');
+    var dock = document.getElementById('bottomGlassDock');
+    var ambientBg = document.getElementById('globalAmbientBgContainer');
+
+    if (name === 'dashboard') {
+        if (home) home.style.setProperty('display','none','important');
+        if (dash) dash.style.removeProperty('display');
+        if (themeBtn) themeBtn.style.setProperty('display','inline-flex','important');
+        if (returnBtn) returnBtn.style.setProperty('display','inline-flex','important');
+        if (topBar) topBar.style.setProperty('display','flex','important');
+        if (dock) dock.style.setProperty('display','inline-flex','important');
+        if (ambientBg) ambientBg.style.setProperty('display','none','important');
+        document.body.classList.add('on-dashboard');
+        
+        // Initialize dashboard state if needed
+        if (typeof switchDashboardView === 'function') {
+            switchDashboardView('checkin');
+        }
+        
+        // Apply background scope properly when entering dashboard
+        if (typeof applyBackgroundState === 'function') {
+            applyBackgroundState('dashboard');
+        }
+    } else {
+        if (dash) dash.style.setProperty('display','none','important');
+        if (home) home.style.removeProperty('display');
+        if (themeBtn) themeBtn.style.setProperty('display','none','important');
+        if (returnBtn) returnBtn.style.setProperty('display','none','important');
+        if (topBar) topBar.style.setProperty('display','none','important');
+        if (dock) dock.style.setProperty('display','none','important');
+        if (ambientBg) ambientBg.style.removeProperty('display');
+        document.body.classList.remove('on-dashboard');
+        
+        // Apply background scope properly when entering home
+        if (typeof applyBackgroundState === 'function') {
+            applyBackgroundState('home');
+        }
+    }
+};
