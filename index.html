@@ -926,6 +926,79 @@
         </style>
 </head>
 <body data-theme="dark">
+<script>
+// NeuroSense: Core Navigation Fix
+function switchScreen(name) {
+    var home = document.getElementById('lumoraHomeScreen');
+    var dash = document.getElementById('appDashboardScreen');
+    var themeBtn = document.getElementById('btnThemeToggle');
+    var returnBtn = document.getElementById('btnReturnHomeFixed');
+    var topBar = document.querySelector('header.navbar-top-controls');
+    var dock = document.getElementById('bottomGlassDock');
+    var ambientBg = document.getElementById('globalAmbientBgContainer');
+
+    if (name === 'dashboard') {
+        if (home) home.style.setProperty('display','none','important');
+        if (dash) dash.style.removeProperty('display');
+        if (themeBtn) themeBtn.style.setProperty('display','inline-flex','important');
+        if (returnBtn) returnBtn.style.setProperty('display','inline-flex','important');
+        if (topBar) topBar.style.setProperty('display','flex','important');
+        if (dock) dock.style.setProperty('display','inline-flex','important');
+        if (ambientBg) ambientBg.style.setProperty('display','none','important');
+        document.body.classList.add('on-dashboard');
+        window.scrollTo(0,0);
+    } else {
+        if (home) home.style.removeProperty('display');
+        if (dash) dash.style.setProperty('display','none','important');
+        if (themeBtn) themeBtn.style.setProperty('display','none','important');
+        if (returnBtn) returnBtn.style.setProperty('display','none','important');
+        if (topBar) topBar.style.setProperty('display','none','important');
+        if (dock) dock.style.setProperty('display','none','important');
+        if (ambientBg) ambientBg.style.removeProperty('display');
+        document.body.classList.remove('on-dashboard');
+        window.scrollTo(0,0);
+    }
+}
+
+function switchBgVideo(idx) {
+    for (var i = 0; i < 4; i++) {
+        var vid = document.getElementById('bgVideo' + i);
+        var btn = document.getElementById('videoBtn' + i);
+        if (vid) {
+            if (i === idx) {
+                vid.style.opacity = '1'; vid.style.zIndex = '2';
+                vid.classList.add('active');
+                vid.play && vid.play().catch(function(){});
+            } else {
+                vid.style.opacity = '0'; vid.style.zIndex = '1';
+                vid.classList.remove('active');
+            }
+        }
+        if (btn) {
+            if (i === idx) {
+                btn.style.opacity = '1'; btn.style.borderBottom = '2px solid rgba(255,255,255,0.9)';
+            } else {
+                btn.style.opacity = '0.4'; btn.style.borderBottom = 'none';
+            }
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var themeBtn = document.getElementById('btnThemeToggle');
+    var topBar = document.querySelector('header.navbar-top-controls');
+    var dock = document.getElementById('bottomGlassDock');
+    var returnBtn = document.getElementById('btnReturnHomeFixed');
+    var dash = document.getElementById('appDashboardScreen');
+
+    if (themeBtn) themeBtn.style.setProperty('display','none','important');
+    if (topBar) topBar.style.setProperty('display','none','important');
+    if (dock) dock.style.setProperty('display','none','important');
+    if (returnBtn) returnBtn.style.setProperty('display','none','important');
+    if (dash) dash.style.setProperty('display','none','important');
+});
+</script>
+
 <!-- Ambient Background Orbs (ONLY for Dashboard Screen) -->
 <div class="app-background" style="display: none;">
 <div class="glow-orb orb-1"></div>
@@ -1324,7 +1397,116 @@
 </div>
 </div>
 </div>
-</div></div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
+</div><div class="modality-column" id="combinedModalityColumn" style="display: none !important; flex-direction: column; gap: 24px; overflow: visible !important;">
+<div class="glass-card" id="combinedAssessmentIsland" style="display: flex; flex-direction: column; gap: 18px; padding: 22px; border-radius: 24px;">
+    <!-- Combined Assessment -->
+    <div id="combinedGeminiReportWrapper" style="padding: 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(168, 85, 247, 0.08)); border: 1px solid rgba(236, 72, 153, 0.38); display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5rem;">🌌</span>
+                <div>
+                    <h4 style="font-size: 1.15rem; font-weight: 800; color: #EC4899; margin: 0;">Dual-Modality Clinical Fusion Assessment</h4>
+                    <div id="combinedGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Fusion Engine (Gemini / Llama 3.3)</div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span id="combinedGeminiStressTierBadge" style="padding: 6px 14px; border-radius: 999px; background: rgba(236, 72, 153, 0.25); border: 1px solid #EC4899; color: #fff; font-size: 0.85rem; font-weight: 800;">Baseline Calm</span>
+                <span id="combinedGeminiStressIndexText" style="font-size: 1.15rem; font-weight: 800; color: #EC4899;">Index: 22/100</span>
+            </div>
+        </div>
+        <div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: #CBD5E1; text-transform: uppercase; margin-bottom: 8px;">Detected Combined Symptoms:</div>
+            <div id="combinedGeminiSymptomsBox" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <span style="padding: 4px 12px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); font-size: 0.84rem; color: #E2E8F0;">Cognitive Load</span>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Unified Clinical Diagnosis</div>
+                <p id="combinedGeminiSummaryText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Fusion evaluation indicates emotional regulation is intact across both modalities.</p>
+            </div>
+            <div style="padding: 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Recommended Intervention</div>
+                <p id="combinedGeminiInterventionText" style="font-size: 0.88rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin: 0;">Implement standard stress relief protocols over the next 24 hours.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="results-section glass-card" id="combinedAnalysisResults">
+    <div class="results-header">
+        <h2>⚡ Dual-Modality Fusion Breakdown</h2>
+        <span class="badge badge-dual" style="background: rgba(236,72,153,0.25); border-color: #EC4899; color: #EC4899;">Fusion Engine Active</span>
+    </div>
+    <div class="results-grid">
+        <!-- Combined Stress Score & Tier -->
+        <div class="result-box gauge-box">
+            <h4>Unified Stress Severity Score</h4>
+            <div class="stress-gauge-wrapper">
+                <div class="gauge-circle">
+                    <span class="gauge-number" id="combinedStressScoreNumber">0%</span>
+                    <span class="gauge-tier" id="combinedRiskTierText">Minimal / Normal</span>
+                </div>
+            </div>
+            <div class="primary-origin" style="margin-top: 12px;">
+                <span>Detected Unified State:</span>
+                <strong id="combinedStressCategoryText" style="color: #1f2937 !important; font-weight: 800;">Calm / Baseline</strong>
+            </div>
+            
+            <div style="margin-top: 18px; width: 100%; text-align: left;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #CBD5E1; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">
+                    <span>Weight Distribution</span>
+                </div>
+                <div style="width: 100%; background: rgba(0,0,0,0.4); border-radius: 999px; height: 16px; display: flex; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                    <div id="combinedTextWeightBar" style="width: 50%; background: #a855f7; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #fff;">50% Text</div>
+                    <div id="combinedAudioWeightBar" style="width: 50%; background: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: #111827;">50% Audio</div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- Both XAI Boxes -->
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+             <!-- LIME Word Attribution Explainer -->
+             <div class="result-box xai-text-box" id="combinedLimeBoxWrapper">
+                 <div class="xai-header">
+                     <h4>🔍 Word-Level Attribution Weights (LIME)</h4>
+                     <span class="xai-legend">
+                         <span class="legend-dot dot-red"></span> High Stress
+                         <span class="legend-dot dot-yellow"></span> Mild Stress
+                         <span class="legend-dot dot-green"></span> Calm
+                     </span>
+                 </div>
+                 <div class="lime-token-box" id="combinedLimeHighlightedText" style="min-height: 120px; font-size: 1.05rem;">
+                     No text analyzed yet.
+                 </div>
+             </div>
+             <!-- SHAP Acoustic Feature Attribution Chart -->
+             <div class="result-box xai-audio-box" id="combinedShapBoxWrapper">
+                 <h4>🔊 Top Acoustic Features Driving vocal prediction (SHAP)</h4>
+                 <p class="xai-subtext" id="combinedShapSummaryText">Explainable AI feature importance:</p>
+                 <div class="chart-container-small" style="height: 220px;">
+                     <canvas id="combinedShapChartCanvas"></canvas>
+                 </div>
+             </div>
+        </div>
+        <!-- NEW FEATURE: Cognitive Distortion Scanner & Interactive Reframing Engine (Combined) -->
+        <div class="glass-card" id="combinedDistortionScannerWrapper" style="padding: 20px; border-radius: 20px; background: rgba(236, 72, 153, 0.08); border: 1px solid rgba(236, 72, 153, 0.3); display: flex; flex-direction: column; gap: 14px; grid-column: 1 / -1;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 1.3rem;">🧠</span>
+                    <h4 style="font-size: 1.1rem; font-weight: 800; color: #EC4899; margin: 0;">Cognitive Distortion Scanner &amp; Instant Reframing</h4>
+                </div>
+                <span id="combinedDistortionCountBadge" style="padding: 4px 12px; border-radius: 999px; background: rgba(236, 72, 153, 0.2); border: 1px solid #EC4899; color: #fff; font-size: 0.82rem; font-weight: 700;">Scanning Active</span>
+            </div>
+            <p style="font-size: 0.88rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.5;">
+                Identifies psychological distortions (such as <strong>Catastrophizing</strong> or <strong>All-or-Nothing Thinking</strong>) and offers interactive CBT reframing prompts.
+            </p>
+            <div id="combinedDistortionItemsList" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+</div>
+</div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
 <h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🎧</span> Acoustic Training Datasets &amp; Validation</h4>
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Extracts 195 vocal biomarkers via OpenSmile &amp; Librosa, validated across RAVDESS &amp; IEMOCAP clinical datasets to detect pitch shimmer &amp; MFCC energy shifts.</p>

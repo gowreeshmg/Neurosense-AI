@@ -366,7 +366,7 @@ function applyBackgroundState(screenName) {
     }
 }
 
-function switchScreen(screenName) {
+function old_switchScreen(screenName) {
     const homeScreen = document.getElementById('lumoraHomeScreen');
     const dashboardScreen = document.getElementById('appDashboardScreen');
     const appBg = document.querySelector('.app-background');
