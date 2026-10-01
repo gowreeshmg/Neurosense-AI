@@ -23,7 +23,7 @@
 <!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="css/styles.css?v=20261001_v7" rel="stylesheet"/>
+<link href="css/styles.css?v=20261001_v8" rel="stylesheet"/>
 <style id="ios-dashboard-glass">
         @font-face {
             font-family: 'Helvetica Now Text';
@@ -874,7 +874,7 @@
 <div class="glass-card hidden" id="blurControlPopover" style="display: none; position: fixed; top: 80px; right: 26px; z-index: 1050; width: 330px; background: linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.75) !important; backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important; -webkit-backdrop-filter: blur(28px) saturate(180%) contrast(102%) !important; border: 1px solid rgba(255,255,255,0.35) !important; border-top: 1.5px solid rgba(255,255,255,0.60) !important; box-shadow: inset 0 1px 2px rgba(255,255,255,0.45), inset 0 0 18px rgba(255,255,255,0.08), 0 24px 60px rgba(0,0,0,0.55) !important; border-radius: 22px; padding: 22px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 10px;">
 <h4 style="margin: 0; font-size: 1.08rem; font-weight: 800; background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px;">
-<span>✨</span> Atmosphere &amp; Blur
+<span></span> Atmosphere &amp; Blur
             </h4>
 <button onclick="toggleBlurControlPopover()" onmouseout="this.style.color='#94A3B8'" onmouseover="this.style.color='#FFFFFF'" style="background: none; border: none; color: #94A3B8; cursor: pointer; font-size: 1.3rem; line-height: 1; transition: color 0.2s;">✕</button>
 </div>
@@ -948,9 +948,9 @@
 <line x1="12" x2="12" y1="8" y2="16"></line>
 <line x1="15" x2="15" y1="10" y2="14"></line>
 </svg><span class="dock-tooltip">Narrative &amp; Speech</span></div>
-<div class="dock-icon" id="dockBtnCBT" data-label="CBT Assistant" onclick="switchDashboardView('cbt')">
+<div class="dock-icon" id="dockBtnCBT" data-label="AI Therapist" onclick="switchDashboardView('cbt')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 8V4H8"></path><rect height="12" rx="2" width="16" x="4" y="8"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
-<span class="dock-tooltip">CBT Assistant</span></div>
+<span class="dock-tooltip">AI Therapist</span></div>
 <div class="dock-icon" id="dockBtnPressure" data-label="Pressure &amp; Survey" onclick="switchDashboardView('pressure')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
 <span class="dock-tooltip">Pressure &amp; Survey</span></div>
@@ -979,12 +979,12 @@
 <textarea id="journalTextarea" oninput="updateWordCount()" placeholder="e.g., 'I have three university exams coming up next week and the assignment deadlines for coursework are making me feel overwhelmed completely...'" rows="6"></textarea>
 <div class="quick-prompts">
 <span>Quick Load:</span>
-<button class="prompt-chip" onclick="loadPrompt('academic')">📚 Academic Overload</button>
+<button class="prompt-chip" onclick="loadPrompt('academic')">Academic Overload</button>
 <button class="prompt-chip" onclick="loadPrompt('personal')">💔 Personal / Family Stress</button>
 <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful &amp; Calm</button>
 </div>
 <div class="analyze-footer">
-<button class="btn btn-gradient btn-large run-combined-btn" id="btnRunTextAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; font-weight: bold !important; border: none !important; width: 100% !important; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('text')">
+<button class="btn btn-gradient btn-large" id="btnRunTextAnalysis" onclick="runSingleModalityAnalysis('text')">
 <span></span> Run Narrative Text Check-in Analysis
                                     </button>
 </div>
@@ -996,7 +996,7 @@
 <p class="card-desc">Record your voice directly or upload an audio file to test acoustic stress attribution.</p>
 <div class="glass-pill voice-tips-pill" style="padding: 14px 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); margin: 6px 0 12px 0;">
 <div style="font-weight: 700; font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-<span>💡</span> How to Check Your Vocal Biomarkers:
+<span></span> How to Check Your Vocal Biomarkers:
                                     </div>
 <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
                                         Press <strong>Start Voice Recording</strong> and speak clearly for 5–10 seconds about your day or studies. Our AI analyzes pitch fluctuations, micro-tremors, and MFCC vocal tract stability to calculate real-time stress severity.
@@ -1014,7 +1014,7 @@
 <button class="btn btn-secondary" id="btnUploadAudio" onclick="document.getElementById('audioFileInput').click()">
 <span></span> Upload Audio File
                                     </button>
-<button class="btn btn-gradient btn-large run-combined-btn" id="btnRunAudioAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; font-weight: bold !important; border: none !important; margin-top: 6px; width: 100% !important; margin: 6px auto 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
+<button class="btn btn-gradient btn-large" id="btnRunAudioAnalysis" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
 <span></span> Run Voice Check-in Analysis
                                     </button>
 </div>
@@ -1026,7 +1026,7 @@
 <span style="font-size: 1.5rem;"></span>
 <div>
 <h4 style="font-size: 1.15rem; font-weight: 800; color: #C084FC; margin: 0;">NeuroSense AI Narrative Clinical Assessment</h4>
-<div id="textGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Dual-Modality Engine (Gemini / Llama 3.3)</div>
+<div id="textGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Dual-Modality Engine</div>
 </div>
 </div>
 <div style="display: flex; align-items: center; gap: 10px;">
@@ -1074,7 +1074,7 @@
 <!-- LIME Word Attribution Explainer -->
 <div class="result-box xai-text-box" id="limeBoxWrapper" style="display: none !important;">
 <div class="xai-header">
-<h4>🔍 Word-Level Attribution Weights (LIME)</h4>
+<h4>Word-Level Attribution Weights (LIME)</h4>
 <span class="xai-legend">
 <span class="legend-dot dot-red"></span> High Stress
                                                 <span class="legend-dot dot-yellow"></span> Mild Stress
@@ -1104,7 +1104,7 @@
 <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed completely", "awful")</div>
 <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
 </div>
-<button class="btn" onclick="applyTextReframing('catastrophizing')" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+<button class="btn" onclick="applyTextReframing('catastrophizing')" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">Reframe Sentence</button>
 </div>
 </div>
 </div>
@@ -1119,7 +1119,7 @@
 <span style="font-size: 1.5rem;"></span>
 <div>
 <h4 style="font-size: 1.15rem; font-weight: 800; color: #34D399; margin: 0;">NeuroSense AI Voice Clinical Assessment</h4>
-<div id="voiceGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Dual-Modality Engine (Gemini / Llama 3.3)</div>
+<div id="voiceGeminiProviderText" style="font-size: 0.8rem; color: rgba(255,255,255,0.75);">NeuroSense Dual-Modality Engine</div>
 </div>
 </div>
 <div style="display: flex; align-items: center; gap: 10px;">
@@ -1146,7 +1146,7 @@
 </div>
 </div><div class="results-section glass-card hidden" id="audioAnalysisResults">
 <div class="results-header">
-<h2>🎵 Speech Acoustic Biomarker Breakdown</h2>
+<h2>Speech Acoustic Biomarker Breakdown</h2>
 <span class="badge badge-dual" style="background: rgba(56,189,248,0.25); border-color: #38bdf8; color: #38bdf8;">Voice Modality Active</span>
 </div>
 <div class="results-grid">
@@ -1197,7 +1197,7 @@
 </div>
 </div></div></div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
-<h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🎧</span> Acoustic Training Datasets &amp; Validation</h4>
+<h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span></span> Acoustic Training Datasets &amp; Validation</h4>
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Extracts 195 vocal biomarkers via OpenSmile &amp; Librosa, validated across RAVDESS &amp; IEMOCAP clinical datasets to detect pitch shimmer &amp; MFCC energy shifts.</p>
 </div>
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
@@ -1205,21 +1205,21 @@
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Processes frequency features through a rank-based Random Forest &amp; SVM ensemble to output real-time Shapley Additive Explanations (SHAP).</p>
 </div>
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
-<h4 style="color: #34d399; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🔒</span> Edge-AI Privacy &amp; Real-time Synthesis</h4>
+<h4 style="color: #34d399; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span></span> Edge-AI Privacy &amp; Real-time Synthesis</h4>
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Voice samples are processed strictly in-memory during edge extraction and synthesized with dual AI engines without permanent server storage.</p>
 </div>
 </div><div class="bottom-small-islands-grid mobile-only-islands" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 24px; padding-bottom: 30px;">
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
-<h4 style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>📚</span> Linguistic Training Corpus &amp; Validation</h4>
+<h4 style="color: var(--accent-purple); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span></span> Linguistic Training Corpus &amp; Validation</h4>
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Fine-tuned on 150,000+ validated student reflections and C-SSRS transcripts to detect subtle cognitive overload and academic burnout.</p>
 </div>
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
-<h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🔍</span> Token Attribution &amp; LIME Explainability</h4>
+<h4 style="color: var(--accent-cyan); display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span></span> Token Attribution &amp; LIME Explainability</h4>
 <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Employs Local Interpretable Model-agnostic Explanations to perturb individual words and calculate exact stress contributions.</p>
 </div>
 <div style="padding: 18px; border-radius: 20px; background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%), rgba(16,24,40,0.55); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255,255,255,0.28); border-top: 1.5px solid rgba(255,255,255,0.50); box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 8px 24px rgba(0,0,0,0.35);">
-<h4 style="color: #facc15; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span>🌱</span> Cognitive Behavioral Reframing Link</h4>
-<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing) and routes them directly to the CBT Assistant for immediate reframing.</p>
+<h4 style="color: #facc15; display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0; font-size: 0.95rem;"><span></span> Cognitive Behavioral Reframing Link</h4>
+<p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">Automatically identifies cognitive distortions (such as catastrophizing) and routes them directly to the AI Therapist for immediate reframing.</p>
 </div>
 </div></div>
 <!-- VIEW 2: TEXT & NARRATIVE JOURNAL FACE -->
@@ -1232,23 +1232,23 @@
 <div style="display: flex; align-items: center; gap: 12px;">
 <span style="font-size: 1.6rem;"></span>
 <div>
-<h3 id="cbtGreetingText" style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #fff;">NeuroSense GPT &amp; CBT Assistant</h3>
+<h3 id="cbtGreetingText" style="margin: 0; font-size: 1.3rem; font-weight: 800; color: #fff;">AI Therapist</h3>
 </div>
 </div>
 <div style="display: flex; align-items: center; gap: 10px;">
-<span class="badge badge-ai" style="margin: 0; font-size: 0.8rem; padding: 4px 12px;">Gemini &amp; Llama 3.3 AI Engine</span>
+<span class="badge badge-ai" style="margin: 0; font-size: 0.8rem; padding: 4px 12px;"></span>
 </div>
 </div>
 <!-- Direct Full-Island Chat Messages Area -->
 <div class="chat-messages-box" id="cbtChatMessages" style="flex: 1 1 auto; min-height: 0; max-height: none !important; overflow-y: auto; overflow-x: hidden; padding: 10px 6px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; background: transparent !important; border: none !important; box-shadow: none !important; box-sizing: border-box; width: 100%;">
 <div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
 <div class="chat-msg bot-msg" style="max-width: 82%; font-size: 0.96rem; padding: 14px 18px; border-radius: 16px; line-height: 1.6;">
-<strong>NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
+<strong>AI Therapist:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
                             </div>
 </div>
 <!-- Input bar: input + Send only (no Reset button) -->
 <div class="chat-input-bar" style="display: flex; flex-wrap: nowrap; gap: 8px; width: 100%; box-sizing: border-box; align-items: center; flex-shrink: 0; background: rgba(0,0,0,0.30); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 6px 10px; overflow: hidden;">
-<input id="cbtChatInput" onkeypress="handleChatKeyPress(event)" placeholder="Message NeuroSense GPT about stress or emotions..." style="flex: 1 1 0; min-width: 0; padding: 10px 14px; border-radius: 14px; border: none; font-size: 0.92rem; box-sizing: border-box; outline: none;" type="text"/>
+<input id="cbtChatInput" onkeypress="handleChatKeyPress(event)" placeholder="Message AI Therapist about stress or emotions..." style="flex: 1 1 0; min-width: 0; padding: 10px 14px; border-radius: 14px; border: none; font-size: 0.92rem; box-sizing: border-box; outline: none;" type="text"/>
 <button class="btn btn-gradient" onclick="sendCBTChat()" style="flex: 0 0 auto; border-radius: 14px; padding: 8px 20px; font-weight: 700; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 4px 14px rgba(56,189,248,0.35); cursor: pointer;">Send </button>
 </div>
 </div>
@@ -1264,7 +1264,7 @@
 <!-- Card 1: Behavioral Risk Banner -->
 <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.4);">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
-<span style="font-size: 1.4rem;">🛡️</span>
+<span style="font-size: 1.4rem;"></span>
 <h3 id="lifestyleRiskTitle" style="font-size: 1.35rem; font-weight: 800; color: #F59E0B;">Behavioral Risk: 54%</h3>
 </div>
 <div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden; margin-bottom: 14px; position: relative;">
@@ -1344,7 +1344,7 @@
 </div>
 <!-- Section 4: Circadian & Digital Behavior Simulator Sliders -->
 <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25); display: flex; flex-direction: column; gap: 16px;">
-<h4 style="font-size: 1.1rem; font-weight: 700; color: #10B981; margin: 0;">🎛️ Calibrate &amp; Simulate Behavioral Indicators (Rb)</h4>
+<h4 style="font-size: 1.1rem; font-weight: 700; color: #10B981; margin: 0;">Calibrate &amp; Simulate Behavioral Indicators (Rb)</h4>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
 <div>
 <label style="display: flex; justify-content: space-between; font-size: 0.88rem; color: #fff; margin-bottom: 6px;">
@@ -1372,7 +1372,7 @@
 <!-- Section 5: Interpretation -->
 <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px;">
 <div style="display: flex; align-items: center; gap: 8px;">
-<span style="color: #6366F1; font-size: 1.2rem;">💡</span>
+<span style="color: #6366F1; font-size: 1.2rem;"></span>
 <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Interpretation</h3>
 </div>
 <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
@@ -1429,6 +1429,7 @@
 <div style="width: 100%; background: rgba(255,255,255,0.12); height: 12px; border-radius: 999px; overflow: hidden;">
 <div id="pressureCombinedBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #F59E0B, #EA580C); border-radius: 999px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
 </div>
+</div>
 <!-- 4-Signal Breakdown Grid -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
 <!-- 1. Questionnaire (Rq) -->
@@ -1441,8 +1442,6 @@
 <div id="sigRqBar" style="width: 0%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
 </div>
 </div>
-
-</div>
 <!-- 3. Response Time (Rr) -->
 <div class="glass-card" style="padding: 18px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -1452,8 +1451,6 @@
 <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 999px; overflow: hidden;">
 <div id="sigRrBar" style="width: 0%; height: 100%; background: #F59E0B; border-radius: 999px;"></div>
 </div>
-</div>
-
 </div>
 </div>
 <!-- Bottom Buttons -->
@@ -1525,7 +1522,7 @@
 <!-- Card 2: 14-Day Longitudinal Mood & Circadian Trajectory Tracker -->
 <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2);">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-<h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">📅 14-Day Longitudinal Risk Trajectory</h3>
+<h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">14-Day Longitudinal Risk Trajectory</h3>
 <span class="badge" style="background: rgba(99, 102, 241, 0.25); color: #818CF8; border: 1px solid #818CF8;">Learning Vector Quantization Active</span>
 </div>
 <div style="height: 260px; width: 100%;">
@@ -1535,7 +1532,7 @@
 <!-- Card 3: Offline Privacy Guard -->
 <div class="glass-card" style="padding: 22px; border-radius: 20px; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
 <div style="display: flex; align-items: center; gap: 14px; max-width: 620px;">
-<span style="font-size: 2.2rem;">🔒</span>
+<span style="font-size: 2.2rem;"></span>
 <div>
 <h4 style="font-size: 1.15rem; font-weight: 800; color: #38BDF8; margin: 0 0 4px 0;">MINDGUARD Offline Privacy &amp; Local Processing Mode</h4>
 <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.4;">When enabled, all behavioral telemetries, response-time calculations, and clinical screening models run completely inside your device's browser sandbox without cloud network transmission.</p>
@@ -1555,7 +1552,7 @@
 <!-- Scripts -->
 <script src="./js/charts.js?v=20260807_fix10"></script>
 <script src="./js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="./js/main.js?v=20261001_v7"></script>
+<script src="./js/main.js?v=20261001_v8"></script>
 <style>
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
 .dock-icon {

@@ -2570,3 +2570,6 @@ window.switchScreen = function(name) {
 
 // Ensure switchBgVideo is globally accessible
 window.switchBgVideo = switchBgVideo;
+
+// Ensure switchDashboardView is globally accessible
+window.switchDashboardView = switchDashboardView;
