@@ -23,7 +23,7 @@
 <!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="css/styles.css?v=20261001_final" rel="stylesheet"/>
+<link href="css/styles.css?v=20261001_v2" rel="stylesheet"/>
 <style id="ios-dashboard-glass">
         @font-face {
             font-family: 'Helvetica Now Text';
@@ -1203,7 +1203,7 @@ window.switchDashboardView = function(viewName) {
 
 </nav>
 <!-- VIEW 1: VOICE & SPEECH ACOUSTIC CHECK-IN FACE -->
-<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland" style="background: rgba(16, 24, 40, 0.4) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255,255,255,0.2) !important;">
+<div class="modality-view active" id="viewCheckin" style="padding: 4px 14px 120px 14px; box-sizing: border-box; overflow-y: auto;"><div class="dual-modality-columns" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; width: 100%; margin-bottom: 24px;"><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="textInputIsland" >
 <div class="card-header">
 <h3>📝 Narrative Journal Entry</h3>
 <span class="word-counter" id="wordCountText">0 words</span>
@@ -1229,7 +1229,7 @@ window.switchDashboardView = function(viewName) {
 <span>⚡</span> Run Narrative Text Check-in Analysis
                                     </button>
 </div>
-</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland" style="background: rgba(16, 24, 40, 0.4) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255,255,255,0.2) !important;">
+</div></div><div class="modality-column" style="display: flex; flex-direction: column; gap: 24px; overflow: visible !important;"><div class="input-card glass-card" id="voiceInputIsland" >
 <div class="card-header">
 <h3>🎙️ Voice &amp; Speech Acoustic Check-in</h3>
 <span class="status-indicator ready" id="micStatusText">Ready to record</span>
@@ -1922,7 +1922,7 @@ window.switchDashboardView = function(viewName) {
 <!-- Scripts -->
 <script src="/js/charts.js?v=20260807_fix10"></script>
 <script src="/js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="/js/main.js?v=20261001_final"></script>
+<script src="/js/main.js?v=20261001_v2"></script>
 <style>
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
 .dock-icon {
