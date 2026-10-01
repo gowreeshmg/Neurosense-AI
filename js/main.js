@@ -2582,3 +2582,77 @@ window.switchBgVideo = switchBgVideo;
 
 // Ensure switchDashboardView is globally accessible
 window.switchDashboardView = switchDashboardView;
+
+
+// ============================================
+// Dock Hover Tooltip System
+// Shows tooltip when hovering over dock icons (same style as click tooltip)
+// ============================================
+(function initDockHoverTooltips() {
+    function ensureGlobalTooltip() {
+        let gt = document.getElementById('globalDockTooltip');
+        if (!gt) {
+            gt = document.createElement('div');
+            gt.id = 'globalDockTooltip';
+            gt.style.cssText = 'position: fixed; display: none; background: transparent; font-size: 0.85rem; font-weight: 700; white-space: nowrap; z-index: 2147483647; pointer-events: none; transform: translateX(-50%); text-align: center;';
+            document.body.appendChild(gt);
+        }
+        return gt;
+    }
+
+    function showTooltipForIcon(icon) {
+        const gt = ensureGlobalTooltip();
+        const label = icon.getAttribute('data-label');
+        if (!label) return;
+
+        // Clear any existing click tooltip timer
+        if (window._globalTooltipTimer) {
+            clearTimeout(window._globalTooltipTimer);
+            window._globalTooltipTimer = null;
+        }
+
+        const rect = icon.getBoundingClientRect();
+        gt.textContent = label;
+
+        if (document.body.getAttribute('data-theme') === 'light') {
+            gt.style.color = '#1e293b';
+            gt.style.textShadow = '0px 2px 10px rgba(255,255,255,0.9)';
+        } else {
+            gt.style.color = '#ffffff';
+            gt.style.textShadow = '0px 2px 10px rgba(0,0,0,0.9)';
+        }
+
+        gt.style.left = (rect.left + rect.width / 2) + 'px';
+        gt.style.top = (rect.top - 25) + 'px';
+        gt.style.setProperty('display', 'block', 'important');
+    }
+
+    function hideTooltip() {
+        const gt = document.getElementById('globalDockTooltip');
+        if (gt) {
+            gt.style.setProperty('display', 'none', 'important');
+            gt.textContent = '';
+        }
+    }
+
+    function attachListeners() {
+        const dockIcons = document.querySelectorAll('.dock-icon');
+        dockIcons.forEach(icon => {
+            icon.addEventListener('mouseenter', function() {
+                showTooltipForIcon(this);
+            });
+            icon.addEventListener('mouseleave', function() {
+                // Only hide if there's no active click timer
+                if (!window._globalTooltipTimer) {
+                    hideTooltip();
+                }
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachListeners);
+    } else {
+        attachListeners();
+    }
+})();
