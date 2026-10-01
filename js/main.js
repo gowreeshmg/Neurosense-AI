@@ -452,7 +452,7 @@ function old_switchScreen(screenName) {
  * Switches active dashboard tab view between Voice, Text, and CBT/GPT Assistant
  */
 
-function old_switchDashboardView(viewName) {
+function switchDashboardView(viewName) {
     const views = {
         'checkin': document.getElementById('viewCheckin'),
         'cbt': document.getElementById('viewCBT'),
@@ -1001,7 +1001,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
     
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<span>⚡</span> Analyzing Multimodal Biomarkers (Running LIME & SHAP)...';
+        btn.innerHTML = '<span></span> Analyzing Multimodal Biomarkers (Running LIME & SHAP)...';
     }
     
     try {
@@ -1113,7 +1113,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<span>⚡</span> Run Combined Dual-Modality Check-in Analysis';
+            btn.innerHTML = '<span></span> Run Combined Dual-Modality Check-in Analysis';
         }
 
         // Only reveal islands if we got a result
@@ -1269,7 +1269,7 @@ function displayAnalysisResults(res, forcedModality) {
             if (tTier) tTier.innerText = res.risk_tier || "Minimal / Normal";
             if (tCat) tCat.innerText = res.final_stress_category || "Calm / Baseline";
             const badge = document.getElementById('resultModalityBadge');
-            if (badge) badge.innerText = "📝 Narrative Text Analysis Active";
+            if (badge) badge.innerText = "Narrative Text Analysis Active";
         } else {
             if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
             if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
@@ -1376,7 +1376,7 @@ function displayAnalysisResults(res, forcedModality) {
             if (!distortionsHTML) {
                 distortionsHTML = `
                     <div style="padding: 12px 16px; border-radius: 14px; background: rgba(52, 211, 153, 0.15); border: 1px solid #34D399; color: #fff;">
-                        <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">🌟 Healthy & Grounded Cognitive Framing</div>
+                        <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">Healthy & Grounded Cognitive Framing</div>
                         <div style="font-size: 0.84rem; color: rgba(255,255,255,0.8);">No severe cognitive distortions (catastrophizing or extreme all-or-nothing terms) detected in this entry!</div>
                     </div>`;
                 valence = 0.55;
@@ -1647,7 +1647,7 @@ async function sendCBTChat() {
     
     // Show animated loading indicator bubble while waiting for Gemini / GPT
     const typingId = 'cbtTyping_' + Date.now();
-    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>🤖 NeuroSense GPT:</strong> Analyzing input & preparing CBT guidance... ⌛</div>`;
+    box.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg" style="opacity: 0.88; font-style: italic;"><strong>AI Therapist:</strong> Analyzing input & preparing CBT guidance... </div>`;
     box.scrollTop = box.scrollHeight;
     
     let success = false;
@@ -1672,7 +1672,7 @@ async function sendCBTChat() {
                 break;
             } else if (attempt < 2) {
                 const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/2)... ⌛`;
+                if (typingEl) typingEl.innerHTML = `<strong>AI Therapist:</strong> AI Engine busy, retrying connection (Attempt ${attempt+1}/2)... `;
                 await new Promise(r => setTimeout(r, 400));
             } else {
                 let errMsg = "API returned " + res.status;
@@ -1685,7 +1685,7 @@ async function sendCBTChat() {
         } catch (err) {
             if (attempt < 2) {
                 const typingEl = document.getElementById(typingId);
-                if (typingEl) typingEl.innerHTML = `<strong>🤖 NeuroSense GPT:</strong> Re-establishing connection with clinical AI engine... ⌛`;
+                if (typingEl) typingEl.innerHTML = `<strong>AI Therapist:</strong> Re-establishing connection with clinical AI engine... `;
                 await new Promise(r => setTimeout(r, 400));
             } else {
                 let errorDetails = (err && err.message) ? err.message : "Unknown connection error.";
@@ -1706,12 +1706,12 @@ async function sendCBTChat() {
     if (typingBubble) typingBubble.remove();
     
     if (success && replyText) {
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${replyText}</div>`;
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>AI Therapist:</strong> ${replyText}</div>`;
         window.cbtChatHistory.push({ role: "user", content: msg });
         window.cbtChatHistory.push({ role: "assistant", content: replyText });
     } else {
         const errorMsg = replyText || "⚠️ AI Connection Error: Unable to reach Gemini or Llama API. Please ensure your Vercel Environment Variables (GROQ_API_KEY and GEMINI_API_KEY) are active and redeployed, or check your internet connection.";
-        box.innerHTML += `<div class="chat-msg bot-msg"><strong>🤖 NeuroSense GPT:</strong> ${errorMsg}</div>`;
+        box.innerHTML += `<div class="chat-msg bot-msg"><strong>AI Therapist:</strong> ${errorMsg}</div>`;
     }
     
     box.scrollTop = box.scrollHeight;
@@ -1730,7 +1730,7 @@ function resetCBTChat() {
         box.innerHTML = `
             <div id="cbtChatSpacer" style="flex: 1 1 auto; min-height: 0;"></div>
             <div class="chat-msg bot-msg" style="max-width: 82%; font-size: 0.96rem; padding: 14px 18px; border-radius: 16px; line-height: 1.6;">
-                <strong>🤖 NeuroSense GPT:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
+                <strong>AI Therapist:</strong> Hello! I am your AI Cognitive Companion. I specialize in mental health guidance, Cognitive Behavioral Therapy (CBT) grounding, and stress severity analysis. How can I support you right now?
             </div>
         `;
     }
@@ -2398,7 +2398,7 @@ function togglePrivacyGuard(btnEl) {
     if (!btnEl) return;
     const isCurrentlyOff = btnEl.textContent.includes('OFF');
     if (isCurrentlyOff) {
-        btnEl.innerHTML = '⚡ Local Mode: ON 🔒';
+        btnEl.innerHTML = 'Local Mode: ON 🔒';
         btnEl.style.background = 'rgba(16, 185, 129, 0.3)';
         btnEl.style.borderColor = '#10B981';
         btnEl.style.color = '#fff';
@@ -2408,7 +2408,7 @@ function togglePrivacyGuard(btnEl) {
         document.body.appendChild(alertDiv);
         setTimeout(() => { if (alertDiv.parentNode) alertDiv.parentNode.removeChild(alertDiv); }, 4000);
     } else {
-        btnEl.innerHTML = '⚡ Local Mode: OFF';
+        btnEl.innerHTML = 'Local Mode: OFF';
         btnEl.style.background = 'rgba(56, 189, 248, 0.2)';
         btnEl.style.borderColor = '#38BDF8';
         btnEl.style.color = '#38BDF8';
