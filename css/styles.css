@@ -2784,3 +2784,7 @@ body.on-dashboard:not([data-theme="light"]) .top-center-title {
 .results-section, #textAnalysisResults, #audioAnalysisResults {
     flex-direction: column !important;
 }
+/* Restored Purple Light Theme */
+body[data-theme="light"] {
+    background: linear-gradient(135deg, #f3e8ff 0%, #ede9fe 50%, #e0e7ff 100%) !important;
+}

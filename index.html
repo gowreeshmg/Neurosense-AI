@@ -23,10 +23,777 @@
 <!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="css/styles.css?v=20261001_v2" rel="stylesheet"/>
+<link href="css/styles.css?v=20261001_v4" rel="stylesheet"/>
+<style id="ios-dashboard-glass">
+        @font-face {
+            font-family: 'Helvetica Now Text';
+            src: url('https://db.onlinewebfonts.com/c/08e020de1811ec4489f82d1247a42c09?family=Helvetica+Now+Text');
+            font-weight: normal;
+            font-style: normal;
+        }
+        * {
+            font-family: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.01);
+            background-blend-mode: luminosity;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: none;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.4px;
+            background: linear-gradient(180deg,
+              rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+              rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+              rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        @keyframes dropdown-in {
+            from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-dropdown { animation: dropdown-in 0.2s ease-out; }
+        .duration-400 { transition-duration: 400ms; }
+        /* EXACT iPHONE iOS GLASSMORPHISM & TRANSPARENT BODY OVERRIDE FOR DASHBOARD */
+        #lumoraHomeScreen.hidden-screen,
+        #lumoraHomeScreen[style*="display: none"],
+        #lumoraHomeScreen[style*="display:none"] {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        body.on-dashboard {
+            background-color: transparent !important;
+            background: transparent !important;
+        }
+        #dashboardBgVideoContainer {
+            display: none !important;
+        }
+        #appDashboardScreen {
+            position: relative !important;
+            z-index: 2 !important;
+            background: transparent !important;
+        }
+        /* =========================================================================
+           1. UNIVERSAL iPHONE iOS LIQUID GLASS ISLAND HIERARCHY (OUTER vs INNER)
+           ========================================================================= */
+        #globalAmbientBgContainer {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            background: #000000;
+            pointer-events: none;
+        }
 
+        /* Fix Brain Emoji Visibility on Windows/Edge/Chrome */
+        body.on-dashboard .brand-icon,
+        .brand-icon {
+            background: none !important;
+            -webkit-background-clip: border-box !important;
+            -webkit-text-fill-color: initial !important;
+            color: initial !important;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)) !important;
+            font-size: 2.2rem !important;
+            display: inline-block !important;
+            opacity: 1 !important;
+        }
 
+        /* Round Top Right Theme Toggle Glassmorphism Island */
+        #btnThemeToggle.round-glass-btn {
+            position: fixed !important;
+            z-index: 1000 !important;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.45) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.45rem !important;
+            cursor: pointer !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            padding: 0 !important;
+        }
+        #btnThemeToggle.round-glass-btn:hover {
+            transform: scale(1.08) !important;
+            background: rgba(255, 255, 255, 0.22) !important;
+        }
 
+        /* =========================================================================
+           2. DARK MODE SLEEK GLASS ISLANDS & ELEGANT HIGH-CONTRAST TYPOGRAPHY
+           ========================================================================= */
+        /* Outer Islands & Glass Pills: Completely Transparent so the blurred background shines through cleanly */
+        body.on-dashboard .glass-card,
+        body.on-dashboard .glass-card-accent,
+        body.on-dashboard .cbt-card,
+        body.on-dashboard .cbt-chat-container,
+        body.on-dashboard .hero-banner,
+        body.on-dashboard .counselor-banner,
+        body.on-dashboard .counselor-card,
+        body.on-dashboard .footer,
+        body.on-dashboard .navbar-top-controls .glass-pill,
+        body.on-dashboard .navbar-top-controls button.glass-pill,
+        body.on-dashboard .navbar-top-controls div.glass-pill,
+        body.on-dashboard .role-selector.glass-pill,
+        body.on-dashboard .role-selector,
+        body.on-dashboard .glass-pill,
+        body.on-dashboard #btnThemeToggle.round-glass-btn {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+        }
+
+        /* Inner Islands ("islands inside other islands should be darker so that its easily visible and would also looks good") */
+        body.on-dashboard:not([data-theme="light"]) .audio-visualizer-container,
+        body.on-dashboard:not([data-theme="light"]) textarea,
+        body.on-dashboard:not([data-theme="light"]) .lime-token-box,
+        body.on-dashboard:not([data-theme="light"]) .result-box,
+        body.on-dashboard:not([data-theme="light"]) .xai-text-box,
+        body.on-dashboard:not([data-theme="light"]) .xai-audio-box,
+        body.on-dashboard:not([data-theme="light"]) .gauge-box,
+        body.on-dashboard:not([data-theme="light"]) .toggle-group,
+        body.on-dashboard:not([data-theme="light"]) .prompt-chip,
+        body.on-dashboard:not([data-theme="light"]) .btn-secondary,
+        body.on-dashboard:not([data-theme="light"]) .role-btn:not(.active),
+        body.on-dashboard:not([data-theme="light"]) .cbt-exercise-box,
+        body.on-dashboard:not([data-theme="light"]) .cbt-coping-box,
+        body.on-dashboard:not([data-theme="light"]) .bot-msg,
+        body.on-dashboard:not([data-theme="light"]) .chat-input-bar input,
+        body.on-dashboard:not([data-theme="light"]) .stat-pill,
+        body.on-dashboard:not([data-theme="light"]) .progress-bar {
+            background: rgba(6, 11, 22, 0.55) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+        }
+
+        /* Top Center Title in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) .top-center-title {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+        }
+
+        /* Crisp, elegant Headings in Dark Mode (pure white with clean drop shadow, no blurry neon) */
+        body.on-dashboard:not([data-theme="light"]) h2,
+        body.on-dashboard:not([data-theme="light"]) h3,
+        body.on-dashboard:not([data-theme="light"]) .cbt-exercise-box h4,
+        body.on-dashboard:not([data-theme="light"]) .cbt-coping-box h4,
+        body.on-dashboard:not([data-theme="light"]) .cbt-chat-container h4 {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85) !important;
+            font-weight: 400 !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        /* Refined, readable Body Text & Labels in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen h1:not(.top-center-title),
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen p,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen span:not(.badge):not(.status-indicator):not(.cbt-tag),
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen label,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen div,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen table,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen th,
+        body.on-dashboard:not([data-theme="light"]) #appDashboardScreen td,
+        body.on-dashboard:not([data-theme="light"]) .cbt-steps,
+        body.on-dashboard:not([data-theme="light"]) .chat-msg {
+            color: #E2E8F0 !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) .card-desc,
+        body.on-dashboard:not([data-theme="light"]) .hero-content p,
+        body.on-dashboard:not([data-theme="light"]) .toggle-label {
+            color: #CBD5E1 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) textarea#journalTextarea::placeholder {
+            color: rgba(203, 213, 225, 0.65) !important;
+            text-shadow: none !important;
+        }
+
+        /* Sleek Sapphire / Azure Ocean Gradient Buttons in Dark Mode */
+        body.on-dashboard:not([data-theme="light"]) .role-btn.active,
+        body.on-dashboard:not([data-theme="light"]) .btn-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+            font-weight: 400 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.on-dashboard:not([data-theme="light"]) #btnRoleCounselor.active {
+            background: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%) !important;
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.4) !important;
+        }
+
+        /* Sleek Glass Badges & Status Indicators in Dark Mode (no jarring neon) */
+        body.on-dashboard:not([data-theme="light"]) .badge,
+        body.on-dashboard:not([data-theme="light"]) .status-indicator,
+        body.on-dashboard:not([data-theme="light"]) .cbt-tag {
+            background: rgba(56, 189, 248, 0.18) !important;
+            border: 1px solid rgba(56, 189, 248, 0.45) !important;
+            color: #38BDF8 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+            text-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+        body.on-dashboard:not([data-theme="light"]) .status-indicator.ready {
+            background: rgba(52, 211, 153, 0.18) !important;
+            border: 1px solid rgba(52, 211, 153, 0.45) !important;
+            color: #34D399 !important;
+        }
+
+        /* Progress Bar Fills */
+        body.on-dashboard:not([data-theme="light"]) .fill-text {
+            background: linear-gradient(90deg, #9333EA 0%, #EC4899 100%) !important;
+            box-shadow: 0 0 12px rgba(236, 72, 153, 0.5) !important;
+            color: #ffffff !important;
+            font-weight: 400 !important;
+        }
+        body.on-dashboard:not([data-theme="light"]) .fill-audio {
+            background: linear-gradient(90deg, #0284C7 0%, #38BDF8 100%) !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5) !important;
+            color: #ffffff !important;
+            font-weight: 400 !important;
+        }
+
+        /* =========================================================================
+           3. LIGHT MODE REFINED GLASS ISLANDS & CRISP TYPOGRAPHY
+           ========================================================================= */
+        /* Outer Islands: Sleek translucent white glass */
+        body.on-dashboard[data-theme="light"] .glass-card,
+        body.on-dashboard[data-theme="light"] .glass-card-accent,
+        body.on-dashboard[data-theme="light"] .hero-banner,
+        body.on-dashboard[data-theme="light"] .counselor-banner,
+        body.on-dashboard[data-theme="light"] .counselor-card,
+        body.on-dashboard[data-theme="light"] .footer,
+        body.on-dashboard[data-theme="light"] .navbar-top-controls .glass-pill {
+            background: rgba(255, 255, 255, 0.62) !important;
+            backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Inner Islands: Clean recessed inner frosted glass */
+        body.on-dashboard[data-theme="light"] .audio-visualizer-container,
+        body.on-dashboard[data-theme="light"] textarea,
+        body.on-dashboard[data-theme="light"] .lime-token-box,
+        body.on-dashboard[data-theme="light"] .result-box,
+        body.on-dashboard[data-theme="light"] .xai-text-box,
+        body.on-dashboard[data-theme="light"] .xai-audio-box,
+        body.on-dashboard[data-theme="light"] .gauge-box,
+        body.on-dashboard[data-theme="light"] .role-selector,
+        body.on-dashboard[data-theme="light"] .toggle-group,
+        body.on-dashboard[data-theme="light"] .prompt-chip,
+        body.on-dashboard[data-theme="light"] .btn-secondary,
+        body.on-dashboard[data-theme="light"] .role-btn:not(.active),
+        body.on-dashboard[data-theme="light"] .cbt-exercise-box,
+        body.on-dashboard[data-theme="light"] .cbt-coping-box,
+        body.on-dashboard[data-theme="light"] .cbt-chat-container,
+        body.on-dashboard[data-theme="light"] .bot-msg,
+        body.on-dashboard[data-theme="light"] .chat-input-bar input,
+        body.on-dashboard[data-theme="light"] .stat-pill,
+        body.on-dashboard[data-theme="light"] .progress-bar {
+            background: rgba(241, 245, 249, 0.78) !important;
+            backdrop-filter: blur(16px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Top Center Title in Light Mode */
+        body.on-dashboard[data-theme="light"] .top-center-title {
+            color: #0F172A !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.95) !important;
+        }
+
+        /* Premium Charcoal Slate Headings in Light Mode */
+        body.on-dashboard[data-theme="light"] h2,
+        body.on-dashboard[data-theme="light"] h3,
+        body.on-dashboard[data-theme="light"] .cbt-exercise-box h4,
+        body.on-dashboard[data-theme="light"] .cbt-coping-box h4,
+        body.on-dashboard[data-theme="light"] .cbt-chat-container h4 {
+            color: #0F172A !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+            font-weight: 400 !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        body.on-dashboard[data-theme="light"] #appDashboardScreen h1:not(.top-center-title),
+        body.on-dashboard[data-theme="light"] #appDashboardScreen p,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen span:not(.badge):not(.status-indicator):not(.cbt-tag),
+        body.on-dashboard[data-theme="light"] #appDashboardScreen label,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen div,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen table,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen th,
+        body.on-dashboard[data-theme="light"] #appDashboardScreen td,
+        body.on-dashboard[data-theme="light"] .cbt-steps,
+        body.on-dashboard[data-theme="light"] .chat-msg {
+            color: #334155 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .card-desc,
+        body.on-dashboard[data-theme="light"] .hero-content p,
+        body.on-dashboard[data-theme="light"] .toggle-label {
+            color: #475569 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] textarea#journalTextarea::placeholder {
+            color: rgba(71, 85, 105, 0.65) !important;
+            text-shadow: none !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .role-btn.active,
+        body.on-dashboard[data-theme="light"] .btn-primary {
+            background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+            font-weight: 400 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.on-dashboard[data-theme="light"] #btnRoleCounselor.active {
+            background: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%) !important;
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.35) !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .badge,
+        body.on-dashboard[data-theme="light"] .status-indicator,
+        body.on-dashboard[data-theme="light"] .cbt-tag {
+            background: rgba(2, 132, 199, 0.12) !important;
+            border: 1px solid rgba(2, 132, 199, 0.35) !important;
+            color: #0284C7 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+            text-shadow: none !important;
+            font-weight: 400 !important;
+        }
+
+        body.on-dashboard[data-theme="light"] .status-indicator.ready {
+            background: rgba(5, 150, 105, 0.12) !important;
+            border: 1px solid rgba(5, 150, 105, 0.35) !important;
+            color: #059669 !important;
+        }
+
+        @media (max-width: 900px) {
+            /* Removed overriding top positions to allow global sync */
+            #btnThemeToggle.round-glass-btn {
+                position: fixed !important;
+
+            /* 2. Return to Home on Top Left Corner */
+            header.navbar-top-controls > div:first-child {
+                position: fixed !important;
+                top: 10px !important;
+                left: 12px !important;
+                width: auto !important;
+                min-width: 0 !important;
+                flex: none !important;
+                z-index: 1000 !important;
+                display: block !important;
+            }
+
+            header.navbar-top-controls > div:first-child button.glass-pill {
+                padding: 6px 14px !important;
+                font-size: 0.82rem !important;
+                height: 34px !important;
+                border-radius: 999px !important;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.28) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 6px !important;
+                margin: 0 !important;
+            }
+
+            /* 3. Top Center Header: Big NeuroSense AI Text & Title */
+            header.navbar-top-controls {
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                margin: 0 auto 18px auto !important;
+                padding: 46px 0 0 0 !important; /* Space so it sits centered right below top corner buttons */
+                width: 100% !important;
+            }
+
+            header.navbar-top-controls > div:nth-child(2) {
+                width: 100% !important;
+                min-width: 100% !important;
+                flex: none !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            header.navbar-top-controls .nav-brand.top-center-brand {
+                width: 100% !important;
+                padding: 0 !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 4px !important;
+                text-align: center !important;
+            }
+
+            header.navbar-top-controls .nav-brand .brand-icon {
+                font-size: 2.6rem !important;
+                display: inline-block !important;
+            }
+
+            header.navbar-top-controls .nav-brand .brand-text h1,
+            header.navbar-top-controls .nav-brand .brand-text h1.top-center-title {
+                font-size: 2.2rem !important;
+                font-weight: 800 !important;
+                letter-spacing: -0.6px !important;
+                line-height: 1.1 !important;
+                margin: 0 !important;
+                display: block !important;
+                text-align: center !important;
+                color: #182C41 !important;
+                text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;
+            }
+
+            body.on-dashboard:not([data-theme="light"]) header.navbar-top-controls .nav-brand .brand-text h1,
+            body.on-dashboard:not([data-theme="light"]) header.navbar-top-controls .nav-brand .brand-text h1.top-center-title {
+                color: #FFFFFF !important;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.4) !important;
+            }
+
+            header.navbar-top-controls .nav-brand .badge-ai {
+                margin: 6px auto 0 auto !important;
+                font-size: 0.72rem !important;
+                padding: 4px 12px !important;
+                display: inline-block !important;
+            }
+
+            /* 4. Role selector on mobile right underneath center title */
+            header.navbar-top-controls > div:nth-child(3) {
+                width: 100% !important;
+                min-width: 100% !important;
+                flex: none !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            header.navbar-top-controls .role-selector {
+                width: 90% !important;
+                max-width: 360px !important;
+                display: flex !important;
+                justify-content: space-between !important;
+            }
+
+            header.navbar-top-controls .role-selector .role-btn {
+                flex: 1 !important;
+                padding: 8px 10px !important;
+                font-size: 0.85rem !important;
+                justify-content: center !important;
+            }
+
+            /* 5. Voice and Narrative cards NEXT TO EACH OTHER on phone screens (2 columns) */
+            .input-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 10px !important;
+            }
+
+            .input-grid .glass-card {
+                padding: 12px 10px !important;
+                border-radius: 18px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+
+            .input-grid .card-header h3 {
+                font-size: 0.92rem !important;
+                line-height: 1.25 !important;
+            }
+
+            .input-grid .card-desc {
+                font-size: 0.74rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 8px !important;
+            }
+
+            .audio-actions .btn,
+            .quick-access .prompt-chip,
+            .journal-footer .btn {
+                font-size: 0.74rem !important;
+                padding: 6px 4px !important;
+                min-height: 38px !important;
+                line-height: 1.2 !important;
+                white-space: normal !important;
+                text-align: center !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin-bottom: 6px !important;
+                border-radius: 10px !important;
+            }
+
+            .audio-visualizer-container {
+                min-height: 80px !important;
+                padding: 6px !important;
+                margin-bottom: 8px !important;
+            }
+
+            textarea#journalTextarea {
+                height: 115px !important;
+                font-size: 0.8rem !important;
+                padding: 8px !important;
+                margin-bottom: 8px !important;
+            }
+
+            #appDashboardScreen {
+                padding: 10px 12px !important;
+            }
+        }
+
+        /* Remove island / glass box around center NeuroSense AI brand on dashboard */
+        header.navbar-top-controls .nav-brand.top-center-brand {
+            background: transparent !important;
+            border: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+
+        header.navbar-top-controls .nav-brand.top-center-brand .top-center-title {
+            color: #182C41 !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85) !important;
+            font-weight: 800 !important;
+        }
+
+        /* Enforce complete invisibility of result island until a test completes */
+        #analysisResultsSection.hidden,
+        .results-section.hidden,
+        .hidden {
+            display: none !important;
+        }
+
+        /* Fallback canvas color */
+        html { background: #ffffff; }
+        html[data-theme="dark"] { background: #050505; }
+        body[data-theme="dark"] { background: #050505; }
+    </style>
+<style>
+        @media (min-width: 769px) {
+            .mobile-dock-only { display: none !important; }
+        }
+    </style>
+<style id="magic-dock-styles">
+        .magic-dock {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 10px 16px !important;
+            border-radius: 9999px !important;
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+            position: fixed !important;
+            bottom: 30px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 1000 !important;
+            margin: 0 !important;
+            width: auto !important;
+        }
+
+        body[data-theme="dark"] .magic-dock {
+            background: rgba(30, 30, 30, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .dock-separator {
+            width: 1px !important;
+            height: 32px !important;
+            background: rgba(0, 0, 0, 0.1) !important;
+            margin: 0 12px !important;
+        }
+
+        body[data-theme="dark"] .dock-separator {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .dock-icon {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 50% !important;
+            color: #4B5563 !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease, color 0.2s ease, margin 0.1s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+            transform-origin: bottom center !important;
+            margin: 0 8px !important; /* Base distance between icons */
+        }
+
+        body[data-theme="dark"] .dock-icon {
+            color: #9CA3AF !important;
+        }
+
+        .dock-icon:hover {
+            background: rgba(0, 0, 0, 0.04) !important;
+            color: #111827 !important;
+        }
+
+        body[data-theme="dark"] .dock-icon:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #F3F4F6 !important;
+        }
+
+        /* Clean Tooltips without black background */
+        .dock-icon::before {
+            content: attr(data-label) !important;
+            position: absolute !important;
+            top: -24px !important;
+            left: 50% !important;
+            transform: translateX(-50%) scale(0.9) !important;
+            background: transparent !important;
+            color: #000000 !important; /* Light theme black text */
+            padding: 0 !important;
+            border-radius: 0 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            font-family: inherit !important;
+            white-space: nowrap !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+            z-index: 2000 !important;
+            box-shadow: none !important;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 2px rgba(255,255,255,1) !important;
+        }
+
+        body[data-theme="dark"] .dock-icon::before {
+            color: #ffffff !important; /* Dark theme white text */
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1) !important;
+        }
+
+        @media (hover: hover) {
+            .dock-icon:hover::before {
+                opacity: 1 !important;
+                transform: translateX(-50%) scale(1) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .magic-dock {
+                width: 95vw !important;
+                max-width: none !important;
+                gap: 8px !important;
+                padding: 10px !important;
+                justify-content: flex-start !important;
+                overflow-x: auto !important;
+                border-radius: 24px !important;
+            }
+            .dock-icon {
+                width: 48px !important;
+                height: 48px !important;
+                margin: 0 !important;
+                flex: 0 0 48px !important;
+                border-radius: 50% !important; /* Make it perfectly round */
+            }
+            .dock-icon:hover::before {
+                opacity: 0 !important;
+            }
+            .dock-icon.clicked-tooltip::before {
+                opacity: 1 !important;
+                transform: translateX(-50%) scale(1) !important;
+                top: auto !important;
+                bottom: 100% !important;
+                margin-bottom: 12px !important;
+            }
+            .quick-prompts {
+                display: none !important;
+            }
+            #btnUploadAudio {
+                display: inline-flex !important;
+            }
+            #viewCBT {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            #cbtCompanionIsland {
+                height: calc(100svh - 110px) !important; /* Bring send button up */
+                min-height: 0 !important;
+                border-radius: 0 !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+            .cbt-header {
+                display: none !important;
+            }
+        }
+        
+        body.has-custom-bg #appDashboardScreen::before {
+            display: none !important;
+        }
+        
+        #viewCheckin {
+            padding-bottom: 120px !important;
+        }
+
+        /* Force exactly equal heights for the input islands */
+        #textInputIsland, #voiceInputIsland {
+            min-height: 480px; height: 100%;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+        }
+
+        /* Prevent Voice Check-in buttons from overlapping */
+        .audio-actions {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            margin-top: 24px !important; /* give enough space from the visualizer */
+        }
+        
+        #btnRunAudioAnalysis {
+            width: 100% !important;
+            margin-top: auto !important;
+        }
+    </style>
 
 </head>
 <body data-theme="dark">
@@ -291,7 +1058,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button class="prompt-chip" onclick="loadPrompt('calm')">🌿 Peaceful &amp; Calm</button>
 </div>
 <div class="analyze-footer" style="display: flex; justify-content: center; width: 100%;">
-<button class="btn btn-gradient btn-large run-combined-btn" id="btnRunTextAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; font-weight: bold !important; border: none !important; width: 100% !important; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('text')">
+<button class="btn btn-gradient btn-large" id="btnRunTextAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; border: none !important; width: 100% !important; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('text')">
 <span></span> Run Narrative Text Check-in Analysis
                                     </button>
 </div>
@@ -321,7 +1088,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <button class="btn btn-secondary" id="btnUploadAudio" onclick="document.getElementById('audioFileInput').click()">
 <span></span> Upload Audio File
                                     </button>
-<button class="btn btn-gradient btn-large run-combined-btn" id="btnRunAudioAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; font-weight: bold !important; border: none !important; margin-top: 6px; width: 100% !important; margin: 6px auto 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
+<button class="btn btn-gradient btn-large" id="btnRunAudioAnalysis" style="background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important; color: white !important; border: none !important; margin-top: 6px; width: 100% !important; margin: 6px auto 0 auto; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 700;" onclick="runSingleModalityAnalysis('audio')" style="margin-top: 6px; width: 100%; font-weight: 700;">
 <span></span> Run Voice Check-in Analysis
                                     </button>
 </div>
@@ -988,8 +1755,60 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Scripts -->
 <script src="/js/charts.js?v=20260807_fix10"></script>
 <script src="/js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="/js/main.js?v=20261001_v2"></script>
-
+<script src="/js/main.js?v=20261001_v4"></script>
+<style>
+/* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
+.dock-icon {
+    position: relative !important;
+}
+.dock-tooltip {
+    display: none !important;
+    position: absolute !important;
+    bottom: calc(100% + 14px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: transparent !important;
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+}
+body[data-theme="dark"] .dock-tooltip {
+    color: white !important;
+}
+body[data-theme="light"] .dock-tooltip {
+    color: black !important;
+}
+.dock-icon.clicked-tooltip .dock-tooltip {
+    display: block !important;
+}
+body[data-theme="dark"] #bottomGlassDock {
+    background: rgba(25, 25, 35, 0.85) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+}
+body[data-theme="light"] #bottomGlassDock {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+}
+@media (max-width: 900px) {
+    header.navbar-top-controls > div.top-center-wrapper {
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        margin-top: 40px !important;
+    }
+    .sidebar-dock.magic-dock {
+        overflow: visible !important;
+    }
+}
+</style>
 <script>
     // OVERRIDE JS FOR ASSESSMENT ISLANDS
     const originalRunSingleModalityAnalysis = window.runSingleModalityAnalysis;
