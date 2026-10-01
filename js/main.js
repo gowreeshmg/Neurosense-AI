@@ -1602,7 +1602,7 @@ function filterTriageTable() {
 }
 
 /**
- * Handles sending chat messages to the CBT Assistant
+ * Handles sending chat messages to the AI Therapist
  */
 async function sendCBTChat() {
     const wrapper = document.getElementById('v0InputWrapper');
