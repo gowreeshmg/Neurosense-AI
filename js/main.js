@@ -482,26 +482,44 @@ function switchDashboardView(viewName) {
         if (btn) btn.classList.remove('active');
     });
     
-    // Set active and show view
-    if (views[viewName]) views[viewName].classList.add('active');
-    
-    if (btns[viewName]) {
-        btns[viewName].classList.add('active');
-        
-        // Bulletproof Global Tooltip System
-        let globalTooltip = document.getElementById('globalDockTooltip');
-        if (!globalTooltip) {
-            globalTooltip = document.createElement('div');
-            globalTooltip.id = 'globalDockTooltip';
-            globalTooltip.style.cssText = 'position: fixed; display: none; background: transparent; font-size: 0.85rem; font-weight: 700; white-space: nowrap; z-index: 2147483647; pointer-events: none; transform: translateX(-50%); text-align: center;';
-            document.body.appendChild(globalTooltip);
-        }
-        
-        const label = btns[viewName].getAttribute('data-label');
+    // Show the selected view (single activation - no duplicates)
+    const activeView = views[viewName];
+    if (activeView) {
+        activeView.classList.add('active');
+        activeView.style.setProperty('display', 'block', 'important');
+        activeView.style.setProperty('visibility', 'visible', 'important');
+        activeView.style.setProperty('opacity', '1', 'important');
+    }
+
+    // Activate the selected dock button
+    const activeBtn = btns[viewName];
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+
+    // Single global tooltip - clears previous before showing new
+    let globalTooltip = document.getElementById('globalDockTooltip');
+    if (!globalTooltip) {
+        globalTooltip = document.createElement('div');
+        globalTooltip.id = 'globalDockTooltip';
+        globalTooltip.style.cssText = 'position: fixed; display: none; background: transparent; font-size: 0.85rem; font-weight: 700; white-space: nowrap; z-index: 2147483647; pointer-events: none; transform: translateX(-50%); text-align: center; transition: opacity 0.2s ease;';
+        document.body.appendChild(globalTooltip);
+    }
+
+    // Always clear any existing tooltip timer first
+    if (window._globalTooltipTimer) {
+        clearTimeout(window._globalTooltipTimer);
+        window._globalTooltipTimer = null;
+    }
+    // Hide immediately before showing new one
+    globalTooltip.style.setProperty('display', 'none', 'important');
+
+    if (activeBtn) {
+        const label = activeBtn.getAttribute('data-label');
         if (label) {
-            const rect = btns[viewName].getBoundingClientRect();
+            const rect = activeBtn.getBoundingClientRect();
             globalTooltip.innerHTML = label;
-            
+
             if (document.body.getAttribute('data-theme') === 'light') {
                 globalTooltip.style.color = '#1e293b';
                 globalTooltip.style.textShadow = '0px 2px 10px rgba(255,255,255,0.9)';
@@ -509,33 +527,20 @@ function switchDashboardView(viewName) {
                 globalTooltip.style.color = '#ffffff';
                 globalTooltip.style.textShadow = '0px 2px 10px rgba(0,0,0,0.9)';
             }
-            
+
             globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
             globalTooltip.style.top = (rect.top - 25) + 'px';
             globalTooltip.style.setProperty('display', 'block', 'important');
-            
-            if (window._globalTooltipTimer) clearTimeout(window._globalTooltipTimer);
+
             window._globalTooltipTimer = setTimeout(() => {
                 globalTooltip.style.setProperty('display', 'none', 'important');
             }, 1800);
         }
-    }// Show selected - CSS .active class handles display:block
-    const activeView = views[viewName];
-    if (activeView) {
-        activeView.classList.add('active');
-        activeView.style.setProperty('display', 'block', 'important');
-        activeView.style.setProperty('visibility', 'visible', 'important');
-        activeView.style.setProperty('opacity', '1', 'important');
-        
-        // Scroll to top
-        const contentArea = document.querySelector('#studentPortal') || document.body;
-        if (contentArea) contentArea.scrollTop = 0;
     }
-    
-    const activeBtn = btns[viewName];
-    if (activeBtn) {
-        activeBtn.classList.add('active');
-    }
+
+    // Scroll to top
+    const contentArea = document.querySelector('#studentPortal') || document.body;
+    if (contentArea) contentArea.scrollTop = 0;
 
     // Auto-render questionnaire when Pressure & Survey view opens
     if (viewName === 'pressure' && typeof switchQuestionnaire === 'function') {
