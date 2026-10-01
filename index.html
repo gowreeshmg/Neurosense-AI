@@ -6,12 +6,12 @@
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>NeuroSense AI — Dual-Modality Mental Health Detection &amp; Explainable CBT System</title>
 <!-- PWA & Mobile Home Screen App Icons -->
-<link href="/manifest.json" rel="manifest"/>
-<link href="/img/neurosense-logo.svg" rel="icon" type="image/svg+xml"/>
-<link href="/favicon.png" rel="icon" type="image/png"/>
-<link href="/apple-touch-icon.png" rel="apple-touch-icon"/>
-<link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon-precomposed"/>
-<link href="/img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="./manifest.json" rel="manifest"/>
+<link href="./img/neurosense-logo.svg" rel="icon" type="image/svg+xml"/>
+<link href="./favicon.png" rel="icon" type="image/png"/>
+<link href="./apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="./apple-touch-icon-precomposed.png" rel="apple-touch-icon-precomposed"/>
+<link href="./img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="NeuroSense AI" name="apple-mobile-web-app-title"/>
@@ -23,7 +23,7 @@
 <!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="css/styles.css?v=20261001_v6" rel="stylesheet"/>
+<link href="css/styles.css?v=20261001_v7" rel="stylesheet"/>
 <style id="ios-dashboard-glass">
         @font-face {
             font-family: 'Helvetica Now Text';
@@ -865,7 +865,7 @@
 </button>
 
 <!-- Fixed Header Controls (Right) -->
-<button class="round-glass-btn liquid-glass" id="btnThemeToggle" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" style="display: inline-flex !important; position: fixed; top: 55px !important; right: 18px !important; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Click: Switch Theme | Double-Click: Blur &amp; Atmosphere Controls">
+<button class="round-glass-btn liquid-glass" id="btnThemeToggle" onclick="handleThemeBtnClick(event)" ondblclick="handleThemeBtnDoubleClick(event)" style="display: none !important; position: fixed; top: 55px !important; right: 18px !important; z-index: 1000; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)) !important; backdrop-filter: blur(24px) saturate(190%) !important; -webkit-backdrop-filter: blur(24px) saturate(190%) !important; border: 1px solid rgba(255, 255, 255, 0.45) !important; border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.55), 0 10px 25px rgba(0, 0, 0, 0.45) !important; align-items: center; justify-content: center; font-size: 1.28rem !important; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0;" title="Click: Switch Theme | Double-Click: Blur &amp; Atmosphere Controls">
 <span id="themeIcon" style="display: inline-flex; align-items: center; justify-content: center;">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" style="filter: drop-shadow(0 2px 6px rgba(0, 242, 254, 0.45)); color: #00F2FE;" viewbox="0 0 24 24" width="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
 </span>
@@ -1553,9 +1553,9 @@
 <p><strong>NeuroSense AI</strong> — Final Year B.Tech Research Project | Built with FastAPI, scikit-learn Rank-Based Ensemble, LIME, SHAP, and OpenAI Whisper.</p>
 </footer>
 <!-- Scripts -->
-<script src="/js/charts.js?v=20260807_fix10"></script>
-<script src="/js/audio_recorder.js?v=20260807_fix10"></script>
-<script src="/js/main.js?v=20261001_v6"></script>
+<script src="./js/charts.js?v=20260807_fix10"></script>
+<script src="./js/audio_recorder.js?v=20260807_fix10"></script>
+<script src="./js/main.js?v=20261001_v7"></script>
 <style>
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
 .dock-icon {
@@ -1707,5 +1707,50 @@ body[data-theme="light"] #bottomGlassDock {
         });
     });
     </script>
+
+<script>
+// NeuroSense: Core Navigation Fix (Inline to guarantee execution)
+window.switchScreen = function(name) {
+    var home = document.getElementById('lumoraHomeScreen');
+    var dash = document.getElementById('appDashboardScreen');
+    var themeBtn = document.getElementById('btnThemeToggle');
+    var returnBtn = document.getElementById('btnReturnHomeFixed');
+    var topBar = document.querySelector('header.navbar-top-controls');
+    var dock = document.getElementById('bottomGlassDock');
+    var ambientBg = document.getElementById('globalAmbientBgContainer');
+
+    if (name === 'dashboard') {
+        if (home) home.style.setProperty('display','none','important');
+        if (dash) dash.style.removeProperty('display');
+        if (themeBtn) themeBtn.style.setProperty('display','inline-flex','important');
+        if (returnBtn) returnBtn.style.setProperty('display','inline-flex','important');
+        if (topBar) topBar.style.setProperty('display','flex','important');
+        if (dock) dock.style.setProperty('display','inline-flex','important');
+        if (ambientBg) ambientBg.style.setProperty('display','none','important');
+        document.body.classList.add('on-dashboard');
+        
+        if (typeof switchDashboardView === 'function') {
+            switchDashboardView('checkin');
+        }
+        if (typeof applyBackgroundState === 'function') {
+            applyBackgroundState('dashboard');
+        }
+    } else {
+        if (dash) dash.style.setProperty('display','none','important');
+        if (home) home.style.removeProperty('display');
+        if (themeBtn) themeBtn.style.setProperty('display','none','important');
+        if (returnBtn) returnBtn.style.setProperty('display','none','important');
+        if (topBar) topBar.style.setProperty('display','none','important');
+        if (dock) dock.style.setProperty('display','none','important');
+        if (ambientBg) ambientBg.style.removeProperty('display');
+        document.body.classList.remove('on-dashboard');
+        
+        if (typeof applyBackgroundState === 'function') {
+            applyBackgroundState('home');
+        }
+    }
+};
+</script>
 </body>
+
 </html>

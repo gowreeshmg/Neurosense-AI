@@ -2567,3 +2567,6 @@ window.switchScreen = function(name) {
         }
     }
 };
+
+// Ensure switchBgVideo is globally accessible
+window.switchBgVideo = switchBgVideo;
