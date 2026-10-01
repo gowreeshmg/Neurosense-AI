@@ -497,44 +497,48 @@ function switchDashboardView(viewName) {
         activeBtn.classList.add('active');
     }
 
-    // Single global tooltip - clears previous before showing new
+    // Single global tooltip - only ONE tooltip shown at any time
     let globalTooltip = document.getElementById('globalDockTooltip');
     if (!globalTooltip) {
         globalTooltip = document.createElement('div');
         globalTooltip.id = 'globalDockTooltip';
-        globalTooltip.style.cssText = 'position: fixed; display: none; background: transparent; font-size: 0.85rem; font-weight: 700; white-space: nowrap; z-index: 2147483647; pointer-events: none; transform: translateX(-50%); text-align: center; transition: opacity 0.2s ease;';
+        globalTooltip.style.cssText = 'position: fixed; display: none; background: transparent; font-size: 0.85rem; font-weight: 700; white-space: nowrap; z-index: 2147483647; pointer-events: none; transform: translateX(-50%); text-align: center;';
         document.body.appendChild(globalTooltip);
     }
 
-    // Always clear any existing tooltip timer first
+    // ALWAYS clear previous tooltip first
     if (window._globalTooltipTimer) {
         clearTimeout(window._globalTooltipTimer);
         window._globalTooltipTimer = null;
     }
-    // Hide immediately before showing new one
     globalTooltip.style.setProperty('display', 'none', 'important');
+    globalTooltip.textContent = '';
 
     if (activeBtn) {
         const label = activeBtn.getAttribute('data-label');
         if (label) {
-            const rect = activeBtn.getBoundingClientRect();
-            globalTooltip.innerHTML = label;
+            // Small delay to ensure old tooltip is fully cleared before showing new
+            requestAnimationFrame(() => {
+                const rect = activeBtn.getBoundingClientRect();
+                globalTooltip.textContent = label;
 
-            if (document.body.getAttribute('data-theme') === 'light') {
-                globalTooltip.style.color = '#1e293b';
-                globalTooltip.style.textShadow = '0px 2px 10px rgba(255,255,255,0.9)';
-            } else {
-                globalTooltip.style.color = '#ffffff';
-                globalTooltip.style.textShadow = '0px 2px 10px rgba(0,0,0,0.9)';
-            }
+                if (document.body.getAttribute('data-theme') === 'light') {
+                    globalTooltip.style.color = '#1e293b';
+                    globalTooltip.style.textShadow = '0px 2px 10px rgba(255,255,255,0.9)';
+                } else {
+                    globalTooltip.style.color = '#ffffff';
+                    globalTooltip.style.textShadow = '0px 2px 10px rgba(0,0,0,0.9)';
+                }
 
-            globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
-            globalTooltip.style.top = (rect.top - 25) + 'px';
-            globalTooltip.style.setProperty('display', 'block', 'important');
+                globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
+                globalTooltip.style.top = (rect.top - 25) + 'px';
+                globalTooltip.style.setProperty('display', 'block', 'important');
 
-            window._globalTooltipTimer = setTimeout(() => {
-                globalTooltip.style.setProperty('display', 'none', 'important');
-            }, 1800);
+                window._globalTooltipTimer = setTimeout(() => {
+                    globalTooltip.style.setProperty('display', 'none', 'important');
+                    globalTooltip.textContent = '';
+                }, 1800);
+            });
         }
     }
 
