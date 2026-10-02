@@ -1334,16 +1334,7 @@ function displayAnalysisResults(res, forcedModality) {
             }
         }
         
-        if (mathDiv) {
-            if (modality === 'both') {
-                mathDiv.style.display = 'block';
-                const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
-                const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `${tScore}% (Text) + ${aScore}% (Voice) = ${scoreNum}% (Combined Result)`;;
-            } else {
-                mathDiv.style.display = 'none';
-            }
-        }
+
         
     } else if (modality === 'text') {
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
@@ -1436,15 +1427,7 @@ function displayAnalysisResults(res, forcedModality) {
                 mathDiv.style.display = 'block';
                 const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
                 const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `
-                    <div style="display:flex; justify-content: space-around; width: 100%; margin-bottom: 8px;">
-                        <div>Narrative Text: <span style="color: #38BDF8;">${tScore}%</span></div>
-                        <div>Speech Acoustic: <span style="color: #38BDF8;">${aScore}%</span></div>
-                    </div>
-                    <div style="font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
-                        Combined Result = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span>
-                    </div>
-                `;;
+                mathDiv.innerHTML = `${tScore}% (Text) + ${aScore}% (Voice) = ${scoreNum}% (Combined Result)`;
             } else {
                 mathDiv.style.display = 'none';
             }
