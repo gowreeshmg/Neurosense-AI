@@ -1037,7 +1037,8 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 if (transcribeRes.ok) {
                     const tData = await transcribeRes.json();
                     grooqTranscription = tData.text || tData.transcription || null;
-                    if (grooqTranscription && !text) {
+                    // No longer overwriting the narrative text area with transcription
+                    if (grooqTranscription && !text && mode !== 'audio') {
                         document.getElementById('journalTextarea').value = grooqTranscription;
                         updateWordCount();
                     }
@@ -1291,6 +1292,37 @@ function displayAnalysisResults(res, forcedModality) {
         if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
         if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
         
+        let mathDiv = document.getElementById('fusionMathExplanation');
+        if (!mathDiv && audioRes && modality === 'both') {
+            mathDiv = document.createElement('div');
+            mathDiv.id = 'fusionMathExplanation';
+            mathDiv.style.marginTop = '16px';
+            mathDiv.style.padding = '12px';
+            mathDiv.style.borderRadius = '12px';
+            mathDiv.style.background = 'rgba(56, 189, 248, 0.1)';
+            mathDiv.style.border = '1px solid rgba(56, 189, 248, 0.3)';
+            mathDiv.style.fontSize = '0.85rem';
+            mathDiv.style.color = 'var(--text-color)';
+            mathDiv.style.textAlign = 'center';
+            mathDiv.style.fontWeight = '600';
+            
+            const primaryOrigin = audioRes.querySelector('.primary-origin');
+            if (primaryOrigin && primaryOrigin.parentNode) {
+                primaryOrigin.parentNode.appendChild(mathDiv);
+            }
+        }
+        
+        if (mathDiv) {
+            if (modality === 'both') {
+                mathDiv.style.display = 'block';
+                const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
+                const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
+                mathDiv.innerHTML = `Narrative Text (${tScore}%) + Speech Acoustic (${aScore}%) gives Combined Result = <span style="color: #38BDF8;">${scoreNum}%</span>`;
+            } else {
+                mathDiv.style.display = 'none';
+            }
+        }
+        
     } else if (modality === 'text') {
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
@@ -1356,6 +1388,37 @@ function displayAnalysisResults(res, forcedModality) {
         if (aNum) aNum.innerText = `${scoreNum}%`;
         if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
         if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
+        
+        let mathDiv = document.getElementById('fusionMathExplanation');
+        if (!mathDiv && audioRes && modality === 'both') {
+            mathDiv = document.createElement('div');
+            mathDiv.id = 'fusionMathExplanation';
+            mathDiv.style.marginTop = '16px';
+            mathDiv.style.padding = '12px';
+            mathDiv.style.borderRadius = '12px';
+            mathDiv.style.background = 'rgba(56, 189, 248, 0.1)';
+            mathDiv.style.border = '1px solid rgba(56, 189, 248, 0.3)';
+            mathDiv.style.fontSize = '0.85rem';
+            mathDiv.style.color = 'var(--text-color)';
+            mathDiv.style.textAlign = 'center';
+            mathDiv.style.fontWeight = '600';
+            
+            const primaryOrigin = audioRes.querySelector('.primary-origin');
+            if (primaryOrigin && primaryOrigin.parentNode) {
+                primaryOrigin.parentNode.appendChild(mathDiv);
+            }
+        }
+        
+        if (mathDiv) {
+            if (modality === 'both') {
+                mathDiv.style.display = 'block';
+                const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
+                const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
+                mathDiv.innerHTML = `Narrative Text (${tScore}%) + Speech Acoustic (${aScore}%) gives Combined Result = <span style="color: #38BDF8;">${scoreNum}%</span>`;
+            } else {
+                mathDiv.style.display = 'none';
+            }
+        }
     }
     
     // 1. Update Modality Badge & Stress Score
