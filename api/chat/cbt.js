@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
         const systemPrompt = is_reframe 
             ? `You are a clinical psychologist AI. Reframe the following sentence into a healthier, grounded cognitive perspective, resolving any cognitive distortions. Return ONLY the reframed sentence. No conversational intro, no quotes, just the sentence.`
-            : `You are AI Therapist, an empathetic and highly skilled clinical psychologist and Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to actively help them manage their stress. First, provide a warm, empathetic acknowledgment of their feelings. Then, ALWAYS provide specific, actionable ways to help solve or manage their stress (such as a CBT reframing exercise, a grounding technique, or a practical coping strategy). Keep your responses structured, highly actionable, and extremely helpful. Do not give medical advice. Provide a moderately detailed response (3 to 5 sentences).`;
+            : `You are AI Therapist, an empathetic and highly skilled clinical psychologist and Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to deeply understand their problems before offering solutions. First, provide a warm, empathetic acknowledgment of their feelings. Instead of directly giving solutions right away, ask thoughtful, exploratory questions to understand the root causes of their feelings (e.g., 'What do you think is causing you to feel this way?', or 'Can you tell me more about what happened?'). Guide them through a conversational therapeutic process, working together to find ways to solve their problems. Keep your responses conversational, empathetic, and moderately concise (2 to 4 sentences). Do not give medical advice.`;
 
         let reply = "I'm sorry, I couldn't generate a response at this time.";
         let geminiSuccess = false;
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
                 );
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
                 const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
                     method: 'POST',
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
                 groqHistory.push({ role: "user", content: message });
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
                 const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "llama3-70b-8192", // Use active Llama 3.3 model
+                        model: "llama-3.1-70b-versatile", // Use active Llama 3.3 model
                         messages: groqHistory,
                         temperature: 0.7,
                         max_tokens: 250
@@ -106,12 +106,7 @@ export default async function handler(req, res) {
                 if (!groqRes.ok) {
                     const errData = await groqRes.text();
                     console.error("Groq API Error:", errData);
-                    let parsedErr = "Failed to fetch response from Groq Llama AI.";
-                    try {
-                        const j = JSON.parse(errData);
-                        if (j.error && j.error.message) parsedErr = "Groq: " + j.error.message;
-                    } catch(e) { parsedErr = "Groq: " + errData; }
-                    return res.status(502).json({ error: parsedErr });
+                    return res.status(200).json({ reply: "I'm sorry, the therapist is currently busy or the AI engine is overloaded. Please try again in a moment." });
                 }
 
                 const data = await groqRes.json();
@@ -120,10 +115,10 @@ export default async function handler(req, res) {
                 }
             } catch (err) {
                 console.error("Groq request failed:", err);
-                return res.status(502).json({ error: "Failed to fetch response from Groq Llama AI." });
+                return res.status(200).json({ reply: "I'm sorry, the therapist is currently busy or the AI engine is overloaded. Please try again in a moment." });
             }
         } else if (!geminiSuccess && !groqKey) {
-            return res.status(502).json({ error: "Gemini API failed/timed out and no Groq API key is available for fallback." });
+            return res.status(200).json({ reply: "I'm sorry, the therapist is currently busy or the AI engine is overloaded. Please try again in a moment." });
         }
 
         return res.status(200).json({ reply });
