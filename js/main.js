@@ -1207,6 +1207,42 @@ async function runSingleModalityAnalysis(modality) {
         audioBlob = tempAudio; 
         simulatedAudioVector = tempSim;
     } else if (modality === 'audio') {
+        if (!hasAudio) {
+            alert("You haven't uploaded an audio file or recorded voice.");
+            return;
+        }
+        const tempText = textElem.value;
+        textElem.value = ""; 
+        
+        await runMultimodalAnalysis('audio');
+        
+        if (tempText && !textElem.value.trim()) {
+            textElem.value = tempText;
+        }
+    }
+}
+
+function displayAnalysisResults(res, forcedModality) {
+    if (!res) return;
+    
+    const textElem = document.getElementById('journalTextarea');
+    const text = textElem ? textElem.value.trim() : "";
+    
+    let modality;
+    if (forcedModality) {
+        modality = forcedModality;
+    } else {
+        modality = (audioBlob || simulatedAudioVector) && text ? 'combined' :
+                   (audioBlob || simulatedAudioVector) ? 'audio' : 'text';
+    }
+    
+    const limeBox = document.getElementById('limeBoxWrapper');
+    const shapBox = document.getElementById('shapBoxWrapper');
+    const textRes = document.getElementById('textAssessmentIsland');
+    const audioRes = document.getElementById('voiceAssessmentIsland');
+    const combinedRes = document.getElementById('combinedAssessmentIsland');
+    
+    if (modality === 'audio') {
             if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
             if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
             
