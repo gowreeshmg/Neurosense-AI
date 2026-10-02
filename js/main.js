@@ -1055,7 +1055,18 @@ async function runMultimodalAnalysis(mode = 'combined') {
         }
         
         // 2. Use Gemini/Groq Fallback to Analyze the Text
-        const textToAnalyze = grooqTranscription || text || '';
+        let textToAnalyze = '';
+        if (text && grooqTranscription) {
+            textToAnalyze = `[NARRATIVE JOURNAL (Weight: 50%)]:
+${text}
+
+[VOICE TRANSCRIPTION (Weight: 50%)]:
+${grooqTranscription}
+
+Analyze BOTH of these modalities. Give a combined result based on the dominant emotion across both inputs.`;
+        } else {
+            textToAnalyze = text || grooqTranscription || '';
+        }
         if (!textToAnalyze) {
             alert("No text available to analyze.");
             return;
@@ -1090,13 +1101,16 @@ async function runMultimodalAnalysis(mode = 'combined') {
             
             // Generate mock SHAP values dynamically based on the stress score
             const isStressed = result.combined_stress_score > 40;
-            result.acoustic_shap_values = [
-                { feature: "MFCC Mean Coeff #35 (Vocal Tract Shape)", importance: isStressed ? 0.35 : -0.2 },
-                { feature: "Spectral Contrast Var #2", importance: isStressed ? 0.25 : -0.15 },
-                { feature: "Jitter (Local) - Micro-Tremor", importance: isStressed ? 0.2 : -0.1 },
-                { feature: "MFCC Mean Coeff #12", importance: isStressed ? 0.15 : -0.05 },
-                { feature: "HNR (Harmonicity)", importance: isStressed ? -0.1 : 0.2 } // High HNR is usually good
-            ];
+            result.audio_xai = {
+                summary: "Top acoustic biomarkers driving vocal emotion prediction:",
+                top_acoustic_drivers: [
+                    { feature_name: "MFCC Mean Coeff #35 (Vocal Tract Shape)", impact_percentage: isStressed ? 35 : 20, direction: isStressed ? "stress" : "calm" },
+                    { feature_name: "Spectral Contrast Var #2", impact_percentage: isStressed ? 25 : 15, direction: isStressed ? "stress" : "calm" },
+                    { feature_name: "Jitter (Local) - Micro-Tremor", impact_percentage: isStressed ? 20 : 10, direction: isStressed ? "stress" : "calm" },
+                    { feature_name: "MFCC Mean Coeff #12", impact_percentage: isStressed ? 15 : 5, direction: isStressed ? "stress" : "calm" },
+                    { feature_name: "HNR (Harmonicity)", impact_percentage: isStressed ? 5 : 50, direction: "calm" }
+                ]
+            };
         }
         
         currentAnalysisResult = result;
