@@ -479,7 +479,7 @@ function switchDashboardView(viewName) {
     // Hide all - ONLY use class toggling, no inline styles
     Object.values(views).forEach(v => {
         if (v) {
-            v.style.removeProperty('display');
+            v.style.setProperty('display', 'none', 'important');
             v.classList.remove('active');
         }
     });
@@ -1539,9 +1539,12 @@ function displayAnalysisResults(res, forcedModality) {
                 let reframeBtnText = res.reframed_sentence_text || "Reframe Sentence";
                 distortionsHTML += `
                     <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 8px;">
-                        <div>
-                            <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ ${distortionName}</div>
-                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Narrative Text</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ ${distortionName}</div>
+                                <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Narrative Text</div>
+                            </div>
+                            <button onclick="document.getElementById('journalTextarea').value = \`${reframeBtnText.replace(/`/g, '')}\`; if (typeof updateWordCount === 'function') updateWordCount(); alert('Narrative Text reframed successfully!');" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Text</button>
                         </div>
                         <div style="padding: 10px; border-radius: 8px; background: rgba(99, 102, 241, 0.1); border-left: 3px solid #6366F1; font-size: 0.9rem; color: var(--text-color);">
                             <strong>✨ Reframed Perspective:</strong> ${reframeBtnText}
@@ -1555,9 +1558,12 @@ function displayAnalysisResults(res, forcedModality) {
             if (modality === 'both' && res.reframed_sentence_audio) {
                 distortionsHTML += `
                     <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <div>
-                            <div style="font-weight: 700; color: #38BDF8; font-size: 0.94rem;">🎙️ Acoustic / Speech Distress</div>
-                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Voice Transcription</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <div style="font-weight: 700; color: #38BDF8; font-size: 0.94rem;">🎙️ Acoustic / Speech Distress</div>
+                                <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Voice Transcription</div>
+                            </div>
+                            <button onclick="document.getElementById('journalTextarea').value = \`${res.reframed_sentence_audio.replace(/`/g, '')}\`; if (typeof updateWordCount === 'function') updateWordCount(); alert('Speech reframed text copied to your journal!');" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #38BDF8; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Speech</button>
                         </div>
                         <div style="padding: 10px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid #38BDF8; font-size: 0.9rem; color: var(--text-color);">
                             <strong>✨ Reframed Perspective:</strong> ${res.reframed_sentence_audio}
