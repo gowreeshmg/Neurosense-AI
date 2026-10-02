@@ -55,7 +55,7 @@ IMPORTANT RULES:
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`, {
+                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -102,7 +102,7 @@ IMPORTANT RULES:
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "qwen/qwen3.8-27b",
+                        model: "llama-3.1-8b-instant",
                         messages: groqHistory,
                         temperature: 0.8,
                         max_tokens: 500

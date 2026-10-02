@@ -49,7 +49,7 @@ Include 4-8 key words in text_highlights.`;
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`, {
+          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -96,7 +96,7 @@ Include 4-8 key words in text_highlights.`;
                   "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                  model: "qwen/qwen3.8-27b",
+                  model: "llama-3.1-8b-instant",
                   messages: [
                       { role: "system", content: systemPrompt },
                       { role: "user", content: "Text to analyze:\n\"" + text + "\"" }
