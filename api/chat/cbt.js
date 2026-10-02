@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         let reply = "I'm sorry, I couldn't generate a response at this time.";
         let geminiSuccess = false;
 
-        // Try Gemini First if key is available
+        // ===== TRY GEMINI FIRST =====
         if (geminiKey) {
             try {
                 let formattedHistory = [];
@@ -42,9 +42,10 @@ export default async function handler(req, res) {
                 );
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
-                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+                // Use gemini-2.0-flash (gemini-1.5-flash is RETIRED as of 2026)
+                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -63,14 +64,15 @@ export default async function handler(req, res) {
                         geminiSuccess = true;
                     }
                 } else {
-                    console.warn("Gemini API Error or Rate Limit, falling back to Groq...");
+                    const errText = await geminiRes.text();
+                    console.warn("Gemini API Error:", geminiRes.status, errText);
                 }
             } catch (err) {
                 console.warn("Gemini request failed (timeout/network), falling back to Groq...", err.message);
             }
         }
 
-        // Fallback to Groq if Gemini failed or isn't available
+        // ===== FALLBACK TO GROQ =====
         if (!geminiSuccess && groqKey) {
             try {
                 let groqHistory = [
@@ -84,7 +86,7 @@ export default async function handler(req, res) {
                 groqHistory.push({ role: "user", content: message });
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout for Groq
 
                 const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -93,7 +95,7 @@ export default async function handler(req, res) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "llama-3.1-8b-instant", // Use active Llama 3.3 model
+                        model: "llama-3.3-70b-versatile",
                         messages: groqHistory,
                         temperature: 0.7,
                         max_tokens: 250

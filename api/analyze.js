@@ -32,13 +32,14 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
   let resultJson = null;
   let geminiSuccess = false;
 
-  // Try Gemini First
+  // ===== TRY GEMINI FIRST =====
   if (geminiKey) {
       try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+          const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
-          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+          // Use gemini-2.0-flash (gemini-1.5-flash is RETIRED as of 2026)
+          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -66,18 +67,19 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
                   }
               }
           } else {
-              console.warn("Gemini API Error, falling back to Groq...");
+              const errText = await geminiRes.text();
+              console.warn("Gemini API Error:", geminiRes.status, errText);
           }
       } catch (err) {
           console.warn("Gemini request failed (timeout/network), falling back to Groq...");
       }
   }
 
-  // Fallback to Groq
+  // ===== FALLBACK TO GROQ =====
   if (!geminiSuccess && groqKey) {
       try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
           const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
               method: "POST",
@@ -86,7 +88,7 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
                   "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                  model: "llama-3.1-8b-instant",
+                  model: "llama-3.3-70b-versatile",
                   messages: [
                       { role: "system", content: systemPrompt },
                       { role: "user", content: "Text to analyze: " + text }
@@ -109,7 +111,8 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
                   }
               }
           } else {
-              console.error("Groq API Error on fallback");
+              const errText = await groqRes.text();
+              console.error("Groq API Error on fallback:", errText);
           }
       } catch (err) {
           console.error("Groq request failed:", err);

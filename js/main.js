@@ -7,8 +7,6 @@ function blobToBase64(blob) {
     });
 }
 
-// --- HUGGINGFACE ZERO-GPU WAKE-UP PING ---
-fetch('https://webapp1-neurosense-ai.hf.space').catch(() => {});
 
 /* ==========================================================================
    NeuroSense AI — Main Application Controller (UI Engine & API Bridge)
@@ -1030,7 +1028,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
         if (audioBlob) {
             try {
                 const base64Audio = await blobToBase64(audioBlob);
-                const transcribeRes = await fetch('/api/transcribe.js', {
+                const transcribeRes = await fetch('/api/transcribe', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ audio: base64Audio, mimeType: audioBlob.type || 'audio/webm' })
@@ -1063,7 +1061,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
             return;
         }
 
-        const response = await fetch('/api/analyze.js', {
+        const response = await fetch('/api/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: textToAnalyze })
@@ -1497,7 +1495,7 @@ async function applyTextReframing(distortionType) {
     btn.disabled = true;
 
     try {
-        const response = await fetch('/api/chat/cbt.js', {
+        const response = await fetch('/api/chat/cbt', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1652,7 +1650,7 @@ async function sendCBTChat() {
     
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-            const res = await fetch('/api/chat/cbt.js', {
+            const res = await fetch('/api/chat/cbt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

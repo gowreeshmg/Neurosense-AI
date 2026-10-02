@@ -39,7 +39,6 @@ export default async function handler(req, res) {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${groqKey}`
-                // Do NOT set Content-Type — let fetch set it with the boundary for multipart
             },
             body: formData,
             signal: controller.signal
