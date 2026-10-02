@@ -1057,13 +1057,13 @@ async function runMultimodalAnalysis(mode = 'combined') {
         // 2. Use Gemini/Groq Fallback to Analyze the Text
         let textToAnalyze = '';
         if (text && grooqTranscription) {
-            textToAnalyze = `[NARRATIVE JOURNAL (Weight: 50%)]:
+            textToAnalyze = `[NARRATIVE TEXT]:
 ${text}
 
-[VOICE TRANSCRIPTION (Weight: 50%)]:
+[VOICE TRANSCRIPTION]:
 ${grooqTranscription}
 
-Analyze BOTH of these modalities. Give a combined result based on the dominant emotion across both inputs.`;
+Analyze both of these inputs independently. Evaluate their stress levels and return a single JSON object. CRITICAL INSTRUCTION: The final 'combined_stress_score' MUST be the absolute MAXIMUM (higher value) between the Narrative stress score and the Voice stress score. The 'predicted_category' MUST correspond to the modality that had the higher stress severity (e.g. if Voice is Depression 80% and Text is Anxiety 40%, the final category is Depression and score is 80). Extract word highlights for BOTH the narrative text and the voice transcription into 'text_highlights' to explain this final decision.`;
         } else {
             textToAnalyze = text || grooqTranscription || '';
         }
@@ -1322,7 +1322,9 @@ function displayAnalysisResults(res, forcedModality) {
     } else {
         // COMBINED FUSION
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
-        if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
+        if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
+        const dvlBox = document.getElementById('dualVocalLexicalBox');
+        if (dvlBox) dvlBox.style.setProperty('display', 'none', 'important');
         
         if (audioRes) {
             audioRes.querySelector('h2').innerText = "Multimodal Fusion Biomarker Breakdown";
@@ -1416,10 +1418,11 @@ function displayAnalysisResults(res, forcedModality) {
                 }
                 
                 let highlightedText = originalText;
-                
+                let highlightedAudio = res.audio_transcription_text || (window.audioBlob ? res.audio_analysis?.transcription || window.grooqTranscription : "");
+
                 // Sort by weight length descending so we match longer phrases first
                 const sortedHighlights = [...res.text_highlights].sort((a,b) => b.word.length - a.word.length);
-                
+
                 sortedHighlights.forEach(h => {
                     if (!h.word) return;
                     const weight = h.weight;
@@ -1428,15 +1431,31 @@ function displayAnalysisResults(res, forcedModality) {
                     if (weight > 0.5) { bgColor = 'rgba(244, 63, 94, 0.3)'; color = '#F43F5E'; }
                     else if (weight > 0.1) { bgColor = 'rgba(245, 158, 11, 0.3)'; color = '#F59E0B'; }
                     else if (weight < -0.1) { bgColor = 'rgba(16, 185, 129, 0.3)'; color = '#10B981'; }
-                    
+
                     // Escape regex special chars
                     const safeWord = h.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                     const regex = new RegExp(`\\b(${safeWord})\\b`, 'gi');
-                    
+
                     highlightedText = highlightedText.replace(regex, `<mark style="background:${bgColor}; color:${color}; padding: 0 4px; border-radius: 4px; font-weight: 600; font-family: inherit;">$1</mark>`);
+                    if (highlightedAudio) {
+                        highlightedAudio = highlightedAudio.replace(regex, `<mark style="background:${bgColor}; color:${color}; padding: 0 4px; border-radius: 4px; font-weight: 600; font-family: inherit;">$1</mark>`);
+                    }
                 });
-                
-                limeContainer.innerHTML = `<p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 0;">${highlightedText}</p>`;
+
+                if (modality === 'both' && highlightedAudio) {
+                    limeContainer.innerHTML = `
+                        <div style="margin-bottom: 14px;">
+                            <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Narrative Text:</strong>
+                            <p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 0 0;">${highlightedText}</p>
+                        </div>
+                        <div>
+                            <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Voice Transcription:</strong>
+                            <p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 0 0;">${highlightedAudio}</p>
+                        </div>
+                    `;
+                } else {
+                    limeContainer.innerHTML = `<p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 0;">${highlightedText}</p>`;
+                }
             } else {
                 limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
             }
