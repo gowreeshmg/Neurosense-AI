@@ -1380,19 +1380,33 @@ function displayAnalysisResults(res, forcedModality) {
         const limeContainer = document.getElementById('limeHighlightedText');
         if (limeContainer) {
             if (res.text_highlights && Array.isArray(res.text_highlights) && res.text_highlights.length > 0) {
-                let html = '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
-                res.text_highlights.forEach(h => {
+                let originalText = document.getElementById('journalTextarea').value || '';
+                if (!originalText && res.audio_analysis && res.audio_analysis.transcription) {
+                    originalText = res.audio_analysis.transcription;
+                }
+                
+                let highlightedText = originalText;
+                
+                // Sort by weight length descending so we match longer phrases first
+                const sortedHighlights = [...res.text_highlights].sort((a,b) => b.word.length - a.word.length);
+                
+                sortedHighlights.forEach(h => {
+                    if (!h.word) return;
                     const weight = h.weight;
                     let bgColor = 'rgba(255, 255, 255, 0.1)';
                     let color = 'var(--text-color)';
-                    if (weight > 0.5) { bgColor = 'rgba(244, 63, 94, 0.2)'; color = '#F43F5E'; }
-                    else if (weight > 0.1) { bgColor = 'rgba(245, 158, 11, 0.2)'; color = '#F59E0B'; }
-                    else if (weight < -0.1) { bgColor = 'rgba(16, 185, 129, 0.2)'; color = '#10B981'; }
+                    if (weight > 0.5) { bgColor = 'rgba(244, 63, 94, 0.3)'; color = '#F43F5E'; }
+                    else if (weight > 0.1) { bgColor = 'rgba(245, 158, 11, 0.3)'; color = '#F59E0B'; }
+                    else if (weight < -0.1) { bgColor = 'rgba(16, 185, 129, 0.3)'; color = '#10B981'; }
                     
-                    html += `<span style="padding:4px 10px; border-radius:8px; background:${bgColor}; color:${color}; font-weight:600; font-size:0.9rem;">${h.word} (${(weight).toFixed(2)})</span>`;
+                    // Escape regex special chars
+                    const safeWord = h.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const regex = new RegExp(`\\b(${safeWord})\\b`, 'gi');
+                    
+                    highlightedText = highlightedText.replace(regex, `<mark style="background:${bgColor}; color:${color}; padding: 0 4px; border-radius: 4px; font-weight: 600; font-family: inherit;">$1</mark>`);
                 });
-                html += '</div>';
-                limeContainer.innerHTML = html;
+                
+                limeContainer.innerHTML = `<p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 0;">${highlightedText}</p>`;
             } else {
                 limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
             }
