@@ -1494,7 +1494,8 @@ function displayAnalysisResults(res, forcedModality) {
                 }
                 
                 let highlightedText = originalText;
-                let highlightedAudio = res.audio_transcription_text || res.audio_analysis?.transcription || res.transcription || window.groqTranscription || text || "Audio transcription unavailable";
+                let _audioText = res.audio_transcription_text || res.audio_analysis?.transcription || res.transcription || window.groqTranscription || text;
+                let highlightedAudio = (_audioText && _audioText.trim()) ? _audioText : "Audio transcription unavailable";
 
                 // Sort by weight length descending so we match longer phrases first
                 const sortedHighlights = [...res.text_highlights].sort((a,b) => b.word.length - a.word.length);
@@ -1526,12 +1527,14 @@ function displayAnalysisResults(res, forcedModality) {
                         <div style="margin-bottom: 14px;">
                             <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Narrative Text:</strong>
                             <p id="limeTextParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedText}</p>
-                            <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeTxt}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; background: rgba(99,102,241,0.2); border: 1px solid #6366f1; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Text</button>
                         </div>
-                        <div>
+                        <div style="margin-bottom: 16px;">
                             <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Voice Transcription:</strong>
                             <p id="limeAudioParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedAudio}</p>
-                            <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${reframeAud}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; background: rgba(56,189,248,0.2); border: 1px solid #38bdf8; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Speech</button>
+                        </div>
+                        <div style="display: flex; gap: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 12px; justify-content: flex-start;">
+                            <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeTxt}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 6px 10px; border-radius: 6px; background: rgba(99,102,241,0.2); border: 1px solid #6366f1; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Text</button>
+                            <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${reframeAud}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 6px 10px; border-radius: 6px; background: rgba(56,189,248,0.2); border: 1px solid #38bdf8; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Speech</button>
                         </div>`;
                 } else {
                     limeContainer.innerHTML = `
