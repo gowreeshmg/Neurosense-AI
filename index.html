@@ -1563,6 +1563,23 @@ body[data-theme="light"] #bottomGlassDock {
 }
 </style>
 
+<script>
+    function toggleMobileHeroMenu() {
+        const menu = document.getElementById('heroMobileMenu');
+        const iconOpen = document.getElementById('heroMenuIconOpen');
+        const iconClose = document.getElementById('heroMenuIconClose');
+        if (!menu) return;
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            if (iconOpen) iconOpen.classList.add('hidden');
+            if (iconClose) iconClose.classList.remove('hidden');
+        } else {
+            menu.classList.add('hidden');
+            if (iconOpen) iconOpen.classList.remove('hidden');
+            if (iconClose) iconClose.classList.add('hidden');
+        }
+    }
+</script>
 </section>
 <script id="magic-dock-js">
 // Dock dragging disabled to permanently lock to the bottom.

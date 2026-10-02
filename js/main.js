@@ -1171,9 +1171,9 @@ Analyze BOTH of these modalities. Give a combined result based on the dominant e
             setTimeout(() => {
                 const combinedRes = document.getElementById('audioAnalysisResults');
                 const textRes = document.getElementById('textAnalysisResults');
-                if (modality === 'both' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                else if (modality === 'text' && textRes) textRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                else if (modality === 'audio' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (mode === 'both' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (mode === 'text' && textRes) textRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (mode === 'audio' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
         }
     }
@@ -1258,8 +1258,6 @@ function displayAnalysisResults(res, forcedModality) {
         }
     }
 
-    const limeBox = document.getElementById('limeBoxWrapper');
-    const shapBox = document.getElementById('shapBoxWrapper');
     const textRes = document.getElementById('textAnalysisResults');
     const audioRes = document.getElementById('audioAnalysisResults');
     
