@@ -1172,9 +1172,9 @@ Analyze both of these inputs independently. Evaluate their stress levels and ret
             setTimeout(() => {
                 const combinedRes = document.getElementById('audioAnalysisResults');
                 const textRes = document.getElementById('textAnalysisResults');
-                if (mode === 'both' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                else if (mode === 'text' && textRes) textRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                else if (mode === 'audio' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (mode === 'both' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                else if (mode === 'text' && textRes) textRes.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                else if (mode === 'audio' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 100);
         }
     }
@@ -1283,7 +1283,7 @@ function displayAnalysisResults(res, forcedModality) {
             audioRes.style.setProperty('display', 'flex', 'important');
         }
         if (textRes) textRes.style.setProperty('display', 'none', 'important');
-        if (audioRes) setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        if (audioRes) setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
         
         const aNum = document.getElementById('audioStressScoreNumber');
         const aTier = document.getElementById('audioRiskTierText');
@@ -1317,7 +1317,7 @@ function displayAnalysisResults(res, forcedModality) {
                 mathDiv.style.display = 'block';
                 const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
                 const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `Narrative Text (${tScore}%) + Speech Acoustic (${aScore}%) gives Combined Result = <span style="color: #38BDF8;">${scoreNum}%</span>`;
+                mathDiv.innerHTML = `${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${tScore}%</span> (Narrative Text) <br> + <br> ${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${aScore}%</span> (Speech Acoustic) <br> = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span> (Combined Result)`;
             } else {
                 mathDiv.style.display = 'none';
             }
@@ -1339,7 +1339,7 @@ function displayAnalysisResults(res, forcedModality) {
             textRes.style.setProperty('display', 'flex', 'important');
         }
         if (audioRes) audioRes.style.setProperty('display', 'none', 'important');
-        if (textRes) setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        if (textRes) setTimeout(() => textRes.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
         
         const tNum = document.getElementById('textStressScoreNumber');
         const tTier = document.getElementById('textRiskTierText');
@@ -1380,7 +1380,7 @@ function displayAnalysisResults(res, forcedModality) {
         if (textRes) {
             textRes.style.setProperty('display', 'none', 'important');
         }
-        if (audioRes) setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        if (audioRes) setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
         
         const aNum = document.getElementById('audioStressScoreNumber');
         const aTier = document.getElementById('audioRiskTierText');
@@ -1414,7 +1414,7 @@ function displayAnalysisResults(res, forcedModality) {
                 mathDiv.style.display = 'block';
                 const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
                 const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `Narrative Text (${tScore}%) + Speech Acoustic (${aScore}%) gives Combined Result = <span style="color: #38BDF8;">${scoreNum}%</span>`;
+                mathDiv.innerHTML = `${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${tScore}%</span> (Narrative Text) <br> + <br> ${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${aScore}%</span> (Speech Acoustic) <br> = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span> (Combined Result)`;
             } else {
                 mathDiv.style.display = 'none';
             }
@@ -1481,7 +1481,7 @@ function displayAnalysisResults(res, forcedModality) {
                 }
                 
                 let highlightedText = originalText;
-                let highlightedAudio = res.audio_transcription_text || (window.audioBlob ? res.audio_analysis?.transcription || window.grooqTranscription : "");
+                let highlightedAudio = res.audio_transcription_text || res.audio_analysis?.transcription || window.grooqTranscription || "";
 
                 // Sort by weight length descending so we match longer phrases first
                 const sortedHighlights = [...res.text_highlights].sort((a,b) => b.word.length - a.word.length);
@@ -1529,45 +1529,53 @@ function displayAnalysisResults(res, forcedModality) {
         const valElem = document.getElementById('valenceScoreText');
         const velElem = document.getElementById('velocityScoreText');
         if (distList && (modality === 'text' || modality === 'both')) {
-            const textVal = document.getElementById('journalTextarea')?.value || "";
             let distortionsHTML = "";
             let valence = -0.42;
-            
-            // Only show ONE distortion max, use var(--card-bg) and var(--text-color) for light theme support
-            if (textVal.toLowerCase().includes("overwhelmed") || textVal.toLowerCase().includes("awful") || textVal.toLowerCase().includes("terrible") || scoreNum > 60) {
-                distortionsHTML = `
-                    <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+            let distortionName = res.cognitive_distortion || "Cognitive Distortion";
+            let isHealthy = distortionName.toLowerCase() === "healthy" || distortionName.toLowerCase() === "none";
+            if (!isHealthy || scoreNum > 20) {
+                if (isHealthy) distortionName = "Emotional Overwhelm";
+                let reframeBtnText = res.reframed_sentence_text || "Reframe Sentence";
+                distortionsHTML += `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 8px;">
                         <div>
-                            <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ Catastrophizing</div>
-                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
+                            <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ ${distortionName}</div>
+                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Narrative Text</div>
                         </div>
-                        <button onclick="applyTextReframing('catastrophizing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                        <div style="padding: 10px; border-radius: 8px; background: rgba(99, 102, 241, 0.1); border-left: 3px solid #6366F1; font-size: 0.9rem; color: var(--text-color);">
+                            <strong>✨ Reframed Perspective:</strong> ${reframeBtnText}
+                        </div>
                     </div>`;
                 valence = -0.68;
                 if (velElem) velElem.innerText = "High Escalation ↑";
                 if (velElem) velElem.style.color = "#F43F5E";
             }
-            else if (textVal.toLowerCase().includes("always") || textVal.toLowerCase().includes("never") || textVal.toLowerCase().includes("completely") || textVal.toLowerCase().includes("impossible")) {
-                distortionsHTML = `
-                    <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            
+            if (modality === 'both' && res.reframed_sentence_audio) {
+                distortionsHTML += `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                         <div>
-                            <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ All-or-Nothing Thinking</div>
-                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Viewing situations in extreme black-and-white terms without acknowledging moderate progress.</div>
+                            <div style="font-weight: 700; color: #38BDF8; font-size: 0.94rem;">🎙️ Acoustic / Speech Distress</div>
+                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Voice Transcription</div>
                         </div>
-                        <button onclick="applyTextReframing('all_or_nothing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
+                        <div style="padding: 10px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid #38BDF8; font-size: 0.9rem; color: var(--text-color);">
+                            <strong>✨ Reframed Perspective:</strong> ${res.reframed_sentence_audio}
+                        </div>
                     </div>`;
-                valence = Math.min(valence, -0.75);
             }
+
             if (!distortionsHTML) {
                 distortionsHTML = `
-                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(52, 211, 153, 0.15); border: 1px solid #34D399; color: #fff;">
-                        <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">Healthy & Grounded Cognitive Framing</div>
-                        <div style="font-size: 0.84rem; color: rgba(255,255,255,0.8);">No severe cognitive distortions (catastrophizing or extreme all-or-nothing terms) detected in this entry!</div>
+                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10B981;">
+                        <div style="font-weight: 700; font-size: 0.94rem;">Healthy & Grounded Cognitive Framing</div>
+                        <div style="font-size: 0.84rem;">No severe cognitive distortions detected in this entry!</div>
                     </div>`;
-                valence = 0.55;
-                if (velElem) velElem.innerText = "Stable / Calm →";
-                if (velElem) velElem.style.color = "#34D399";
+                valence = 0.85;
+                if (velElem) velElem.innerText = "Stable & Grounded →";
+                if (velElem) velElem.style.color = "#10B981";
             }
+            
             distList.innerHTML = distortionsHTML;
             if (valElem) {
                 valElem.innerText = valence > 0 ? `+${valence}` : `${valence}`;
@@ -1661,11 +1669,11 @@ function displayAnalysisResults(res, forcedModality) {
             if (window.innerWidth < 1024) {
                 const targetRes = modality === 'audio' ? document.getElementById('audioAnalysisResults') : modality === 'text' ? document.getElementById('textAnalysisResults') : section;
                 if (targetRes) {
-                    targetRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    targetRes.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             } else {
                 const resultsSec = document.getElementById('analysisResultsSection');
-                if (resultsSec) resultsSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (resultsSec) resultsSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }, 120);
     }
@@ -2704,7 +2712,7 @@ function showAndScrollToResults() {
     
     // Auto-scroll to the results
     setTimeout(() => {
-        bottomRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        bottomRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 300);
 }
 

@@ -40,7 +40,7 @@ Return ONLY a valid JSON object with this exact structure:
   "text_highlights": [
     {"word": "<key word from text>", "weight": <float -1 to 1, positive=negative emotion, negative=positive>}
   ],
-  "cognitive_distortion": "<a short name of a cognitive distortion found in the text, e.g. Catastrophizing, All-or-Nothing Thinking, Overgeneralization. If none, output Healthy>",
+  "cognitive_distortion": "<a short name of a cognitive distortion found in the text (e.g. Catastrophizing, Emotional Reasoning, Overgeneralization). If the category is anything other than Normal, you MUST provide a distortion name. Do NOT output Healthy unless category is Normal>",
   "reframed_sentence_text": "<a single empathetic sentence reframing the negative NARRATIVE TEXT thoughts into a grounded perspective>",
   "reframed_sentence_audio": "<a single empathetic sentence reframing the negative VOICE TRANSCRIPTION thoughts into a grounded perspective (only if voice transcription provided)>"
 }
