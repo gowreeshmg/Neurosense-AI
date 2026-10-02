@@ -1236,6 +1236,32 @@ function displayAnalysisResults(res, forcedModality) {
                    (audioBlob || simulatedAudioVector) ? 'audio' : 'text';
     }
     
+    const rawScore = res.combined_stress_score !== undefined ? res.combined_stress_score : (res.stress_score || 0);
+    let scoreNum = Math.round(rawScore);
+    if (rawScore > 0 && rawScore <= 1.0) scoreNum = Math.round(rawScore * 100);
+
+    res.final_stress_category = res.predicted_category || res.final_stress_category || "Normal";
+    
+    // Assign generic tiers and colors based on score, but NEVER overwrite the category
+    if (!res.risk_tier) {
+        if (scoreNum < 20) {
+            res.risk_tier = "Normal";
+            res.color_code = res.color_code || "green";
+        } else if (scoreNum < 40) {
+            res.risk_tier = "Stress";
+            res.color_code = res.color_code || "blue";
+        } else if (scoreNum < 60) {
+            res.risk_tier = "Anxiety";
+            res.color_code = res.color_code || "orange";
+        } else if (scoreNum < 80) {
+            res.risk_tier = "Depression";
+            res.color_code = res.color_code || "orange";
+        } else {
+            res.risk_tier = "Emotional Distress";
+            res.color_code = res.color_code || "red";
+        }
+    }
+
     const limeBox = document.getElementById('limeBoxWrapper');
     const shapBox = document.getElementById('shapBoxWrapper');
     const textRes = document.getElementById('textAssessmentIsland');
