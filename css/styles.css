@@ -4574,3 +4574,12 @@ body.on-dashboard:not([data-theme="light"]) .top-center-title {
 .results-section, #textAnalysisResults, #audioAnalysisResults {
     flex-direction: column !important;
 }
+
+/* Run Combined button: black text in light, white text in dark */
+body[data-theme="light"] #btnRunCombined {
+    color: #000 !important;
+}
+body:not([data-theme="light"]) #btnRunCombined,
+body[data-theme="dark"] #btnRunCombined {
+    color: #fff !important;
+}
