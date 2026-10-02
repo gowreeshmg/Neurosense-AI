@@ -1234,7 +1234,7 @@ textarea:focus {
     transition: all 0.5s ease;
 }
 
-.gauge-number {
+.gauge-number { color: var(--text-color) !important; 
     font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 800;

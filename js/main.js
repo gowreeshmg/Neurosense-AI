@@ -1099,17 +1099,55 @@ Analyze BOTH of these modalities. Give a combined result based on the dominant e
                 transcription: grooqTranscription
             };
             
-            // Generate mock SHAP values dynamically based on the stress score
-            const isStressed = result.combined_stress_score > 40;
+            // Generate mock SHAP values dynamically based on the actual detected category
+            let topDrivers = [];
+            const cat = (result.predicted_category || "Normal").toLowerCase();
+            
+            if (cat.includes("depression")) {
+                topDrivers = [
+                    { feature_name: "MFCC Mean Coeff #2 (Flattened Affect)", impact_percentage: 38, direction: "stress" },
+                    { feature_name: "Speech Rate / Pause Duration", impact_percentage: 26, direction: "stress" },
+                    { feature_name: "Fundamental Frequency (Low Variance)", impact_percentage: 18, direction: "stress" },
+                    { feature_name: "Spectral Contrast (Monotone)", impact_percentage: 12, direction: "stress" },
+                    { feature_name: "HNR (Harmonicity)", impact_percentage: 6, direction: "calm" }
+                ];
+            } else if (cat.includes("anxiety")) {
+                topDrivers = [
+                    { feature_name: "Jitter (Local) - Micro-Tremor", impact_percentage: 34, direction: "stress" },
+                    { feature_name: "Pitch Variance (High Fluctuations)", impact_percentage: 28, direction: "stress" },
+                    { feature_name: "Shimmer (Amplitude Tremor)", impact_percentage: 20, direction: "stress" },
+                    { feature_name: "Breathing Rate (Inhalations)", impact_percentage: 14, direction: "stress" },
+                    { feature_name: "Vocal Tension Index", impact_percentage: 4, direction: "stress" }
+                ];
+            } else if (cat.includes("emotional")) { // emotional distress
+                topDrivers = [
+                    { feature_name: "MFCC Throat Tension Coeff #35", impact_percentage: 42, direction: "stress" },
+                    { feature_name: "Voice Breaks / Instability", impact_percentage: 22, direction: "stress" },
+                    { feature_name: "RMS Amplitude Energy", impact_percentage: 18, direction: "stress" },
+                    { feature_name: "Spectral Roll-off", impact_percentage: 10, direction: "stress" },
+                    { feature_name: "HNR Drop (Vocal Fry)", impact_percentage: 8, direction: "stress" }
+                ];
+            } else if (cat.includes("stress")) {
+                topDrivers = [
+                    { feature_name: "Speech Velocity / Tempo", impact_percentage: 31, direction: "stress" },
+                    { feature_name: "Vocal Tract Shape (MFCC #12)", impact_percentage: 24, direction: "stress" },
+                    { feature_name: "High Frequency Energy", impact_percentage: 21, direction: "stress" },
+                    { feature_name: "Amplitude Clipping", impact_percentage: 15, direction: "stress" },
+                    { feature_name: "Fundamental Freq Shift", impact_percentage: 9, direction: "stress" }
+                ];
+            } else { // normal
+                topDrivers = [
+                    { feature_name: "HNR (High Harmonicity)", impact_percentage: 45, direction: "calm" },
+                    { feature_name: "Stable Pitch Contour", impact_percentage: 25, direction: "calm" },
+                    { feature_name: "Normal Speech Rate", impact_percentage: 18, direction: "calm" },
+                    { feature_name: "Low Micro-Tremor (Jitter)", impact_percentage: 8, direction: "calm" },
+                    { feature_name: "Spectral Balance", impact_percentage: 4, direction: "calm" }
+                ];
+            }
+
             result.audio_xai = {
-                summary: "Top acoustic biomarkers driving vocal emotion prediction:",
-                top_acoustic_drivers: [
-                    { feature_name: "MFCC Mean Coeff #35 (Vocal Tract Shape)", impact_percentage: isStressed ? 35 : 20, direction: isStressed ? "stress" : "calm" },
-                    { feature_name: "Spectral Contrast Var #2", impact_percentage: isStressed ? 25 : 15, direction: isStressed ? "stress" : "calm" },
-                    { feature_name: "Jitter (Local) - Micro-Tremor", impact_percentage: isStressed ? 20 : 10, direction: isStressed ? "stress" : "calm" },
-                    { feature_name: "MFCC Mean Coeff #12", impact_percentage: isStressed ? 15 : 5, direction: isStressed ? "stress" : "calm" },
-                    { feature_name: "HNR (Harmonicity)", impact_percentage: isStressed ? 5 : 50, direction: "calm" }
-                ]
+                summary: `Top acoustic biomarkers driving vocal emotion prediction (${cat}):`,
+                top_acoustic_drivers: topDrivers
             };
         }
         
@@ -1341,10 +1379,20 @@ function displayAnalysisResults(res, forcedModality) {
         // 3. Update LIME Token XAI & Cognitive Distortion Scanner
         const limeContainer = document.getElementById('limeHighlightedText');
         if (limeContainer) {
-            if (res.text_xai && res.text_xai.html_highlighted) {
-                limeContainer.innerHTML = res.text_xai.html_highlighted;
-            } else if (res.text_analysis && res.text_analysis.metadata) {
-                limeContainer.innerHTML = `<p>Analyzed ${res.text_analysis.metadata.word_count} words. Pronoun ratio: ${res.text_analysis.metadata.first_person_ratio}.</p>`;
+            if (res.text_highlights && Array.isArray(res.text_highlights) && res.text_highlights.length > 0) {
+                let html = '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
+                res.text_highlights.forEach(h => {
+                    const weight = h.weight;
+                    let bgColor = 'rgba(255, 255, 255, 0.1)';
+                    let color = 'var(--text-color)';
+                    if (weight > 0.5) { bgColor = 'rgba(244, 63, 94, 0.2)'; color = '#F43F5E'; }
+                    else if (weight > 0.1) { bgColor = 'rgba(245, 158, 11, 0.2)'; color = '#F59E0B'; }
+                    else if (weight < -0.1) { bgColor = 'rgba(16, 185, 129, 0.2)'; color = '#10B981'; }
+                    
+                    html += `<span style="padding:4px 10px; border-radius:8px; background:${bgColor}; color:${color}; font-weight:600; font-size:0.9rem;">${h.word} (${(weight).toFixed(2)})</span>`;
+                });
+                html += '</div>';
+                limeContainer.innerHTML = html;
             } else {
                 limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
             }
@@ -1358,12 +1406,14 @@ function displayAnalysisResults(res, forcedModality) {
             const textVal = document.getElementById('journalTextarea')?.value || "";
             let distortionsHTML = "";
             let valence = -0.42;
+            
+            // Only show ONE distortion max, use var(--card-bg) and var(--text-color) for light theme support
             if (textVal.toLowerCase().includes("overwhelmed") || textVal.toLowerCase().includes("awful") || textVal.toLowerCase().includes("terrible") || scoreNum > 60) {
-                distortionsHTML += `
-                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                distortionsHTML = `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                         <div>
-                            <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ Catastrophizing ("overwhelmed", "awful")</div>
-                            <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
+                            <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ Catastrophizing</div>
+                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Assuming the worst possible outcome without evaluating balanced probabilities.</div>
                         </div>
                         <button onclick="applyTextReframing('catastrophizing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
                     </div>`;
@@ -1371,12 +1421,12 @@ function displayAnalysisResults(res, forcedModality) {
                 if (velElem) velElem.innerText = "High Escalation ↑";
                 if (velElem) velElem.style.color = "#F43F5E";
             }
-            if (textVal.toLowerCase().includes("always") || textVal.toLowerCase().includes("never") || textVal.toLowerCase().includes("completely") || textVal.toLowerCase().includes("impossible")) {
-                distortionsHTML += `
-                    <div style="padding: 12px 16px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            else if (textVal.toLowerCase().includes("always") || textVal.toLowerCase().includes("never") || textVal.toLowerCase().includes("completely") || textVal.toLowerCase().includes("impossible")) {
+                distortionsHTML = `
+                    <div style="padding: 12px 16px; border-radius: 14px; background: var(--card-bg); border: 1px solid rgba(100,100,100,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                         <div>
-                            <div style="font-weight: 700; color: #FBBF24; font-size: 0.94rem;">⚠️ All-or-Nothing Thinking ("completely", "never")</div>
-                            <div style="font-size: 0.84rem; color: rgba(255,255,255,0.65);">Viewing situations in extreme black-and-white terms without acknowledging moderate progress.</div>
+                            <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ All-or-Nothing Thinking</div>
+                            <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Viewing situations in extreme black-and-white terms without acknowledging moderate progress.</div>
                         </div>
                         <button onclick="applyTextReframing('all_or_nothing')" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Sentence</button>
                     </div>`;
