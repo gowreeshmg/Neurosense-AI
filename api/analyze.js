@@ -42,6 +42,8 @@ Return ONLY a valid JSON object with this exact structure:
 Include 4-8 key words in text_highlights.`;
 
   let resultJson = null;
+  let geminiErrString = "Key not provided";
+  let groqErrString = "Key not provided";
 
   // ===== TRY GEMINI FIRST =====
   if (geminiKey) {
@@ -71,15 +73,15 @@ Include 4-8 key words in text_highlights.`;
                       textResponse = textResponse.replace(/^```json/g, '').replace(/^```/g, '').replace(/```$/g, '').trim();
                       resultJson = JSON.parse(textResponse);
                   } catch(e) {
-                      console.warn("Failed to parse Gemini JSON:", e);
+                      console.warn("Failed to parse Gemini JSON:", e); geminiErrString = "JSON Parse Error: " + e.message;
                   }
               }
           } else {
-              const errText = await geminiRes.text();
+              const errText = await geminiRes.text(); geminiErrString = errText;
               console.warn("Gemini API Error:", geminiRes.status, errText);
           }
       } catch (err) {
-          console.warn("Gemini failed, falling back to Groq:", err.message);
+          geminiErrString = err.message; console.warn("Gemini failed, falling back to Groq:", err.message);
       }
   }
 
@@ -117,25 +119,28 @@ Include 4-8 key words in text_highlights.`;
                       content = content.replace(/^```json/g, '').replace(/^```/g, '').replace(/```$/g, '').trim();
                       resultJson = JSON.parse(content);
                   } catch(e) {
-                      console.warn("Failed to parse Groq JSON:", e);
+                      console.warn("Failed to parse Groq JSON:", e); groqErrString = "JSON Parse Error: " + e.message;
                   }
               }
           } else {
-              const errText = await groqRes.text();
+              const errText = await groqRes.text(); groqErrString = errText;
               console.error("Groq API Error:", errText);
           }
       } catch (err) {
-          console.error("Groq request failed:", err);
+          groqErrString = err.message; console.error("Groq request failed:", err);
       }
   }
 
   if (resultJson) {
-      // Ensure final_stress_category exists
       if (!resultJson.final_stress_category) {
           resultJson.final_stress_category = resultJson.predicted_category || resultJson.risk_tier || "Normal";
       }
       return res.status(200).json(resultJson);
   } else {
-      return res.status(502).json({ error: "Failed to generate analysis from AI engines." });
+      return res.status(502).json({ 
+          error: "Failed to generate analysis from AI engines.", 
+          geminiError: geminiErrString, 
+          groqError: groqErrString 
+      });
   }
 }

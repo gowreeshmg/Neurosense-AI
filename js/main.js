@@ -1080,7 +1080,10 @@ Analyze BOTH of these modalities. Give a combined result based on the dominant e
         
         if (!response.ok) {
             const errData = await response.json().catch(() => ({}));
-            alert(errData.error || "Analysis failed via Vercel API. Make sure your Gemini/Groq API keys are valid in Vercel.");
+            let alertMsg = errData.error || "Analysis failed via Vercel API.";
+            if (errData.geminiError) alertMsg += `\n\nGemini Error: ${errData.geminiError}`;
+            if (errData.groqError) alertMsg += `\n\nGroq Error: ${errData.groqError}`;
+            alert(alertMsg);
             return;
         }
         
