@@ -1241,7 +1241,7 @@ function displayAnalysisResults(res, forcedModality) {
     if (forcedModality) {
         modality = forcedModality;
     } else {
-        modality = (audioBlob || simulatedAudioVector) && text ? 'combined' :
+        modality = (audioBlob || simulatedAudioVector) && text ? 'both' :
                    (audioBlob || simulatedAudioVector) ? 'audio' : 'text';
     }
     
