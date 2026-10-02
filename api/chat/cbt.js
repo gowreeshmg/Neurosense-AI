@@ -93,7 +93,7 @@ export default async function handler(req, res) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "llama-3.1-70b-versatile", // Use active Llama 3.3 model
+                        model: "mixtral-8x7b-32768", // Use active Llama 3.3 model
                         messages: groqHistory,
                         temperature: 0.7,
                         max_tokens: 250
