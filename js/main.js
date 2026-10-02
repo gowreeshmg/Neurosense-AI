@@ -2656,3 +2656,36 @@ window.switchDashboardView = switchDashboardView;
         attachListeners();
     }
 })();
+
+
+/**
+ * Reset all survey data and refresh UI to zero state
+ */
+function resetUnifiedPressure() {
+    // 1. Reset Internal State
+    window.neuroSignalState = { Rq: 0, Rr: 0, Rusage: 0, Rtyped: 0, Rdelete: 0, Ptotal: 0, Re: 0, Rb: 0, weights: {wq: 0.35, we: 0.25, wr: 0.2, wb: 0.2} };
+    window.surveyAnswers = {};
+    window.surveyStartTimes = {};
+    
+    // 2. Clear Local Storage
+    localStorage.removeItem('neuro_pressure_state');
+    localStorage.removeItem('neuro_survey_state');
+    localStorage.removeItem('neuro_survey_times');
+    
+    // 3. Uncheck all radio buttons in the survey
+    const radios = document.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => radio.checked = false);
+    
+    // 4. Reset labels visually
+    document.querySelectorAll('.survey-row label').forEach(lbl => {
+        lbl.style.background = 'transparent';
+        lbl.style.color = '';
+    });
+    
+    // 5. Trigger the normal UI update to draw the 0 state
+    if (typeof refreshUnifiedPressure === 'function') {
+        refreshUnifiedPressure();
+    }
+    
+    console.log("Data refreshed and reset to zero.");
+}
