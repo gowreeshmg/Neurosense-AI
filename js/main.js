@@ -1168,16 +1168,12 @@ Analyze BOTH of these modalities. Give a combined result based on the dominant e
         }
 
         if (currentAnalysisResult) {
-            const textIsland = document.getElementById('textAssessmentIsland');
-            const voiceIsland = document.getElementById('voiceAssessmentIsland');
-            const combinedIsland = document.getElementById('combinedAssessmentIsland');
-            if (textIsland) textIsland.classList.add('show-result');
-            if (voiceIsland) voiceIsland.classList.add('show-result');
-            if (combinedIsland) combinedIsland.classList.add('show-result');
-            
             setTimeout(() => {
-                if (combinedIsland) combinedIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                else if (textIsland) textIsland.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const combinedRes = document.getElementById('audioAnalysisResults');
+                const textRes = document.getElementById('textAnalysisResults');
+                if (modality === 'both' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (modality === 'text' && textRes) textRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                else if (modality === 'audio' && combinedRes) combinedRes.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
         }
     }
@@ -1264,15 +1260,25 @@ function displayAnalysisResults(res, forcedModality) {
 
     const limeBox = document.getElementById('limeBoxWrapper');
     const shapBox = document.getElementById('shapBoxWrapper');
-    const textRes = document.getElementById('textAssessmentIsland');
-    const audioRes = document.getElementById('voiceAssessmentIsland');
-    const combinedRes = document.getElementById('combinedAssessmentIsland');
+    const textRes = document.getElementById('textAnalysisResults');
+    const audioRes = document.getElementById('audioAnalysisResults');
+    
+    const limeBox = document.getElementById('limeBoxWrapper');
+    const shapBox = document.getElementById('shapBoxWrapper');
     
     if (modality === 'audio') {
         if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
         
         if (audioRes) {
+            audioRes.querySelector('h2').innerText = "Speech Acoustic Biomarker Breakdown";
+            const firstH4 = audioRes.querySelector('h4');
+            if (firstH4) firstH4.innerText = "Acoustic Vocal Stress Severity Score";
+            const catLabel = document.getElementById('audioStressCategoryText');
+            if (catLabel && catLabel.previousElementSibling) catLabel.previousElementSibling.innerText = "Detected Acoustic State:";
+            const badge = audioRes.querySelector('.badge-dual');
+            if (badge) badge.innerText = "🎙️ Voice Acoustic Analysis Active";
+
             audioRes.classList.remove('hidden');
             audioRes.classList.add('visible');
             audioRes.style.setProperty('display', 'flex', 'important');
@@ -1287,12 +1293,15 @@ function displayAnalysisResults(res, forcedModality) {
         if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
         if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
         
-        const badge = document.getElementById('resultModalityBadge');
-        if (badge) badge.innerText = "🎙️ Voice Acoustic Analysis Active";
-        
     } else if (modality === 'text') {
         if (limeBox) limeBox.style.setProperty('display', 'block', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'none', 'important');
+        
+        const textGrid = textRes ? textRes.querySelector('.results-grid') : null;
+        const limeWrapper = document.getElementById('limeBoxWrapper');
+        const distWrapper = document.getElementById('distortionScannerWrapper');
+        if (textGrid && limeWrapper) textGrid.appendChild(limeWrapper);
+        if (textGrid && distWrapper) textGrid.appendChild(distWrapper);
         
         if (textRes) {
             textRes.classList.remove('hidden');
@@ -1309,7 +1318,7 @@ function displayAnalysisResults(res, forcedModality) {
         if (tTier) tTier.innerText = res.risk_tier || "Minimal / Normal";
         if (tCat) tCat.innerText = res.final_stress_category || "Calm / Baseline";
         
-        const badge = document.getElementById('resultModalityBadge');
+        const badge = textRes ? textRes.querySelector('.badge-dual') : null;
         if (badge) badge.innerText = "📝 Narrative Text Analysis Active";
         
     } else {
@@ -1318,15 +1327,28 @@ function displayAnalysisResults(res, forcedModality) {
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
         
         if (audioRes) {
+            audioRes.querySelector('h2').innerText = "Multimodal Fusion Biomarker Breakdown";
+            const firstH4 = audioRes.querySelector('h4');
+            if (firstH4) firstH4.innerText = "Fusion Stress Severity Score";
+            const catLabel = document.getElementById('audioStressCategoryText');
+            if (catLabel && catLabel.previousElementSibling) catLabel.previousElementSibling.innerText = "Detected Fusion State:";
+            const badge = audioRes.querySelector('.badge-dual');
+            if (badge) badge.innerText = "🧠 Dual-Modality Fusion Active";
+
+            const audioGrid = audioRes.querySelector('.results-grid');
+            const limeWrapper = document.getElementById('limeBoxWrapper');
+            const distWrapper = document.getElementById('distortionScannerWrapper');
+            if (audioGrid && limeWrapper) audioGrid.appendChild(limeWrapper);
+            if (audioGrid && distWrapper) audioGrid.appendChild(distWrapper);
+
             audioRes.classList.remove('hidden');
             audioRes.classList.add('visible');
             audioRes.style.setProperty('display', 'flex', 'important');
         }
         if (textRes) {
-            textRes.classList.remove('hidden');
-            textRes.classList.add('visible');
-            textRes.style.setProperty('display', 'flex', 'important');
+            textRes.style.setProperty('display', 'none', 'important');
         }
+        if (audioRes) setTimeout(() => audioRes.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
         
         const aNum = document.getElementById('audioStressScoreNumber');
         const aTier = document.getElementById('audioRiskTierText');
@@ -1334,16 +1356,6 @@ function displayAnalysisResults(res, forcedModality) {
         if (aNum) aNum.innerText = `${scoreNum}%`;
         if (aTier) aTier.innerText = res.risk_tier || "Minimal / Normal";
         if (aCat) aCat.innerText = res.final_stress_category || "Calm / Baseline";
-        
-        const tNum = document.getElementById('textStressScoreNumber');
-        const tTier = document.getElementById('textRiskTierText');
-        const tCat = document.getElementById('textStressCategoryText');
-        if (tNum) tNum.innerText = `${scoreNum}%`;
-        if (tTier) tTier.innerText = res.risk_tier || "Minimal / Normal";
-        if (tCat) tCat.innerText = res.final_stress_category || "Calm / Baseline";
-
-        const badge = document.getElementById('resultModalityBadge');
-        if (badge) badge.innerText = "🧠 Dual-Modality Fusion Active";
     }
     
     // 1. Update Modality Badge & Stress Score
