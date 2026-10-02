@@ -483,6 +483,18 @@ function switchDashboardView(viewName) {
             v.classList.remove('active');
         }
     });
+
+    // Manually force hide the result islands to prevent leakage when switching views
+    if (viewName !== 'checkin') {
+        const textRes = document.getElementById('textAnalysisResults');
+        const audioRes = document.getElementById('audioAnalysisResults');
+        if (textRes) textRes.style.setProperty('display', 'none', 'important');
+        if (audioRes) audioRes.style.setProperty('display', 'none', 'important');
+    } else {
+        // If switching back to Check-in, we don't automatically show them, we let displayAnalysisResults handle them,
+        // but if they were already visible, we shouldn't force hide them here either.
+        // Actually, they only show when analysis runs. So it's fine.
+    }
     
     // Remove active from all buttons
     Object.values(btns).forEach(btn => {
@@ -1233,7 +1245,13 @@ function displayAnalysisResults(res, forcedModality) {
                    (audioBlob || simulatedAudioVector) ? 'audio' : 'text';
     }
     
-    const rawScore = res.combined_stress_score !== undefined ? res.combined_stress_score : (res.stress_score || 0);
+    let rawScore = res.combined_stress_score !== undefined ? res.combined_stress_score : (res.stress_score || 0);
+    
+    // In combined mode, user requested the final score to be the maximum of the two modalities
+    if (modality === 'both' && res.text_score !== undefined && res.audio_score !== undefined) {
+        rawScore = Math.max(res.text_score, res.audio_score);
+    }
+    
     let scoreNum = Math.round(rawScore);
     if (rawScore > 0 && rawScore <= 1.0) scoreNum = Math.round(rawScore * 100);
 
@@ -1321,15 +1339,7 @@ function displayAnalysisResults(res, forcedModality) {
                 mathDiv.style.display = 'block';
                 const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
                 const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `
-                    <div style="display:flex; justify-content: space-around; width: 100%; margin-bottom: 8px;">
-                        <div>Narrative Text: <span style="color: #38BDF8;">${tScore}%</span></div>
-                        <div>Speech Acoustic: <span style="color: #38BDF8;">${aScore}%</span></div>
-                    </div>
-                    <div style="font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
-                        Combined Result = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span>
-                    </div>
-                `;;
+                mathDiv.innerHTML = `${tScore}% (Text) + ${aScore}% (Voice) = ${scoreNum}% (Combined Result)`;;
             } else {
                 mathDiv.style.display = 'none';
             }
