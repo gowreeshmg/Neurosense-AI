@@ -1268,6 +1268,10 @@ function displayAnalysisResults(res, forcedModality) {
     if (modality === 'audio') {
         if (limeBox) limeBox.style.setProperty('display', 'none', 'important');
         if (shapBox) shapBox.style.setProperty('display', 'block', 'important');
+        const distScanner = document.getElementById('distortionScannerWrapper');
+        if (distScanner) distScanner.style.setProperty('display', 'none', 'important');
+        const dvlBox = document.getElementById('dualVocalLexicalBox');
+        if (dvlBox) dvlBox.style.setProperty('display', 'block', 'important');
         
         if (audioRes) {
             audioRes.querySelector('h2').innerText = "Speech Acoustic Biomarker Breakdown";
@@ -1317,7 +1321,15 @@ function displayAnalysisResults(res, forcedModality) {
                 mathDiv.style.display = 'block';
                 const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
                 const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${tScore}%</span> (Narrative Text) <br> + <br> ${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${aScore}%</span> (Speech Acoustic) <br> = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span> (Combined Result)`;
+                mathDiv.innerHTML = `
+                    <div style="display:flex; justify-content: space-around; width: 100%; margin-bottom: 8px;">
+                        <div>Narrative Text: <span style="color: #38BDF8;">${tScore}%</span></div>
+                        <div>Speech Acoustic: <span style="color: #38BDF8;">${aScore}%</span></div>
+                    </div>
+                    <div style="font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
+                        Combined Result = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span>
+                    </div>
+                `;;
             } else {
                 mathDiv.style.display = 'none';
             }
@@ -1414,7 +1426,15 @@ function displayAnalysisResults(res, forcedModality) {
                 mathDiv.style.display = 'block';
                 const tScore = res.text_score !== undefined ? res.text_score : Math.max(0, scoreNum - 15);
                 const aScore = res.audio_score !== undefined ? res.audio_score : Math.max(0, scoreNum - 10);
-                mathDiv.innerHTML = `${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${tScore}%</span> (Narrative Text) <br> + <br> ${res.final_stress_category || 'Stress'} <span style="color: #38BDF8;">${aScore}%</span> (Speech Acoustic) <br> = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span> (Combined Result)`;
+                mathDiv.innerHTML = `
+                    <div style="display:flex; justify-content: space-around; width: 100%; margin-bottom: 8px;">
+                        <div>Narrative Text: <span style="color: #38BDF8;">${tScore}%</span></div>
+                        <div>Speech Acoustic: <span style="color: #38BDF8;">${aScore}%</span></div>
+                    </div>
+                    <div style="font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
+                        Combined Result = <span style="color: #38BDF8; font-size: 1.1rem;">${scoreNum}%</span>
+                    </div>
+                `;;
             } else {
                 mathDiv.style.display = 'none';
             }
@@ -1481,7 +1501,7 @@ function displayAnalysisResults(res, forcedModality) {
                 }
                 
                 let highlightedText = originalText;
-                let highlightedAudio = res.audio_transcription_text || res.audio_analysis?.transcription || window.grooqTranscription || "";
+                let highlightedAudio = res.audio_transcription_text || res.audio_analysis?.transcription || res.transcription || window.groqTranscription || text || "Audio transcription unavailable";
 
                 // Sort by weight length descending so we match longer phrases first
                 const sortedHighlights = [...res.text_highlights].sort((a,b) => b.word.length - a.word.length);
