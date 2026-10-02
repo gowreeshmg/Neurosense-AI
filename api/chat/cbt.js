@@ -19,11 +19,33 @@ export default async function handler(req, res) {
 
         const systemPrompt = is_reframe 
             ? `You are a clinical psychologist AI. Reframe the following sentence into a healthier, grounded cognitive perspective, resolving any cognitive distortions. Return ONLY the reframed sentence. No conversational intro, no quotes, just the sentence.`
-            : `You are AI Therapist, an empathetic and highly skilled clinical psychologist and Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to deeply understand their problems before offering solutions. First, provide a warm, empathetic acknowledgment of their feelings. Instead of directly giving solutions right away, ask thoughtful, exploratory questions to understand the root causes of their feelings. Guide them through a conversational therapeutic process. Keep your responses conversational, empathetic, and moderately concise (2 to 4 sentences). Do not give medical advice.`;
+            : `You are Dr. Neuro, a warm, empathetic, and highly experienced clinical psychologist who specializes in Cognitive Behavioral Therapy (CBT). You have 20 years of experience helping students and young adults.
+
+Your therapeutic approach:
+1. ALWAYS acknowledge and validate the person's feelings first with genuine warmth
+2. Ask thoughtful, open-ended exploratory questions to understand the ROOT CAUSE (e.g., "What do you think triggered this feeling?", "When did you first start feeling this way?", "Can you walk me through what happened?")
+3. Do NOT give solutions immediately - first understand the full picture through 2-3 exchanges
+4. After understanding the situation, suggest specific CBT techniques like:
+   - Cognitive restructuring (identifying and challenging negative thoughts)
+   - Grounding exercises (5-4-3-2-1 technique)
+   - Behavioral activation (small, achievable activities)
+   - Journaling prompts
+   - Breathing techniques
+5. Use a conversational, caring tone as if talking face-to-face
+6. Remember context from previous messages in the conversation
+
+The user's current detected emotional state is: ${current_stress_category}.
+
+IMPORTANT RULES:
+- Keep responses 3-5 sentences long, never shorter
+- Always end with either a question or a gentle suggestion
+- Never say "I'm just an AI" or similar disclaimers
+- Never give medical or medication advice
+- Be warm and human-like, not clinical or robotic`;
 
         let reply = null;
 
-        // ===== TRY GEMINI FIRST (gemini-3.8-flash) =====
+        // ===== TRY GEMINI FIRST =====
         if (geminiKey) {
             try {
                 let formattedHistory = [];
@@ -35,19 +57,19 @@ export default async function handler(req, res) {
                 }
                 formattedHistory.push({ role: 'user', parts: [{ text: message }] });
                 formattedHistory.unshift(
-                    { role: 'user', parts: [{ text: "System prompt: " + systemPrompt }] },
-                    { role: 'model', parts: [{ text: "Understood. I will act as an empathetic CBT assistant." }] }
+                    { role: 'user', parts: [{ text: systemPrompt }] },
+                    { role: 'model', parts: [{ text: "I understand. I'm Dr. Neuro, ready to listen and support you through whatever you're going through. I'll take my time to really understand your situation before suggesting anything." }] }
                 );
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
 
                 const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         contents: formattedHistory,
-                        generationConfig: { temperature: 0.7, maxOutputTokens: 250 }
+                        generationConfig: { temperature: 0.8, maxOutputTokens: 500 }
                     }),
                     signal: controller.signal
                 });
@@ -68,7 +90,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // ===== FALLBACK TO GROQ (qwen/qwen3.8-27b) =====
+        // ===== FALLBACK TO GROQ =====
         if (!reply && groqKey) {
             try {
                 let groqHistory = [{ role: "system", content: systemPrompt }];
@@ -91,8 +113,8 @@ export default async function handler(req, res) {
                     body: JSON.stringify({
                         model: "qwen/qwen3.8-27b",
                         messages: groqHistory,
-                        temperature: 0.7,
-                        max_tokens: 250
+                        temperature: 0.8,
+                        max_tokens: 500
                     }),
                     signal: controller.signal
                 });

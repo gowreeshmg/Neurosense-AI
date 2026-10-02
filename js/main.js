@@ -1573,7 +1573,8 @@ async function applyTextReframing(distortionType) {
         const data = await response.json();
         
         if (data.reply) {
-            textarea.value = data.reply.trim();
+            // Strip any quotes that the AI might have wrapped the sentence in
+            textarea.value = data.reply.trim().replace(/^["']|["']$/g, '');
         }
     } catch (err) {
         console.error("Reframing error:", err);
@@ -1584,6 +1585,7 @@ async function applyTextReframing(distortionType) {
     btn.disabled = false;
     
     updateWordCount();
+    // Auto-run analysis to show the red stress words turning into green calm words!
     runSingleModalityAnalysis('text');
 }
 

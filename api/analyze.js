@@ -15,22 +15,35 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "API keys are missing." });
   }
 
-  const systemPrompt = `You are a cognitive behavioral and linguistic stress analysis AI. Analyze the following text for signs of stress, anxiety, or cognitive load.
-Return ONLY a valid JSON object with the following exact structure, no markdown formatting, no backticks, no other text:
+  const systemPrompt = `You are an expert clinical psychologist AI specializing in cognitive-behavioral text analysis. You must classify text into EXACTLY ONE of these 5 categories based on strict clinical criteria:
+
+CLASSIFICATION RULES (follow these STRICTLY):
+
+1. "Normal" (score 0-20): Calm, positive, or neutral everyday statements.
+2. "Stress" (score 30-55): Frustration about external factors: work, exams, deadlines, being busy, overloaded.
+3. "Anxiety" (score 40-65): Fear of the future, nervousness, "what if", panic, racing thoughts.
+4. "Depression" (score 50-75): Total loss of interest in life, saying life is pointless, wanting to sleep forever, feeling completely empty and numb.
+5. "Emotional Distress" (score 60-85): Intense immediate pain, feeling lonely, isolated, misunderstood, overwhelmed by feelings, crying, disconnected from family/friends.
+
+CRITICAL INSTRUCTION FOR EMOTIONAL DISTRESS vs DEPRESSION:
+If the text talks about feeling "disconnected", "lonely", "indifferent in a crowded room", "isolated", or "can't cope with these emotions" -> YOU MUST CLASSIFY AS "Emotional Distress". 
+Only classify as "Depression" if they explicitly talk about life having no point, total numbness, or extreme lethargy.
+
+Return ONLY a valid JSON object with this exact structure:
 {
-  "combined_stress_score": <integer from 0 to 100>,
-  "predicted_category": "<string: Normal, Stress, Anxiety, Depression, Emotional Distress>",
+  "combined_stress_score": <integer 0-100>,
+  "predicted_category": "<exactly one of: Normal, Stress, Anxiety, Depression, Emotional Distress>",
   "risk_tier": "<same as predicted_category>",
+  "final_stress_category": "<same as predicted_category>",
   "text_highlights": [
-    {"word": "<stressed word>", "weight": <float from -1 to 1>},
-    {"word": "<positive word>", "weight": <float from -1 to 1>}
+    {"word": "<key word from text>", "weight": <float -1 to 1, positive=negative emotion, negative=positive>}
   ]
 }
-The 'text_highlights' array should contain 3-8 key words from the text that indicate stress (positive weight) or calmness (negative weight).`;
+Include 4-8 key words in text_highlights.`;
 
   let resultJson = null;
 
-  // ===== TRY GEMINI FIRST (gemini-3.8-flash) =====
+  // ===== TRY GEMINI FIRST =====
   if (geminiKey) {
       try {
           const controller = new AbortController();
@@ -41,9 +54,9 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                   contents: [
-                      { role: 'user', parts: [{ text: "System prompt: " + systemPrompt + "\n\nText to analyze: " + text }] }
+                      { role: 'user', parts: [{ text: systemPrompt + "\n\nText to analyze:\n\"" + text + "\"" }] }
                   ],
-                  generationConfig: { temperature: 0.1, responseMimeType: "application/json" }
+                  generationConfig: { temperature: 0.05, responseMimeType: "application/json" }
               }),
               signal: controller.signal
           });
@@ -70,7 +83,7 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
       }
   }
 
-  // ===== FALLBACK TO GROQ (qwen/qwen3.8-27b) =====
+  // ===== FALLBACK TO GROQ =====
   if (!resultJson && groqKey) {
       try {
           const controller = new AbortController();
@@ -86,9 +99,9 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
                   model: "qwen/qwen3.8-27b",
                   messages: [
                       { role: "system", content: systemPrompt },
-                      { role: "user", content: "Text to analyze: " + text }
+                      { role: "user", content: "Text to analyze:\n\"" + text + "\"" }
                   ],
-                  temperature: 0.1,
+                  temperature: 0.05,
                   response_format: { type: "json_object" }
               }),
               signal: controller.signal
@@ -117,6 +130,10 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
   }
 
   if (resultJson) {
+      // Ensure final_stress_category exists
+      if (!resultJson.final_stress_category) {
+          resultJson.final_stress_category = resultJson.predicted_category || resultJson.risk_tier || "Normal";
+      }
       return res.status(200).json(resultJson);
   } else {
       return res.status(502).json({ error: "Failed to generate analysis from AI engines." });
