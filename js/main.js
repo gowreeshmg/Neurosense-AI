@@ -1160,7 +1160,7 @@ Analyze BOTH of these modalities. Give a combined result based on the dominant e
         
     } catch (err) {
         console.error("Analysis error:", err);
-        alert("The AI backend failed to respond. Please check your API keys or network connection.");
+        alert("CRASH IN MAIN.JS:\n" + err.name + ": " + err.message + "\n\nStack:\n" + err.stack);
     } finally {
         if (btn) {
             btn.disabled = false;
