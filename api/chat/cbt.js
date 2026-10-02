@@ -8,7 +8,6 @@ export default async function handler(req, res) {
         const groqKey = process.env.GROQ_API_KEY;
         
         if (!geminiKey && !groqKey) {
-            console.error("No API keys configured.");
             return res.status(500).json({ error: "API key is missing. Please add GEMINI_API_KEY or GROQ_API_KEY in Vercel environment variables." });
         }
 
@@ -20,12 +19,11 @@ export default async function handler(req, res) {
 
         const systemPrompt = is_reframe 
             ? `You are a clinical psychologist AI. Reframe the following sentence into a healthier, grounded cognitive perspective, resolving any cognitive distortions. Return ONLY the reframed sentence. No conversational intro, no quotes, just the sentence.`
-            : `You are AI Therapist, an empathetic and highly skilled clinical psychologist and Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to deeply understand their problems before offering solutions. First, provide a warm, empathetic acknowledgment of their feelings. Instead of directly giving solutions right away, ask thoughtful, exploratory questions to understand the root causes of their feelings (e.g., 'What do you think is causing you to feel this way?', or 'Can you tell me more about what happened?'). Guide them through a conversational therapeutic process, working together to find ways to solve their problems. Keep your responses conversational, empathetic, and moderately concise (2 to 4 sentences). Do not give medical advice.`;
+            : `You are AI Therapist, an empathetic and highly skilled clinical psychologist and Cognitive Behavioral Therapy (CBT) assistant. The user's current detected stress state is: ${current_stress_category}. Your goal is to deeply understand their problems before offering solutions. First, provide a warm, empathetic acknowledgment of their feelings. Instead of directly giving solutions right away, ask thoughtful, exploratory questions to understand the root causes of their feelings. Guide them through a conversational therapeutic process. Keep your responses conversational, empathetic, and moderately concise (2 to 4 sentences). Do not give medical advice.`;
 
-        let reply = "I'm sorry, I couldn't generate a response at this time.";
-        let geminiSuccess = false;
+        let reply = null;
 
-        // ===== TRY GEMINI FIRST =====
+        // ===== TRY GEMINI FIRST (gemini-3.8-flash) =====
         if (geminiKey) {
             try {
                 let formattedHistory = [];
@@ -38,14 +36,13 @@ export default async function handler(req, res) {
                 formattedHistory.push({ role: 'user', parts: [{ text: message }] });
                 formattedHistory.unshift(
                     { role: 'user', parts: [{ text: "System prompt: " + systemPrompt }] },
-                    { role: 'model', parts: [{ text: "Understood. I will act as NeuroSense GPT, an empathetic CBT assistant." }] }
+                    { role: 'model', parts: [{ text: "Understood. I will act as an empathetic CBT assistant." }] }
                 );
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-                // Use gemini-2.0-flash (gemini-1.5-flash is RETIRED as of 2026)
-                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
+                const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -61,23 +58,20 @@ export default async function handler(req, res) {
                     const data = await geminiRes.json();
                     if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
                         reply = data.candidates[0].content.parts[0].text;
-                        geminiSuccess = true;
                     }
                 } else {
                     const errText = await geminiRes.text();
                     console.warn("Gemini API Error:", geminiRes.status, errText);
                 }
             } catch (err) {
-                console.warn("Gemini request failed (timeout/network), falling back to Groq...", err.message);
+                console.warn("Gemini failed, falling back to Groq:", err.message);
             }
         }
 
-        // ===== FALLBACK TO GROQ =====
-        if (!geminiSuccess && groqKey) {
+        // ===== FALLBACK TO GROQ (qwen/qwen3.8-27b) =====
+        if (!reply && groqKey) {
             try {
-                let groqHistory = [
-                    { role: "system", content: systemPrompt }
-                ];
+                let groqHistory = [{ role: "system", content: systemPrompt }];
                 if (history && Array.isArray(history)) {
                     history.forEach(msg => {
                         groqHistory.push({ role: msg.role === 'assistant' ? 'assistant' : 'user', content: msg.content });
@@ -86,7 +80,7 @@ export default async function handler(req, res) {
                 groqHistory.push({ role: "user", content: message });
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout for Groq
+                const timeoutId = setTimeout(() => controller.abort(), 20000);
 
                 const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -95,7 +89,7 @@ export default async function handler(req, res) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
+                        model: "qwen/qwen3.8-27b",
                         messages: groqHistory,
                         temperature: 0.7,
                         max_tokens: 250
@@ -108,12 +102,7 @@ export default async function handler(req, res) {
                 if (!groqRes.ok) {
                     const errData = await groqRes.text();
                     console.error("Groq API Error:", errData);
-                    let parsedErr = "Failed to fetch response from Groq Llama AI.";
-                    try {
-                        const j = JSON.parse(errData);
-                        if (j.error && j.error.message) parsedErr = j.error.message;
-                    } catch(e) { parsedErr = errData; }
-                    return res.status(502).json({ error: "Groq AI Error: " + parsedErr });
+                    return res.status(502).json({ error: "Groq AI Error: " + errData });
                 }
 
                 const data = await groqRes.json();
@@ -122,10 +111,12 @@ export default async function handler(req, res) {
                 }
             } catch (err) {
                 console.error("Groq request failed:", err);
-                return res.status(502).json({ error: "Groq AI connection timed out or failed." });
+                return res.status(502).json({ error: "Groq AI connection timed out." });
             }
-        } else if (!geminiSuccess && !groqKey) {
-            return res.status(502).json({ error: "Gemini AI failed, and no Groq API Key was found for fallback." });
+        }
+
+        if (!reply) {
+            return res.status(502).json({ error: "Both Gemini and Groq failed to generate a response." });
         }
 
         return res.status(200).json({ reply });

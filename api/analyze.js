@@ -4,7 +4,6 @@ export default async function handler(req, res) {
   }
 
   const { text } = req.body;
-  
   if (!text) {
     return res.status(400).json({ error: 'No text provided for analysis.' });
   }
@@ -30,16 +29,14 @@ Return ONLY a valid JSON object with the following exact structure, no markdown 
 The 'text_highlights' array should contain 3-8 key words from the text that indicate stress (positive weight) or calmness (negative weight).`;
 
   let resultJson = null;
-  let geminiSuccess = false;
 
-  // ===== TRY GEMINI FIRST =====
+  // ===== TRY GEMINI FIRST (gemini-3.8-flash) =====
   if (geminiKey) {
       try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+          const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-          // Use gemini-2.0-flash (gemini-1.5-flash is RETIRED as of 2026)
-          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
+          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -58,10 +55,8 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
               if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
                   let textResponse = data.candidates[0].content.parts[0].text;
                   try {
-                      // Remove markdown code blocks if present
                       textResponse = textResponse.replace(/^```json/g, '').replace(/^```/g, '').replace(/```$/g, '').trim();
                       resultJson = JSON.parse(textResponse);
-                      geminiSuccess = true;
                   } catch(e) {
                       console.warn("Failed to parse Gemini JSON:", e);
                   }
@@ -71,15 +66,15 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
               console.warn("Gemini API Error:", geminiRes.status, errText);
           }
       } catch (err) {
-          console.warn("Gemini request failed (timeout/network), falling back to Groq...");
+          console.warn("Gemini failed, falling back to Groq:", err.message);
       }
   }
 
-  // ===== FALLBACK TO GROQ =====
-  if (!geminiSuccess && groqKey) {
+  // ===== FALLBACK TO GROQ (qwen/qwen3.8-27b) =====
+  if (!resultJson && groqKey) {
       try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+          const timeoutId = setTimeout(() => controller.abort(), 20000);
 
           const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
               method: "POST",
@@ -88,7 +83,7 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
                   "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                  model: "llama-3.3-70b-versatile",
+                  model: "qwen/qwen3.8-27b",
                   messages: [
                       { role: "system", content: systemPrompt },
                       { role: "user", content: "Text to analyze: " + text }
@@ -105,14 +100,16 @@ The 'text_highlights' array should contain 3-8 key words from the text that indi
               const data = await groqRes.json();
               if (data.choices && data.choices[0]) {
                   try {
-                      resultJson = JSON.parse(data.choices[0].message.content);
+                      let content = data.choices[0].message.content;
+                      content = content.replace(/^```json/g, '').replace(/^```/g, '').replace(/```$/g, '').trim();
+                      resultJson = JSON.parse(content);
                   } catch(e) {
                       console.warn("Failed to parse Groq JSON:", e);
                   }
               }
           } else {
               const errText = await groqRes.text();
-              console.error("Groq API Error on fallback:", errText);
+              console.error("Groq API Error:", errText);
           }
       } catch (err) {
           console.error("Groq request failed:", err);
