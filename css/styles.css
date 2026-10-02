@@ -1461,8 +1461,7 @@ textarea:focus {
 }
 
 /* CBT Interactive Chat & Assistant Islands */
-.cbt-chat-container,
-#cbtCompanionIsland {
+.cbt-chat-container {
     background: rgba(15, 23, 42, 0.42) !important;
     backdrop-filter: blur(28px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
@@ -2600,8 +2599,9 @@ header.navbar-top-controls .top-center-title {
         padding: max(10px, env(safe-area-inset-top, 40px)) 0px 14px 0px !important;
     }
     #cbtCompanionIsland {
-        border-radius: 0px !important;
+        border-radius: 22px !important;
         padding: 18px 10px !important;
+        margin: 0 10px !important;
     }
     .chat-msg.user-msg {
         align-self: flex-end !important;
@@ -3625,8 +3625,7 @@ body[data-theme="light"] #v0HeroTitle {
 }
 
 /* ===== POINT 1: Remove transparent island from CBT companion - show pure background ===== */
-.cbt-chat-container,
-#cbtCompanionIsland {
+.cbt-chat-container {
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -3852,8 +3851,7 @@ body:not([data-theme="light"]) .main-brand-title {
 }
 
 /* ── POINT 5b: CBT Assistant - not too black in dark mode ── */
-#viewCBT,
-#cbtCompanionIsland {
+#viewCBT {
     background: transparent !important;
     backdrop-filter: none !important;
     border: none !important;

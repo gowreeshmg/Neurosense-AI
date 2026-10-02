@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWordCount();
     
     // Check backend health on load
-    fetch('/api/metrics')
+    fetch('/api/metrics.js')
         .then(res => res.json())
         .then(data => {
             console.log("[NeuroSense UI] Connected to API Backend successfully. Metrics:", data);
@@ -1024,7 +1024,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
                 let grooqTranscription = null;
                 try {
                     const base64Audio = await blobToBase64(audioBlob);
-                    const transcribeRes = await fetch('/api/transcribe', {
+                    const transcribeRes = await fetch('/api/transcribe.js', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ audio: base64Audio, mimeType: audioBlob.type || 'audio/webm' })
@@ -1074,7 +1074,7 @@ async function runMultimodalAnalysis(mode = 'combined') {
         // Fallback: if audio path failed entirely, try text-only
         if (!result && text) {
             try {
-                const response = await fetch('/api/analyze', {
+                const response = await fetch('/api/analyze.js', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1509,7 +1509,7 @@ async function applyTextReframing(distortionType) {
     btn.disabled = true;
 
     try {
-        const response = await fetch('/api/chat/cbt', {
+        const response = await fetch('/api/chat/cbt.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1664,7 +1664,7 @@ async function sendCBTChat() {
     
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-            const res = await fetch('/api/chat/cbt', {
+            const res = await fetch('/api/chat/cbt.js', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
