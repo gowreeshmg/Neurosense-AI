@@ -41,108 +41,6 @@ async function startRecording() {
         };
         
         mediaRecorder.onstop = () => {
-            
-    audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-    const audioUrl = URL.createObjectURL(audioBlob);
-    
-    updateRecordStatus("Ready to analyze", "ready");
-    
-    // Create hidden audio player for playback
-    let player = document.getElementById("hiddenAudioPlayer");
-    if (!player) {
-        player = document.createElement("audio");
-        player.id = "hiddenAudioPlayer";
-        player.style.display = "none";
-        document.body.appendChild(player);
-    }
-    player.src = audioUrl;
-    
-    // Add overlay play button inside the visualizer container
-    const container = document.querySelector(".audio-visualizer-container");
-    if (container) {
-        container.style.position = "relative";
-        let playBtn = document.getElementById("overlayPlayBtn");
-        if (!playBtn) {
-            playBtn = document.createElement("button");
-            playBtn.id = "overlayPlayBtn";
-            playBtn.innerHTML = "▶";
-            playBtn.style.position = "absolute";
-            playBtn.style.top = "50%";
-            playBtn.style.left = "50%";
-            playBtn.style.transform = "translate(-50%, -50%)";
-            playBtn.style.background = "rgba(99, 102, 241, 0.9)";
-            playBtn.style.color = "white";
-            playBtn.style.border = "none";
-            playBtn.style.borderRadius = "50%";
-            playBtn.style.width = "50px";
-            playBtn.style.height = "50px";
-            playBtn.style.fontSize = "24px";
-            playBtn.style.cursor = "pointer";
-            playBtn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.4)";
-            playBtn.style.zIndex = "10";
-            
-            playBtn.onclick = () => {
-                if (player.paused) {
-                    player.play();
-                    playBtn.innerHTML = "⏸";
-                } else {
-                    player.pause();
-                    playBtn.innerHTML = "▶";
-                }
-            };
-            
-            player.onended = () => {
-                playBtn.innerHTML = "▶";
-            };
-            
-            container.appendChild(playBtn);
-        } else {
-            playBtn.style.display = "block";
-        }
-    }
-    ==============================
-   NeuroSense AI — Audio Recorder & Live Waveform Visualizer
-   ========================================================================== */
-
-let mediaRecorder = null;
-let audioChunks = [];
-let isRecording = false;
-let audioBlob = null;
-let recordingInterval = null;
-let recordingSeconds = 0;
-let audioContext = null;
-let analyserNode = null;
-let animationFrameId = null;
-let simulatedAudioVector = null;
-
-/**
- * Toggles microphone audio recording on/off
- */
-async function toggleRecording() {
-    if (!isRecording) {
-        await startRecording();
-    } else {
-        stopRecording();
-    }
-}
-
-/**
- * Starts recording from user microphone using Web Audio API
- */
-async function startRecording() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioChunks = [];
-        simulatedAudioVector = null;
-        
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = event => {
-            if (event.data.size > 0) {
-                audioChunks.push(event.data);
-            }
-        };
-        
-        mediaRecorder.onstop = () => {
             audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             console.log("Audio recording finalized. Blob size:", audioBlob.size);
             updateRecordStatus("Recording captured successfully!", "ready");
@@ -312,7 +210,6 @@ function handleAudioFileUpload(event) {
     updateRecordStatus(`Uploaded File: ${file.name} (${sizeKB} KB)`, "ready");
     document.getElementById('recordingTimer').innerText = "Uploaded File";
     
-    
     // Create hidden audio player for playback
     let player = document.getElementById("hiddenAudioPlayer");
     if (!player) {
@@ -362,9 +259,10 @@ function handleAudioFileUpload(event) {
             };
             
             container.appendChild(playBtn);
+        } else {
+            playBtn.style.display = 'block';
         }
     }
-
     
     // Draw an energetic visual waveform indicating uploaded file loaded
     const canvas = document.getElementById('waveformCanvas');
