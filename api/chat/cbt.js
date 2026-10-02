@@ -93,7 +93,7 @@ export default async function handler(req, res) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: "mixtral-8x7b-32768", // Use active Llama 3.3 model
+                        model: "llama-3.1-8b-instant", // Use active Llama 3.3 model
                         messages: groqHistory,
                         temperature: 0.7,
                         max_tokens: 250
@@ -106,7 +106,12 @@ export default async function handler(req, res) {
                 if (!groqRes.ok) {
                     const errData = await groqRes.text();
                     console.error("Groq API Error:", errData);
-                    return res.status(200).json({ reply: "I'm sorry, the therapist is currently busy or the AI engine is overloaded. Please try again in a moment." });
+                    let parsedErr = "Failed to fetch response from Groq Llama AI.";
+                    try {
+                        const j = JSON.parse(errData);
+                        if (j.error && j.error.message) parsedErr = j.error.message;
+                    } catch(e) { parsedErr = errData; }
+                    return res.status(502).json({ error: "Groq AI Error: " + parsedErr });
                 }
 
                 const data = await groqRes.json();
@@ -115,10 +120,10 @@ export default async function handler(req, res) {
                 }
             } catch (err) {
                 console.error("Groq request failed:", err);
-                return res.status(200).json({ reply: "I'm sorry, the therapist is currently busy or the AI engine is overloaded. Please try again in a moment." });
+                return res.status(502).json({ error: "Groq AI connection timed out or failed." });
             }
         } else if (!geminiSuccess && !groqKey) {
-            return res.status(200).json({ reply: "I'm sorry, the therapist is currently busy or the AI engine is overloaded. Please try again in a moment." });
+            return res.status(502).json({ error: "Gemini AI failed, and no Groq API Key was found for fallback." });
         }
 
         return res.status(200).json({ reply });

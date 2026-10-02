@@ -210,6 +210,22 @@ function handleAudioFileUpload(event) {
     updateRecordStatus(`Uploaded File: ${file.name} (${sizeKB} KB)`, "ready");
     document.getElementById('recordingTimer').innerText = "Uploaded File";
     
+    // Add audio player if it doesn't exist
+    let player = document.getElementById('uploadedAudioPlayer');
+    if (!player) {
+        player = document.createElement('audio');
+        player.id = 'uploadedAudioPlayer';
+        player.controls = true;
+        player.style.width = '100%';
+        player.style.marginTop = '10px';
+        const actionsDiv = document.querySelector('.audio-actions');
+        if (actionsDiv) {
+            actionsDiv.appendChild(player);
+        }
+    }
+    player.src = URL.createObjectURL(file);
+    player.style.display = 'block';
+    
     // Draw an energetic visual waveform indicating uploaded file loaded
     const canvas = document.getElementById('waveformCanvas');
     if (!canvas) return;
@@ -222,7 +238,6 @@ function handleAudioFileUpload(event) {
         ctx.fillRect(x, (canvas.height - h) / 2, 5, h);
     }
 }
-
 function updateRecordStatus(text, statusClass) {
     const el = document.getElementById('micStatusText');
     if (!el) return;
