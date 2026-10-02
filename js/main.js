@@ -1518,19 +1518,27 @@ function displayAnalysisResults(res, forcedModality) {
                     }
                 });
 
+                let reframeTxt = (res.reframed_sentence_text || "").replace(/`/g, "'");
+                let reframeAud = (res.reframed_sentence_audio || "").replace(/`/g, "'");
+
                 if (modality === 'both' && highlightedAudio) {
                     limeContainer.innerHTML = `
                         <div style="margin-bottom: 14px;">
                             <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Narrative Text:</strong>
-                            <p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 0 0;">${highlightedText}</p>
+                            <p id="limeTextParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedText}</p>
+                            <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeTxt}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; background: rgba(99,102,241,0.2); border: 1px solid #6366f1; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Text</button>
                         </div>
                         <div>
                             <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Voice Transcription:</strong>
-                            <p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 0 0;">${highlightedAudio}</p>
-                        </div>
-                    `;
+                            <p id="limeAudioParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedAudio}</p>
+                            <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${reframeAud}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; background: rgba(56,189,248,0.2); border: 1px solid #38bdf8; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Speech</button>
+                        </div>`;
                 } else {
-                    limeContainer.innerHTML = `<p style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 0;">${highlightedText}</p>`;
+                    limeContainer.innerHTML = `
+                        <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Input Transcript:</strong>
+                        <p id="limeTextParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedText}</p>
+                        <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeTxt}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; background: rgba(99,102,241,0.2); border: 1px solid #6366f1; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Text</button>
+                    `;
                 }
             } else {
                 limeContainer.innerHTML = `<em>No text input provided for LIME token attribution.</em>`;
@@ -1559,9 +1567,7 @@ function displayAnalysisResults(res, forcedModality) {
                             </div>
                             <button onclick="document.getElementById('journalTextarea').value = \`${reframeBtnText.replace(/`/g, '')}\`; if (typeof updateWordCount === 'function') updateWordCount(); alert('Narrative Text reframed successfully!');" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Text</button>
                         </div>
-                        <div style="padding: 10px; border-radius: 8px; background: rgba(99, 102, 241, 0.1); border-left: 3px solid #6366F1; font-size: 0.9rem; color: var(--text-color);">
-                            <strong>✨ Reframed Perspective:</strong> ${reframeBtnText}
-                        </div>
+                        
                     </div>`;
                 valence = -0.68;
                 if (velElem) velElem.innerText = "High Escalation ↑";
@@ -1578,9 +1584,7 @@ function displayAnalysisResults(res, forcedModality) {
                             </div>
                             <button onclick="document.getElementById('journalTextarea').value = \`${res.reframed_sentence_audio.replace(/`/g, '')}\`; if (typeof updateWordCount === 'function') updateWordCount(); alert('Speech reframed text copied to your journal!');" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #38BDF8; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Speech</button>
                         </div>
-                        <div style="padding: 10px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); border-left: 3px solid #38BDF8; font-size: 0.9rem; color: var(--text-color);">
-                            <strong>✨ Reframed Perspective:</strong> ${res.reframed_sentence_audio}
-                        </div>
+                        
                     </div>`;
             }
 
