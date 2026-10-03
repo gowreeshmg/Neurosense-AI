@@ -1571,7 +1571,7 @@ function displayAnalysisResults(res, forcedModality) {
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <div>
                                 <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ ${distortionName}</div>
-                                <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Narrative Text</div>
+                                <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8; max-width: 350px;">Neutralizes anxious words into calm, grounded language while keeping the original meaning.</div>
                             </div>
                             <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeBtnText.replace(/`/g, '')}\`; this.style.display='none';" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Text</button>
                         </div>
@@ -1588,7 +1588,7 @@ function displayAnalysisResults(res, forcedModality) {
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <div>
                                 <div style="font-weight: 700; color: #38BDF8; font-size: 0.94rem;">🎙️ Acoustic / Speech Distress</div>
-                                <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Voice Transcription</div>
+                                <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8; max-width: 350px;">Neutralizes anxious words into calm, grounded language while keeping the original meaning.</div>
                             </div>
                             <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${res.reframed_sentence_audio.replace(/`/g, '')}\`; this.style.display='none';" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #38BDF8; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Speech</button>
                         </div>
@@ -1730,7 +1730,7 @@ async function applyTextReframing(distortionType) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: `You are a CBT reframing engine. Rewrite the following journal entry to reframe the anxiety and physical symptoms in a grounded, manageable, and non-threatening way. DO NOT delete the user's concerns or symptoms; instead, acknowledge them calmly as normal, temporary physical reactions. Keep all the original content and meaning, but expand the sentence to make it feel safe, reassuring, and less anxiety-inducing. DO NOT add conversational filler. RETURN ONLY THE REWRITTEN SENTENCE. Journal entry: "${textarea.value}"`,
+                    message: `You are a CBT reframing engine. Rewrite the following journal entry strictly in the FIRST PERSON ("I", "my"). Keep the core meaning (the situation and the reaction), but completely remove the highly anxious, panic-driven words (e.g., replace severe panic symptoms with calmer equivalents like "feeling tense" or "nervousness"). Make it a grounded, balanced, normal sentence that acknowledges the feelings but doesn't feed the anxiety. DO NOT add conversational filler. RETURN ONLY THE REWRITTEN SENTENCE. Journal entry: "${textarea.value}"`,
                     current_stress_category: 'Reframe Request',
                     history: [],
                     is_reframe: true
