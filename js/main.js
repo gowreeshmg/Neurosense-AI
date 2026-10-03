@@ -1727,7 +1727,7 @@ async function applyTextReframing(distortionType) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: `You are a CBT reframing engine. Rewrite the following journal entry to resolve the "${distortionType.replace('_', ' ')}" cognitive distortion. Keep it in the FIRST PERSON ("I"), keep the original meaning, but make it balanced, realistic, and grounded. RETURN ONLY THE REWRITTEN SENTENCE. DO NOT add conversational filler, do not add quotes, do not explain. Journal entry: "${textarea.value}"`,
+                    message: `You are a CBT text filter. Rewrite the following journal entry to remove anxious or distorted language, making it sound completely normal, calm, and objective. Keep the exact same meaning and context. DO NOT add any new information, DO NOT add advice, DO NOT add coping strategies. RETURN ONLY THE REWRITTEN SENTENCE. Journal entry: "${textarea.value}"`,
                     current_stress_category: 'Reframe Request',
                     history: [],
                     is_reframe: true
@@ -1740,8 +1740,14 @@ async function applyTextReframing(distortionType) {
         const data = await response.json();
         
         if (data.reply) {
-            // Strip any quotes that the AI might have wrapped the sentence in
-            textarea.value = data.reply.trim().replace(/^["']|["']$/g, '');
+            const limeText = document.getElementById('limeTextParagraph');
+            if (limeText) {
+                limeText.innerHTML = data.reply.trim().replace(/^["']|["']$/g, '');
+                // Flash the text green to indicate it was reframed
+                limeText.style.transition = 'color 0.5s ease';
+                limeText.style.color = '#10B981';
+                setTimeout(() => { limeText.style.color = 'var(--text-color)'; }, 2000);
+            }
         }
     } catch (err) {
         console.error("Reframing error:", err);
@@ -1751,9 +1757,6 @@ async function applyTextReframing(distortionType) {
     btn.style.opacity = '1';
     btn.disabled = false;
     
-    updateWordCount();
-    // Auto-run analysis to show the red stress words turning into green calm words!
-    runSingleModalityAnalysis('text');
 }
 
 /**
