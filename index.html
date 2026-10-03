@@ -1222,6 +1222,92 @@
         </div>
     </div>
 </div>
+<script src="./js/audio_recorder.js?v=20260807_fix10"></script>
+<script src="./js/main.js?v=20261003_v9"></script>
+<style>
+
+@media (min-width: 901px) {
+    #dockBtnKeyboard {
+        display: none !important;
+    }
+}
+
+/* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
+.dock-icon {
+    position: relative !important;
+}
+.dock-tooltip {
+    display: none !important;
+    position: absolute !important;
+    bottom: calc(100% + 14px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: transparent !important;
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+}
+body[data-theme="dark"] .dock-tooltip {
+    color: white !important;
+}
+body[data-theme="light"] .dock-tooltip {
+    color: black !important;
+}
+.dock-icon.clicked-tooltip .dock-tooltip {
+    display: block !important;
+}
+body[data-theme="dark"] #bottomGlassDock {
+    background: rgba(25, 25, 35, 0.85) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+}
+body[data-theme="light"] #bottomGlassDock {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+}
+@media (max-width: 900px) {
+    header.navbar-top-controls > div.top-center-wrapper {
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        margin-top: 40px !important;
+    }
+    .sidebar-dock.magic-dock {
+        overflow: visible !important;
+    }
+}
+
+        video {
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+</style>
+
+<script>
+    function toggleMobileHeroMenu() {
+        const menu = document.getElementById('heroMobileMenu');
+        const iconOpen = document.getElementById('heroMenuIconOpen');
+        const iconClose = document.getElementById('heroMenuIconClose');
+        if (!menu) return;
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            if (iconOpen) iconOpen.classList.add('hidden');
+            if (iconClose) iconClose.classList.remove('hidden');
+        } else {
+            menu.classList.add('hidden');
+            if (iconOpen) iconOpen.classList.remove('hidden');
+            if (iconClose) iconClose.classList.add('hidden');
+        }
+    }
+</script>
 </section>
 <script id="magic-dock-js">
 // Dock dragging disabled to permanently lock to the bottom.
