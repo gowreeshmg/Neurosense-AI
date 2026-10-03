@@ -957,7 +957,7 @@
 <div class="dock-icon" id="dockBtnLifestyle" data-label="Lifestyle" onclick="switchDashboardView('lifestyle')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
 </div>
-<div class="dock-icon" id="dockBtnKeyboard" data-label="iOS Keyboard" onclick="switchDashboardView('keyboard')">
+<div class="dock-icon" id="dockBtnKeyboard" data-label="Keyboard" onclick="switchDashboardView('keyboard')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="10" y1="12" x2="10" y2="12"></line><line x1="14" y1="12" x2="14" y2="12"></line><line x1="18" y1="12" x2="18" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
 </div>
 </nav>
@@ -1485,6 +1485,13 @@
 <script src="./js/audio_recorder.js?v=20260807_fix10"></script>
 <script src="./js/main.js?v=20261003_v9"></script>
 <style>
+
+@media (min-width: 901px) {
+    #dockBtnKeyboard {
+        display: none !important;
+    }
+}
+
 /* GUARANTEED TOOLTIP VISIBILITY AND POSITIONING FIXES */
 .dock-icon {
     position: relative !important;
