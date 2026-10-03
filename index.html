@@ -606,12 +606,24 @@
         html { background: #ffffff; }
         html[data-theme="dark"] { background: #050505; }
         body[data-theme="dark"] { background: #050505; }
-    </style>
+    
+        video {
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+</style>
 <style>
         @media (min-width: 769px) {
             .mobile-dock-only { display: none !important; }
         }
-    </style>
+    
+        video {
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+</style>
 <style id="magic-dock-styles">
         .magic-dock {
             display: flex !important;
@@ -793,7 +805,13 @@
             width: 100% !important;
             margin-top: auto !important;
         }
-    </style>
+    
+        video {
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+</style>
 
 </head>
 <body data-theme="dark">
@@ -1543,6 +1561,12 @@ body[data-theme="light"] #bottomGlassDock {
         overflow: visible !important;
     }
 }
+
+        video {
+            pointer-events: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
 </style>
 
 <script>
