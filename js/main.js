@@ -3018,3 +3018,29 @@ window.updateKeyboardTelemetry = function(data) {
     }
 };
 
+
+window.updateNativeSleepData = function(hours) {
+    console.log("Received Sleep Data:", hours);
+    const el = document.getElementById('healthkitSleep');
+    if (el) {
+        el.innerText = parseFloat(hours).toFixed(1) + " hrs";
+    }
+};
+
+window.forceRefreshKeyboard = function() {
+    console.log("Forcing keyboard refresh...");
+    // Just a visual cue that it's refreshing, the iOS app bridges every 5 seconds.
+    const btn = event.currentTarget;
+    const oldText = btn.innerHTML;
+    btn.innerHTML = "Refreshing...";
+    btn.style.opacity = "0.5";
+    setTimeout(() => {
+        btn.innerHTML = oldText;
+        btn.style.opacity = "1";
+    }, 1500);
+    
+    // In a production app, we would send a message to native to fetch immediately:
+    // if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.neurosenseBridge) {
+    //     window.webkit.messageHandlers.neurosenseBridge.postMessage("refreshData");
+    // }
+};
