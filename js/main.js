@@ -2937,3 +2937,84 @@ function resetUnifiedPressure() {
     
     console.log("Data refreshed and reset to zero.");
 }
+
+
+// ==========================================
+// KEYBOARD TELEMETRY BRIDGE (NATIVE IOS)
+// ==========================================
+window.updateKeyboardTelemetry = function(data) {
+    console.log("Received Keyboard Telemetry:", data);
+    
+    // Check if keyboard setup banner is visible, hide it if we get data
+    const banner = document.getElementById('keyboardSetupBanner');
+    if (banner && data.totalKeystrokes > 0) {
+        banner.style.display = 'none';
+    }
+    
+    // Update DOM elements
+    const scoreEl = document.getElementById('kbMoodScore');
+    const stateEl = document.getElementById('kbDetectedState');
+    const wpmEl = document.getElementById('kbWpm');
+    const backspaceEl = document.getElementById('kbBackspaces');
+    
+    if (scoreEl) scoreEl.innerText = Math.round(data.moodScore);
+    if (stateEl) stateEl.innerText = data.state;
+    if (wpmEl) wpmEl.innerText = data.wordsTyped;
+    if (backspaceEl) backspaceEl.innerText = data.backspaceCount;
+    
+    // Update Colors based on score
+    let color = "#34d399"; // Green
+    if (data.moodScore > 75) color = "#ef4444"; // Red
+    else if (data.moodScore > 55) color = "#fb923c"; // Orange
+    else if (data.moodScore > 40) color = "#fbbf24"; // Yellow
+    
+    if (scoreEl) scoreEl.style.color = color;
+    if (stateEl) stateEl.style.color = color;
+    
+    // Update Signal Breakdown Bars
+    // Estimate percentages based on the mood score and basic heuristics for visual feedback
+    let stressPct = Math.min(100, (data.backspaceCount / Math.max(1, data.totalKeystrokes)) * 300);
+    let anxietyPct = Math.min(100, data.moodScore * 0.8);
+    let depPct = Math.min(100, data.moodScore * 0.6);
+    
+    if (data.state === "Emotional Distress") {
+        stressPct = 90; anxietyPct = 85; depPct = 95;
+    } else if (data.state === "Anxiety") {
+        stressPct = 70; anxietyPct = 90; depPct = 50;
+    } else if (data.state === "Stress") {
+        stressPct = 85; anxietyPct = 60; depPct = 40;
+    }
+    
+    const stressBar = document.getElementById('kbStressBar');
+    const anxietyBar = document.getElementById('kbAnxietyBar');
+    const depBar = document.getElementById('kbDepressionBar');
+    
+    if (stressBar) stressBar.style.width = stressPct + '%';
+    if (anxietyBar) anxietyBar.style.width = anxietyPct + '%';
+    if (depBar) depBar.style.width = depPct + '%';
+    
+    const stressTxt = document.getElementById('kbStressPct');
+    const anxietyTxt = document.getElementById('kbAnxietyPct');
+    const depTxt = document.getElementById('kbDepressionPct');
+    
+    if (stressTxt) stressTxt.innerText = Math.round(stressPct) + '%';
+    if (anxietyTxt) anxietyTxt.innerText = Math.round(anxietyPct) + '%';
+    if (depTxt) depTxt.innerText = Math.round(depPct) + '%';
+    
+    // TRIGGER NOTIFICATIONS FOR HIGH DISTRESS
+    if (data.moodScore > 80 && !window.keyboardNotified) {
+        window.keyboardNotified = true;
+        if (typeof showSystemNotification === 'function') {
+            showSystemNotification(
+                "Critical Mental Health Alert",
+                "Your typing patterns suggest severe emotional distress. Please take a moment to breathe or connect with the AI therapist."
+            );
+        } else {
+            alert("⚠️ NEUROSENSE ALERT: Your typing patterns suggest severe emotional distress. Please take a moment to breathe.");
+        }
+        
+        // Reset notification flag after 30 mins
+        setTimeout(() => { window.keyboardNotified = false; }, 1800000);
+    }
+};
+

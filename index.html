@@ -1430,76 +1430,83 @@
 <div class="modality-view" id="viewKeyboard" style="display: none !important; padding-top: 60px; max-width: 900px; margin: 0 auto; padding-left: 14px; padding-right: 14px; padding-bottom: 120px;">
     
     <!-- Keyboard Setup Banner (Mobile Only) -->
-    <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.4); box-shadow: 0 16px 40px rgba(0,0,0,0.4); margin-bottom: 20px;">
+    <div class="glass-card" id="keyboardSetupBanner" style="padding: 24px; border-radius: 24px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.4); box-shadow: 0 16px 40px rgba(0,0,0,0.4); margin-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
             <span style="font-size: 1.8rem;">⌨️</span>
-            <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Enable iOS Keyboard</h3>
+            <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Setup iOS Keyboard</h3>
         </div>
         <p style="font-size: 0.94rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin-bottom: 16px;">
-            To track your real-time typing telemetry (WPM, backspaces, tap pressure, and usage limits), you must enable the Neurosense Keyboard extension on your iPhone.
+            To track your typing telemetry, go to iPhone <b>Settings > General > Keyboard > Keyboards > Add New Keyboard</b> and select <b>Neurosense</b>.
         </p>
-        <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 16px;">
-            <ol style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                <li>Go to iPhone <b>Settings > General > Keyboard > Keyboards</b></li>
-                <li>Tap <b>Add New Keyboard...</b></li>
-                <li>Select <b>Neurosense</b></li>
-                <li>Tap it and turn on <b>Allow Full Access</b></li>
-            </ol>
-        </div>
-        <button class="btn btn-gradient" onclick="alert('Once you build the iOS app in Xcode, iOS will automatically register the keyboard! Follow the instructions above to activate it.')" style="width: 100%; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 0.96rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            Learn How It Works
-        </button>
     </div>
 
-    <!-- Telemetry History & Live Analysis -->
-    <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 16px 40px rgba(0,0,0,0.4); margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-            <span style="font-size: 1.5rem;">📊</span>
-            <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff;">Telemetry History &amp; Stress Analysis</h3>
+    <!-- Keyboard Telemetry Dashboard -->
+    <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 24px;">
+        <h3 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 20px;">Typing Mental Health Analysis</h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <!-- Mood Score -->
+            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 16px; text-align: center;">
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Distress Score</p>
+                <h4 id="kbMoodScore" style="font-size: 2.5rem; font-weight: 800; color: #34d399; margin: 0;">0</h4>
+                <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 4px;">Out of 100</p>
+            </div>
+            
+            <!-- Detected State -->
+            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 16px; text-align: center;">
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Current State</p>
+                <h4 id="kbDetectedState" style="font-size: 1.5rem; font-weight: 800; color: #34d399; margin: 0; line-height: 1.2; padding-top: 10px;">Calm</h4>
+            </div>
+            
+            <!-- WPM -->
+            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 16px; text-align: center;">
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Words Typed</p>
+                <h4 id="kbWpm" style="font-size: 1.8rem; font-weight: 800; color: #fff; margin: 0;">0</h4>
+            </div>
+            
+            <!-- Backspaces -->
+            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 16px; text-align: center;">
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Error Corrections</p>
+                <h4 id="kbBackspaces" style="font-size: 1.8rem; font-weight: 800; color: #fff; margin: 0;">0</h4>
+            </div>
         </div>
-        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 20px;">
-            Passive background tracking of how you type (not what you type) to detect digital stress patterns.
-        </p>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
-            <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #F59E0B; text-transform: uppercase; margin-bottom: 6px;">Tap Pressure</div>
-                <div style="font-size: 1.4rem; font-weight: 800; color: #fff;">Elevated (68%)</div>
-                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 4px;">Higher tap force correlated with acute anxiety.</div>
-            </div>
-            <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 6px;">Typing Velocity</div>
-                <div style="font-size: 1.4rem; font-weight: 800; color: #fff;">45 WPM (Normal)</div>
-                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 4px;">Consistent pacing indicates emotional baseline.</div>
-            </div>
-            <div style="padding: 16px; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12);">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #EC4899; text-transform: uppercase; margin-bottom: 6px;">Backspace Frequency</div>
-                <div style="font-size: 1.4rem; font-weight: 800; color: #fff;">High (12/min)</div>
-                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 4px;">High revision rate suggests hesitancy/stress.</div>
-            </div>
-        </div>
-
-        <div style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px;">
-            <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                <div>
-                    <strong style="font-size: 0.95rem;" class="text-theme">Smart Stress Notifications</strong>
-                    <p style="font-size: 0.8rem; color: rgba(255,255,255,0.65); margin: 4px 0 0 0;">Only alert me when extreme stress or depression is detected (no random pings).</p>
+        
+        <!-- Breakdown Chart -->
+        <div>
+            <h4 style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 12px;">Signal Breakdown</h4>
+            
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 6px;">
+                    <span>Stress (Erratic Typing)</span>
+                    <span id="kbStressPct">0%</span>
                 </div>
-                <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: #6366F1;" />
-            </label>
+                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                    <div id="kbStressBar" style="width: 0%; height: 100%; background: #fbbf24; transition: width 0.5s ease;"></div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 6px;">
+                    <span>Anxiety (Negative Sentiments)</span>
+                    <span id="kbAnxietyPct">0%</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                    <div id="kbAnxietyBar" style="width: 0%; height: 100%; background: #fb923c; transition: width 0.5s ease;"></div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 6px;">
+                    <span>Depression (Low WPM, High Deletes)</span>
+                    <span id="kbDepressionPct">0%</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                    <div id="kbDepressionBar" style="width: 0%; height: 100%; background: #ef4444; transition: width 0.5s ease;"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<!-- Longitudinal Heatmap Island removed per user request -->
-<div class="heatmap-section" style="display: none !important;"></div>
-</section>
-</main>
-<footer class="footer glass-card" style="display: none !important;">
-<p><strong>NeuroSense AI</strong> — Final Year B.Tech Research Project | Built with FastAPI, scikit-learn Rank-Based Ensemble, LIME, SHAP, and OpenAI Whisper.</p>
-</footer>
-<!-- Scripts -->
-<script src="./js/charts.js?v=20260807_fix10"></script>
 <script src="./js/audio_recorder.js?v=20260807_fix10"></script>
 <script src="./js/main.js?v=20261003_v9"></script>
 <style>
