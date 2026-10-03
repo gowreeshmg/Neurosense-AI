@@ -465,7 +465,8 @@ function switchDashboardView(viewName) {
         'cbt': document.getElementById('viewCBT'),
         'lifestyle': document.getElementById('viewLifestyle'),
         'pressure': document.getElementById('viewPressure'),
-        'whatif': document.getElementById('viewWhatIf')
+        'whatif': document.getElementById('viewWhatIf'),
+        'keyboard': document.getElementById('viewKeyboard')
     };
     
     const btns = {
@@ -1069,7 +1070,9 @@ async function runMultimodalAnalysis(mode = 'combined') {
         
         // 2. Use Gemini/Groq Fallback to Analyze the Text
         let textToAnalyze = '';
-        if (text && grooqTranscription) {
+        if (mode === 'audio') {
+            textToAnalyze = grooqTranscription || 'No audio detected.';
+        } else if (text && grooqTranscription) {
             textToAnalyze = `[NARRATIVE TEXT]:
 ${text}
 
@@ -1173,7 +1176,7 @@ Analyze both of these inputs independently. Evaluate their stress levels and ret
         }
         
         currentAnalysisResult = result;
-        const displayMode = mode === 'audio' ? 'audio' : (mode === 'text' ? 'text' : null);
+        const displayMode = mode === 'combined' ? 'both' : mode;
         displayAnalysisResults(result, displayMode);
         
     } catch (err) {
@@ -1225,14 +1228,7 @@ async function runSingleModalityAnalysis(modality) {
             alert("You haven't uploaded an audio file or recorded voice.");
             return;
         }
-        const tempText = textElem.value;
-        textElem.value = ""; 
-        
         await runMultimodalAnalysis('audio');
-        
-        if (tempText && !textElem.value.trim()) {
-            textElem.value = tempText;
-        }
     }
 }
 
@@ -1242,8 +1238,8 @@ function displayAnalysisResults(res, forcedModality) {
     const textElem = document.getElementById('journalTextarea');
     const text = textElem ? textElem.value.trim() : "";
     
-    let modality;
-    if (forcedModality) {
+    let modality = 'both';
+    if (forcedModality && forcedModality !== 'null' && forcedModality !== 'undefined') {
         modality = forcedModality;
     } else {
         modality = (audioBlob || simulatedAudioVector) && text ? 'both' :

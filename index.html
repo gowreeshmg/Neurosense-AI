@@ -957,8 +957,8 @@
 <div class="dock-icon" id="dockBtnLifestyle" data-label="Lifestyle" onclick="switchDashboardView('lifestyle')">
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
 </div>
-<div class="dock-icon" id="dockBtnWhatIf" data-label="What-If &amp; XAI" onclick="switchDashboardView('whatif')">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><line x1="4" x2="4" y1="21" y2="14"></line><line x1="4" x2="4" y1="10" y2="3"></line><line x1="12" x2="12" y1="21" y2="12"></line><line x1="12" x2="12" y1="8" y2="3"></line><line x1="20" x2="20" y1="21" y2="16"></line><line x1="20" x2="20" y1="12" y2="3"></line><line x1="1" x2="7" y1="14" y2="14"></line><line x1="9" x2="15" y1="8" y2="8"></line><line x1="17" x2="23" y1="16" y2="16"></line></svg>
+<div class="dock-icon" id="dockBtnKeyboard" data-label="iOS Keyboard" onclick="switchDashboardView('keyboard')">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="10" y1="12" x2="10" y2="12"></line><line x1="14" y1="12" x2="14" y2="12"></line><line x1="18" y1="12" x2="18" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
 </div>
 </nav>
 <!-- VIEW 1: VOICE & SPEECH ACOUSTIC CHECK-IN FACE -->
@@ -1018,7 +1018,7 @@
 <span></span> Run Voice Check-in Analysis
                                     </button>
 </div>
-</div></div></div><div style="width: 100%; display: flex; justify-content: center; margin-top: 16px; margin-bottom: 16px;"><button class="btn btn-gradient" id="btnRunCombined" onclick="runMultimodalAnalysis()" style="padding: 14px 28px; font-size: 1.1rem; font-weight: 800; border-radius: 999px; cursor: pointer;"><span></span> Run Combined Dual-Modality Check-in Analysis</button></div><div class="results-section glass-card hidden" id="textAnalysisResults" style="margin-top: 0px !important;">
+</div></div></div><div style="width: 100%; display: flex; justify-content: center; margin-top: 16px; margin-bottom: 16px;"><button class="btn btn-gradient" id="btnRunCombined" onclick="runMultimodalAnalysis()" style="padding: 14px 28px; font-size: 1.1rem; font-weight: 800; border-radius: 999px; cursor: pointer;"><span></span> Run Combined Dual-Modality Check-in Analysis</button></div><div class="results-section glass-card hidden" id="textAnalysisResults" style="margin-top: 24px !important;">
 <div class="results-header">
 <h2>Linguistic &amp; Semantic Stress Breakdown</h2>
 <span class="badge badge-dual" style="background: rgba(192,132,252,0.25); border-color: #c084fc; color: #c084fc;">Text Modality Active</span>
@@ -1069,7 +1069,7 @@
 </div>
 </div>
 </div>
-<div class="results-section glass-card hidden" id="audioAnalysisResults" style="margin-top: 0px !important;">
+<div class="results-section glass-card hidden" id="audioAnalysisResults" style="margin-top: 24px !important;">
 <div class="results-header">
 <h2>Speech Acoustic Biomarker Breakdown</h2>
 <span class="badge badge-dual" style="background: rgba(56,189,248,0.25); border-color: #38bdf8; color: #38bdf8;">Voice Modality Active</span>
@@ -1151,7 +1151,7 @@
 <!-- VIEW 3: CBT ASSISTANT & GPT CHAT FACE (Single Full-Screen Assistant Island where entire area is Chat) -->
 <div class="modality-view" id="viewCBT" style="display: none !important; width: 100%; max-width: 1400px; margin: 0 auto; box-sizing: border-box; padding: 4px 14px 120px 14px !important;">
 <!-- ONE Single Unified Full-Screen Glass Island - iOS glassmorphism, fills viewport -->
-<div class="cbt-card glass-card" id="cbtCompanionIsland" style="position: relative !important; height: calc(100svh - 260px) !important; max-height: none !important; min-height: 350px; padding: 22px 22px !important; display: flex; flex-direction: column; width: 100% !important; box-sizing: border-box; justify-content: space-between; overflow: hidden !important;">
+<div class="cbt-card glass-card" id="cbtCompanionIsland" style="position: relative !important; height: calc(100svh - 260px) !important; max-height: none !important; min-height: 350px; padding: 22px 22px !important; display: flex; flex-direction: column; width: calc(100% - 28px) !important; box-sizing: border-box; justify-content: space-between; overflow: hidden !important; border-radius: 24px !important; margin: 0 auto !important;">
 <!-- Sleek Minimal Header explaining AI name & capabilities -->
 <div class="cbt-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.14); flex-shrink: 0; flex-wrap: wrap; gap: 8px;">
 <div style="display: flex; align-items: center; gap: 12px;">
@@ -1185,28 +1185,7 @@
 <button class="round-glass-btn" onclick="updateLifestyleSimulation(true)" style="position: relative !important; top: 0 !important; right: 0 !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; background: rgba(255,255,255,0.1) !important; border: 1px solid rgba(255,255,255,0.3) !important; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: all 0.3s;" title="Refresh &amp; Simulate Usage Telemetry">↻</button>
 </div>
 
-<!-- Keyboard Setup Banner (Mobile Only) -->
-<div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.4); box-shadow: 0 16px 40px rgba(0,0,0,0.4); margin-bottom: 20px;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-        <span style="font-size: 1.8rem;">⌨️</span>
-        <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff;">Enable iOS Keyboard</h3>
-    </div>
-    <p style="font-size: 0.94rem; color: rgba(255,255,255,0.9); line-height: 1.5; margin-bottom: 16px;">
-        To track your real-time typing telemetry (WPM, backspaces, and usage limits), you must enable the Neurosense Keyboard extension on your iPhone.
-    </p>
-    <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 16px;">
-        <ol style="margin: 0; padding-left: 20px; line-height: 1.6;">
-            <li>Go to iPhone <b>Settings > General > Keyboard > Keyboards</b></li>
-            <li>Tap <b>Add New Keyboard...</b></li>
-            <li>Select <b>Neurosense</b></li>
-            <li>Tap it and turn on <b>Allow Full Access</b></li>
-        </ol>
-    </div>
-    <button class="btn btn-gradient" onclick="alert('Once you build the iOS app in Xcode, iOS will automatically register the keyboard! Follow the instructions above to activate it.')" style="width: 100%; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 0.96rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
-        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-        Learn How It Works
-    </button>
-</div>
+
 
 <!-- Card 1: Behavioral Risk Banner -->
 <div class="glass-card" style="padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(245, 158, 11, 0.35); box-shadow: 0 16px 40px rgba(0,0,0,0.4);">
