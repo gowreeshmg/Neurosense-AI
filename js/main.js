@@ -1728,24 +1728,14 @@ async function applyTextReframing(distortionType) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: `Please reframe this sentence to resolve ${distortionType.replace('_', ' ')} cognitive distortions: "${textarea.value}"`,
-                    history: []
+                    current_stress_category: 'Reframe Request',
+                    history: [],
+                    is_reframe: true
                 })
             });
             if (response.ok) break;
             if (attempt < 2) await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
         }
-        
-        // Dummy block to safely replace the original fetch call structure
-        if (false) { fetch('/api/chat/cbt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: `Please reframe this sentence to resolve ${distortionType.replace('_', ' ')} cognitive distortions: "${textarea.value}"`,
-                current_stress_category: 'Reframe Request',
-                history: [],
-                is_reframe: true
-            })
-        });
         
         const data = await response.json();
         
