@@ -1085,11 +1085,16 @@ Analyze both of these inputs independently. Evaluate their stress levels and ret
             return;
         }
 
-        const response = await fetch('/api/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: textToAnalyze })
-        });
+        let response = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+            response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textToAnalyze })
+            });
+            if (response.ok) break;
+            if (attempt < 2) await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+        }
         
         if (!response.ok) {
             const errData = await response.json().catch(() => ({}));
@@ -1537,9 +1542,7 @@ function displayAnalysisResults(res, forcedModality) {
                         </div>`;
                 } else {
                     limeContainer.innerHTML = `
-                        <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Input Transcript:</strong>
-                        <p id="limeTextParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedText}</p>
-                        <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeTxt}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; background: rgba(99,102,241,0.2); border: 1px solid #6366f1; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Text</button>
+                        <p id="limeTextParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 0;">${highlightedText}</p>
                     `;
                 }
             } else {
@@ -1718,7 +1721,22 @@ async function applyTextReframing(distortionType) {
     btn.disabled = true;
 
     try {
-        const response = await fetch('/api/chat/cbt', {
+        let response = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+            response = await fetch('/api/chat/cbt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `Please reframe this sentence to resolve ${distortionType.replace('_', ' ')} cognitive distortions: "${textarea.value}"`,
+                    history: []
+                })
+            });
+            if (response.ok) break;
+            if (attempt < 2) await new Promise(r => setTimeout(r, 1500 * (attempt + 1)));
+        }
+        
+        // Dummy block to safely replace the original fetch call structure
+        if (false) { fetch('/api/chat/cbt', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
