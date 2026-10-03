@@ -3048,19 +3048,19 @@ window.forceRefreshKeyboard = function() {
 };
 
 
+
 let activeShapChart = null;
 
 function renderAudioShapChart(res) {
-    const canvas = document.getElementById('shapChartCanvas');
+    const canvas = document.getElementById('shapChartCanvas') || document.getElementById('combinedShapChartCanvas');
     if (!canvas) return;
     
     if (activeShapChart) {
         activeShapChart.destroy();
     }
     
-    // Fallback Mock SHAP data if AI doesn't provide it
     let features = ["MFCC Vocal Tract", "Micro-Tremor", "Spectral Contrast", "Pitch Instability", "Jitter/Shimmer"];
-    let values = [0.4, 0.35, 0.25, 0.2, 0.15];
+    let values = [0.4, 0.35, -0.25, -0.2, 0.15];
     
     if (res.audio_analysis && res.audio_analysis.top_acoustic_features) {
         features = [];
@@ -3071,11 +3071,15 @@ function renderAudioShapChart(res) {
         }
     }
     
-    // Ensure we have some data
-    if (features.length === 0) {
-        features = ["Vocal Tension", "Pitch Fluctuation", "Acoustic Tremor"];
-        values = [0.6, 0.5, 0.4];
-    }
+    // Convert all numbers to float
+    values = values.map(v => parseFloat(v));
+    
+    const isLight = document.body.getAttribute('data-theme') === 'light';
+    const textColor = isLight ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)';
+    const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+    
+    const bgColors = values.map(v => v > 0 ? 'rgba(244, 63, 94, 0.6)' : 'rgba(16, 185, 129, 0.6)'); // Red for positive (distress), Green for negative (calm)
+    const borderColors = values.map(v => v > 0 ? '#F43F5E' : '#10B981');
     
     const ctx = canvas.getContext('2d');
     activeShapChart = new Chart(ctx, {
@@ -3085,8 +3089,8 @@ function renderAudioShapChart(res) {
             datasets: [{
                 label: 'Acoustic Feature Importance (SHAP)',
                 data: values,
-                backgroundColor: 'rgba(56, 189, 248, 0.6)',
-                borderColor: '#38BDF8',
+                backgroundColor: bgColors,
+                borderColor: borderColors,
                 borderWidth: 1,
                 borderRadius: 4
             }]
@@ -3100,12 +3104,12 @@ function renderAudioShapChart(res) {
             },
             scales: {
                 x: {
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: 'rgba(255,255,255,0.5)' }
+                    grid: { color: gridColor },
+                    ticks: { color: textColor }
                 },
                 y: {
                     grid: { display: false },
-                    ticks: { color: 'rgba(255,255,255,0.8)' }
+                    ticks: { color: textColor, font: { weight: 'bold' } }
                 }
             }
         }
