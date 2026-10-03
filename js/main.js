@@ -1384,7 +1384,10 @@ function displayAnalysisResults(res, forcedModality) {
             const limeWrapper = document.getElementById('limeBoxWrapper');
             const distWrapper = document.getElementById('distortionScannerWrapper');
             if (audioGrid && limeWrapper) audioGrid.appendChild(limeWrapper);
-            if (audioGrid && distWrapper) audioGrid.appendChild(distWrapper);
+            if (audioGrid && distWrapper) {
+                audioGrid.appendChild(distWrapper);
+                distWrapper.style.setProperty('display', 'flex', 'important');
+            }
 
             audioRes.classList.remove('hidden');
             audioRes.classList.add('visible');
@@ -1525,16 +1528,12 @@ function displayAnalysisResults(res, forcedModality) {
                 if (modality === 'both' && highlightedAudio) {
                     limeContainer.innerHTML = `
                         <div style="margin-bottom: 14px;">
-                            <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Narrative Text:</strong>
+                            <strong style="color: var(--text-color); font-size: 0.95rem; text-transform: none;">Narrative Text:</strong>
                             <p id="limeTextParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedText}</p>
                         </div>
-                        <div style="margin-bottom: 16px;">
-                            <strong style="color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase;">Voice Transcription:</strong>
+                        <div>
+                            <strong style="color: var(--text-color); font-size: 0.95rem; text-transform: none;">Voice Transcription:</strong>
                             <p id="limeAudioParagraph" style="font-size: 1.05rem; line-height: 1.6; color: var(--text-color); margin: 6px 0 10px 0;">${highlightedAudio}</p>
-                        </div>
-                        <div style="display: flex; gap: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 12px; justify-content: flex-start;">
-                            <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeTxt}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 6px 10px; border-radius: 6px; background: rgba(99,102,241,0.2); border: 1px solid #6366f1; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Text</button>
-                            <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${reframeAud}\`; this.style.display='none';" style="font-size: 0.75rem; padding: 6px 10px; border-radius: 6px; background: rgba(56,189,248,0.2); border: 1px solid #38bdf8; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">✨ Reframe Speech</button>
                         </div>`;
                 } else {
                     limeContainer.innerHTML = `
@@ -1568,7 +1567,7 @@ function displayAnalysisResults(res, forcedModality) {
                                 <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ ${distortionName}</div>
                                 <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Narrative Text</div>
                             </div>
-                            
+                            <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeBtnText.replace(/`/g, '')}\`; this.style.display='none';" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Text</button>
                         </div>
                         
                     </div>`;
@@ -1585,7 +1584,7 @@ function displayAnalysisResults(res, forcedModality) {
                                 <div style="font-weight: 700; color: #38BDF8; font-size: 0.94rem;">🎙️ Acoustic / Speech Distress</div>
                                 <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Voice Transcription</div>
                             </div>
-                            
+                            <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${res.reframed_sentence_audio.replace(/`/g, '')}\`; this.style.display='none';" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #38BDF8; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Speech</button>
                         </div>
                         
                     </div>`;
