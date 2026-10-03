@@ -1570,7 +1570,7 @@ function displayAnalysisResults(res, forcedModality) {
                                 <div style="font-weight: 700; color: #F59E0B; font-size: 0.94rem;">⚠️ ${distortionName}</div>
                                 <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Narrative Text</div>
                             </div>
-                            <button onclick="document.getElementById('journalTextarea').value = \`${reframeBtnText.replace(/`/g, '')}\`; if (typeof updateWordCount === 'function') updateWordCount(); alert('Narrative Text reframed successfully!');" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Text</button>
+                            <button onclick="document.getElementById('limeTextParagraph').innerHTML = \`${reframeBtnText.replace(/`/g, '')}\`; this.style.display='none';" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #6366F1; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Text</button>
                         </div>
                         
                     </div>`;
@@ -1587,7 +1587,7 @@ function displayAnalysisResults(res, forcedModality) {
                                 <div style="font-weight: 700; color: #38BDF8; font-size: 0.94rem;">🎙️ Acoustic / Speech Distress</div>
                                 <div style="font-size: 0.84rem; color: var(--text-color); opacity: 0.8;">Detected in Voice Transcription</div>
                             </div>
-                            <button onclick="document.getElementById('journalTextarea').value = \`${res.reframed_sentence_audio.replace(/`/g, '')}\`; if (typeof updateWordCount === 'function') updateWordCount(); alert('Speech reframed text copied to your journal!');" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #38BDF8; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Speech</button>
+                            <button onclick="document.getElementById('limeAudioParagraph').innerHTML = \`${res.reframed_sentence_audio.replace(/`/g, '')}\`; this.style.display='none';" class="btn" style="padding: 6px 14px; border-radius: 10px; background: #38BDF8; color: #fff; font-weight: 700; font-size: 0.82rem; border: none; cursor: pointer;">✨ Reframe Speech</button>
                         </div>
                         
                     </div>`;
