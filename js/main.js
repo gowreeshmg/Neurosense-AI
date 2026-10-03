@@ -474,7 +474,7 @@ function switchDashboardView(viewName) {
         'cbt': document.getElementById('dockBtnCBT'),
         'lifestyle': document.getElementById('dockBtnLifestyle'),
         'pressure': document.getElementById('dockBtnPressure'),
-        'whatif': document.getElementById('dockBtnWhatIf')
+        'keyboard': document.getElementById('dockBtnKeyboard')
     };
 
     // Hide all - ONLY use class toggling, no inline styles
