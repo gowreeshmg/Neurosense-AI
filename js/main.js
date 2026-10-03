@@ -1349,7 +1349,10 @@ function displayAnalysisResults(res, forcedModality) {
         const limeWrapper = document.getElementById('limeBoxWrapper');
         const distWrapper = document.getElementById('distortionScannerWrapper');
         if (textGrid && limeWrapper) textGrid.appendChild(limeWrapper);
-        if (textGrid && distWrapper) textGrid.appendChild(distWrapper);
+        if (textGrid && distWrapper) {
+            textGrid.appendChild(distWrapper);
+            distWrapper.style.setProperty('display', 'flex', 'important');
+        }
         
         if (textRes) {
             textRes.classList.remove('hidden');
