@@ -2189,6 +2189,9 @@ const CLINICAL_SURVEYS = {
 function switchQuestionnaire(type) {
     window.activeSurveyType = type;
     
+    // Clear out old data so the pressure gauge restarts for the new test
+    resetUnifiedPressure();
+    
     // Toggle button active states
     ['phq9', 'gad7', 'pss'].forEach(t => {
         const btn = document.getElementById(t === 'phq9' ? 'btnSurveyPHQ9' : t === 'gad7' ? 'btnSurveyGAD7' : 'btnSurveyPSS');
@@ -2316,14 +2319,14 @@ function submitQuestionnaireSession() {
     localStorage.setItem('neuro_pressure_state', JSON.stringify(s));
     refreshUnifiedPressure();
     
-    const alertDiv = document.createElement('div');
-    alertDiv.style.cssText = 'position: fixed; bottom: 90px; right: 24px; background: rgba(16, 185, 129, 0.94); color: #fff; padding: 16px 24px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 999999; font-weight: 700; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.3);';
-    alertDiv.innerHTML = `✅ Synchronized! Questionnaire Signal Rq (${window.neuroSignalState.Rq}%) & Response Latency Rr (${window.neuroSignalState.Rr}%) integrated into Pressure Snapshot.`;
-    document.body.appendChild(alertDiv);
-    setTimeout(() => { if (alertDiv.parentNode) alertDiv.parentNode.removeChild(alertDiv); }, 4000);
-    
     // Switch to Pressure Snapshot to view updated 4-Signal breakdown
     switchDashboardView('pressure');
+    
+    // Scroll smoothly to the top of the pressure view to see the main percentage
+    const view = document.getElementById('viewPressure');
+    if (view) {
+        view.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 /**
