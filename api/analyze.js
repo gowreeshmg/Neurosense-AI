@@ -41,8 +41,8 @@ Return ONLY a valid JSON object with this exact structure:
     {"word": "<key word from text>", "weight": <float -1 to 1, positive=negative emotion, negative=positive>}
   ],
   "cognitive_distortion": "<a short name of a cognitive distortion found in the text (e.g. Catastrophizing, Emotional Reasoning, Overgeneralization). If the category is anything other than Normal, you MUST provide a distortion name. Do NOT output Healthy unless category is Normal>",
-  "reframed_sentence_text": "<a single sentence rewriting the NARRATIVE TEXT to be completely neutral, calm, and free of any anxiety. Strip away all descriptions of panic or physical stress symptoms. State only the objective facts in a normal, relaxed tone. DO NOT add advice. RETURN ONLY THE REWRITTEN SENTENCE.>",
-  "reframed_sentence_audio": "<a single sentence rewriting the VOICE TRANSCRIPTION to be completely neutral, calm, and free of any anxiety. Strip away all descriptions of panic or physical stress symptoms. State only the objective facts in a normal, relaxed tone. DO NOT add advice. RETURN ONLY THE REWRITTEN SENTENCE. (only if voice transcription provided)>"
+  "reframed_sentence_text": "<a single sentence rewriting the NARRATIVE TEXT to reframe the anxiety and physical symptoms in a grounded, non-threatening way. Do not delete the symptoms; acknowledge them calmly as normal, temporary reactions. Keep all original meaning but expand the sentence to feel safe and reassuring. DO NOT add conversational filler. RETURN ONLY THE REWRITTEN SENTENCE.>",
+  "reframed_sentence_audio": "<a single sentence rewriting the VOICE TRANSCRIPTION to reframe the anxiety and physical symptoms in a grounded, non-threatening way. Do not delete the symptoms; acknowledge them calmly as normal, temporary reactions. Keep all original meaning but expand the sentence to feel safe and reassuring. DO NOT add conversational filler. RETURN ONLY THE REWRITTEN SENTENCE. (only if voice transcription provided)>"
 }
 Include 4-8 key words in text_highlights. Ensure text_score and audio_score are populated if analyzing both. Always provide a reframed_sentence_text.`;
 

@@ -1730,7 +1730,7 @@ async function applyTextReframing(distortionType) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: `You are a CBT text filter. Rewrite the following journal entry to be completely neutral, calm, and free of any anxiety or emotional distress. Strip away all descriptions of panic, physical stress symptoms, and catastrophic thinking. State only the objective facts of the situation in a completely normal, relaxed tone. DO NOT add advice or coping strategies. RETURN ONLY THE REWRITTEN SENTENCE. Journal entry: "${textarea.value}"`,
+                    message: `You are a CBT reframing engine. Rewrite the following journal entry to reframe the anxiety and physical symptoms in a grounded, manageable, and non-threatening way. DO NOT delete the user's concerns or symptoms; instead, acknowledge them calmly as normal, temporary physical reactions. Keep all the original content and meaning, but expand the sentence to make it feel safe, reassuring, and less anxiety-inducing. DO NOT add conversational filler. RETURN ONLY THE REWRITTEN SENTENCE. Journal entry: "${textarea.value}"`,
                     current_stress_category: 'Reframe Request',
                     history: [],
                     is_reframe: true
